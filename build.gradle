@@ -1,0 +1,165 @@
+plugins {
+  id 'java'
+  id 'application'
+  id 'org.javamodularity.moduleplugin' version '1.8.12'
+  id 'org.openjfx.javafxplugin' version '0.0.13'
+  id 'org.beryx.jlink' version '2.25.0'
+
+  // third party
+  id("org.gradlex.extra-java-module-info") version "1.8"
+//  id("de.jjohannes.extra-java-module-info") version "0.6"
+}
+
+group 'smpro.app'
+version '1.0-SNAPSHOT'
+
+repositories {
+  google()
+  mavenCentral()
+  maven {
+    url "https://plugins.gradle.org/m2/"
+  }
+  maven {
+    url "https://jitpack.io"
+  }
+}
+
+
+ext {
+  junitVersion = '5.10.0'
+}
+
+sourceCompatibility = '16'
+targetCompatibility = '16'
+
+tasks.withType(JavaCompile) {
+  options.encoding = 'UTF-8'
+}
+
+application {
+  mainModule = 'smpro.app'
+  mainClass = 'smpro.app.Entry'
+}
+
+javafx {
+  version = '17.0.6'
+  modules = ['javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing' ]
+}
+
+
+// CONVERT NON-MODULAR JARS TO AUTOMATIC MODULES USING extrajavamoduleinfo.jar package 'CLOSURES'
+extraJavaModuleInfo {
+  // failOnMissingModuleInfo.set(false)
+
+
+  //  MODLARISATIONS
+
+    // pdf
+  module("com.itextpdf:barcodes", "com.itextpdf.barcodes"){ exports("com.itextpdf.barcodes") }
+  module("com.itextpdf:font-asian", "com.itextpdf.io.font"){ exports("com.itextpdf.io.font") }
+  module("com.itextpdf:sign", "com.itextpdf.signatures"){ exports("com.itextpdf.signatures") }
+  module("com.itextpdf:forms", "com.itextpdf.forms"){ exports("com.itextpdf.forms") }
+  module("com.itextpdf:hyph", "com.itextpdf.hyph"){ exports("com.itextpdf.hyph") }
+  module("com.itextpdf:layout", "com.itextpdf.layout"){ exports("com.itextpdf.layout") }
+  module("com.itextpdf:pdfa", "com.itextpdf.pdfa"){ exports("com.itextpdf.pdfa") }
+  module("com.itextpdf:kernel", "com.itextpdf.kernel"){ exports("com.itextpdf.kernel") }
+  module("com.itextpdf:io", "com.itextpdf.io"){ exports("com.itextpdf.io") }
+
+  // Excel read/write
+//  module("org.apache.poi:poi-ooxml", "org.apache.poi","5.1.0"){ exports("org.apache.poi") }
+//  module("org.apache.poi:poi", "org.apache.poi","5.1.0"){ exports("org.apache.poi") }   // resolved bu POI.OOXML
+//  module("org.apache.poi:poi-ooxml-schemas", "org.apache.poi.ooxml.schemas"){ exports("org.apache.poi.ooxml.schemas") }
+//  module("org.apache.xmlbeans:xmlbeans", "org.apache.xmlbeans"){ exports("org.apache.xmlbeans") }
+//  module("com.github.virtuald:curvesapi", "com.graphbuilder","1.06"){ exports("com.graphbuilder") }
+  automaticModule("com.github.virtuald:curvesapi", "com.graphbuilder")
+  module("org.apache.commons:commons-math3", "org.apache.commons.math3","3.6.1"){ exports("org.apache.commons.math3") }
+  automaticModule("com.zaxxer:SparseBitSet", "com.zaxxer")
+  module("commons-codec:commons-codec", "org.apache.commons.codec","1.15") {exports("org.apache.commons.codec")}
+
+
+    // postgres driver
+  module("org.postgresql:postgresql", "org.postgresql","42.1.4") {exports("org.postgresql") }
+
+  // Others | miscellanious
+  automaticModule("dom4j:dom4j", "dom4j")
+  automaticModule("org.slf4j:slf4j-api", "org.slf4j")
+  module("xml-apis:xml-apis", "xml.apis") {exports("xml.apis")}
+  module("stax:stax-api", "stax.api") {exports("stax.api")}
+
+}
+
+
+
+  //TODO : ADD SHADOWJAR CONFIGURATION
+
+
+
+dependencies {
+
+//  implementation("org.gradlex:extra-java-module-info:1.8")
+
+  implementation('org.controlsfx:controlsfx:11.1.2')
+  implementation('com.dlsc.formsfx:formsfx-core:11.6.0') {
+    exclude(group: 'org.openjfx')
+  }
+//  implementation('net.synedra:validatorfx:0.5.1') {
+//    exclude(group: 'org.openjfx')
+//  }
+
+  //icons
+  implementation('org.kordamp.ikonli:ikonli-javafx:12.3.1')
+  implementation 'org.kordamp.ikonli:ikonli-core:12.3.1'
+  implementation 'org.kordamp.ikonli:ikonli-materialdesign-pack:12.3.1'
+  implementation 'org.kordamp.ikonli:ikonli-materialdesign2-pack:12.3.1'
+
+
+
+  implementation('eu.hansolo:tilesfx:11.48') {
+    exclude(group: 'org.openjfx')
+  }
+
+  testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+
+
+
+  // itext for pdf files
+  implementation 'com.itextpdf:itext7-core:7.0.4'
+
+
+  // add jar files dependences from the LIBS dir
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+
+  // Driver for postgres server connection
+  implementation 'org.postgresql:postgresql:42.1.4'
+
+  // Apache poi for Excel read/write
+  implementation 'org.apache.poi:poi-ooxml:5.1.0'
+
+
+  // json read/write
+  implementation("com.google.code.gson:gson:2.8.6")
+
+    // Atlantafx theme
+  implementation 'io.github.mkpaz:atlantafx-base:2.0.1'
+
+
+
+}
+
+
+
+test {
+useJUnitPlatform()}
+
+jlink {
+  imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")
+  options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+  launcher {
+    name = 'app'
+  }
+}
+
+jlinkZip {
+  group = 'distribution'
+}
