@@ -7,7 +7,6 @@ plugins {
 
   // third party
   id("org.gradlex.extra-java-module-info") version "1.8"
-//  id("de.jjohannes.extra-java-module-info") version "0.6"
 }
 
 group 'smpro.app'
