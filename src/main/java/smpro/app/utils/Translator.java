@@ -2,10 +2,13 @@ package smpro.app.utils;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import smpro.app.ResourceUtil;
 
+import java.text.MessageFormat;
 import java.util.*;
 
 public class Translator {
+//    String RESOURCE_BASE = ResourceUtil.getAppResource("")
     static Locale sysLocale = Locale.getDefault();
     public static ObjectProperty<Locale> localeProperty = new SimpleObjectProperty<>(Locale.ENGLISH);
     public static ObjectProperty<Locale> localeAltProperty = new SimpleObjectProperty<>(Locale.FRENCH);
@@ -45,15 +48,26 @@ public class Translator {
 
 
     public static String getIntl(String key) {
-        ResourceBundle bundle = null;
+        String res;
+        try {
+            res =  ResourceBundle.getBundle(Store.RESOURCE_BASE_URL + "lang", localeProperty.get()).getString(key);
+        } catch (Exception err) {
+             res =  ResourceBundle.getBundle(Store.RESOURCE_BASE_URL + "lang", Locale.ENGLISH).getString(key);
 
+        }
+        return res;
 
-        return "";
     }
 
-    public static String getIntlAlt() {
+    public static String getIntlAlt(String key) {
+        String res;
+        try {
+            res =  ResourceBundle.getBundle(Store.RESOURCE_BASE_URL + "lang", localeAltProperty.get()).getString(key);
+        } catch (Exception err) {
+            res =  ResourceBundle.getBundle(Store.RESOURCE_BASE_URL + "lang", Locale.ENGLISH).getString(key);
 
-        return "";
+        }
+        return res;
     }
 
 }
