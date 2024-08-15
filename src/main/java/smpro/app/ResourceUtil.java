@@ -1,10 +1,19 @@
 package smpro.app;
 
 import javafx.scene.image.Image;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import smpro.app.utils.Store;
+import smpro.app.utils.Translator;
 
+import java.awt.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.*;
 import java.net.URL;
+import java.util.List;
 
 
 public class ResourceUtil {
@@ -20,13 +29,27 @@ public class ResourceUtil {
         return Entry.class.getResourceAsStream(pathFromRoot);
     }
 
-    public static InputStream getStystemFileStream(String filepath) {
-        return null;
+    public static InputStream getStystemFileStream(Stage parent,  List<FileChooser.ExtensionFilter> filter) {
+        FileChooser fileDialog = new FileChooser();
+        fileDialog.setTitle(Translator.getIntl("choose_file"));
+//        fileDialog.setInitialDirectory(new File(Store.desktopPath));
+        fileDialog.getExtensionFilters().addAll(filter);
+
+        File file = fileDialog.showOpenDialog(parent);
+
+        try {
+            return new FileInputStream(file);
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
-    public static Image getImageFromResource(String pathname, int w, int h) {
+    public static Image getImageFromResource(String pathname, int w, int h,boolean... preseveAspectRatio) {
 
-        return new Image(ResourceUtil.getResourceAsStream(pathname), w, h, true, true);
+        return new Image(ResourceUtil.getResourceAsStream(pathname), w, h, preseveAspectRatio.length >0 ? preseveAspectRatio[0] : true, true);
     }
 
 

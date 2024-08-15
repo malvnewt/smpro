@@ -21,8 +21,16 @@ module smpro.app {
     requires eu.hansolo;
 
 
-    //atlantafx for theming
+    //atlantafx and themes
     requires atlantafx.base;
+
+    //ribbons
+    requires com.pixelduke.fxribbon;
+
+    //postgres connection
+    requires java.sql;
+    requires org.postgresql.jdbc;
+
 
     opens smpro.app to javafx.fxml;
     exports smpro.app;

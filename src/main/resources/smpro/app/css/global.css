@@ -8,3 +8,80 @@
     -fx-background-color: transparent;
     -fx-font-weight: bold;
 }
+
+.titled-pane {
+    /*-fx-effect: dropshadow(gaussian, #aaa, 10, 0, 0, 0);*/
+    -fx-background-radius: 5;
+    -fx-background-insets: 0, 1;
+    /*-fx-background-color: linear-gradient(to bottom,#ccc,#aaa);*/
+    -fx-background-color: #eee;
+
+}
+
+.titled-pane > .title {
+    -fx-text-fill: #fff;
+    /*-fx-font-weight: bold;*/
+    -fx-effect: dropshadow(gaussian,#ccc,2,0,0,0);
+    -fx-background-color: linear-gradient(to bottom,#ddd,#eee);
+    -fx-padding: 5 10;
+
+
+}
+
+/*.titled-pane > .title > .arrow-button > .arrow{*/
+/*    -fx-shape: "M0,4 L8,0 L0,8 Z";*/
+/*    -fx-background-color: #242424;*/
+/*}*/
+
+/*.titled-pane > .content {*/
+/*    -fx-background-color: #fff;*/
+/*    -fx-padding: 10;*/
+/*    -fx-effect: innershadow(gaussian, #ccc, 5, 0, 0, 0);*/
+
+/*}*/
+
+.titled-pane >.title > .text {
+    -fx-text-fill: linear-gradient(to bottom, #fff, #cccccc);
+    -fx-effect: dropshadow(gaussian, #fff, 2, 0, 0, 0);
+
+}
+
+
+.image-border {
+    -fx-border-width: 1;
+    -fx-border-color: #24242445;
+    -fx-border-style: dashed;
+}
+
+.success-btn {
+    -fx-background-color: #20aaaa65;
+    /*-fx-text-fill: #242424;*/
+    -fx-text-fill: #242424e3;
+    -fx-padding: 5px 20px;
+    -fx-border-radius: 10px;
+
+}
+
+.link-color {
+    -fx-text-fill: #20a9ff;
+    -fx-cursor: hand;
+}
+
+.text-field {
+    -fx-background-color: #eeeeee90;
+    -fx-border-width: 1px;
+    -fx-border-color: lightgray;
+    -fx-font-weight: bold;
+    -fx-font-family: Consolas;
+}
+
+.smpro-large {
+    -fx-font-size: 55px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Bodoni MT Black";
+}
+.smpro-large-sub {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Bodoni MT"
+}

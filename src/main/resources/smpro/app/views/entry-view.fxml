@@ -58,7 +58,7 @@
                      <children>
                         <VBox layoutX="58.0" layoutY="119.0" prefHeight="720.0" prefWidth="250.0" spacing="2.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <HBox fx:id="menuexpanhb" alignment="CENTER_LEFT" maxHeight="60.0" minHeight="60.0" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                              <HBox fx:id="menuexpanhb" alignment="CENTER_LEFT" maxHeight="60.0" minHeight="60.0" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                                  <children>
                                     <Button fx:id="menuBtn" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" styleClass="transparent-btn">
                                        <cursor>
@@ -79,7 +79,7 @@
                                  </content>
                               </ScrollPane>
                               <Separator prefWidth="200.0" />
-                              <HBox fx:id="settingsContainer" alignment="CENTER_LEFT" maxHeight="60.0" minHeight="60.0" spacing="20.0">
+                              <HBox fx:id="settingsContainer" alignment="CENTER_LEFT" maxHeight="60.0" minHeight="60.0" spacing="30.0">
                                  <children>
                                     <Button fx:id="settingsBtn" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" styleClass="transparent-btn">
                                        <cursor>

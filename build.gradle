@@ -79,7 +79,7 @@ extraJavaModuleInfo {
 
 
     // postgres driver
-  module("org.postgresql:postgresql", "org.postgresql","42.1.4") {exports("org.postgresql") }
+//  module("org.postgresql:postgresql", "org.postgresql","42.6.2") {exports("org.postgresql") }
 
   //charts
   automaticModule("eu.hansolo:charts", "eu.hansolo")
@@ -91,8 +91,11 @@ extraJavaModuleInfo {
   module("xml-apis:xml-apis", "xml.apis") {exports("xml.apis")}
   module("stax:stax-api", "stax.api") {exports("stax.api")}
 
-  // jfoenix
+  // others
   automaticModule("dom4j:dom4j", "dom4j")
+
+  // fxribbon
+  automaticModule("com.pixelduke:fxribbon", "com.pixelduke.fxribbon")
 
 
 
@@ -124,6 +127,7 @@ dependencies {
 
 
 
+
   // charts
   implementation('eu.hansolo:tilesfx:11.48') {
     exclude(group: 'org.openjfx')
@@ -141,10 +145,10 @@ dependencies {
 
 
   // add jar files dependences from the LIBS dir
-    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation fileTree(dir: "lib", include: ["*.jar"])
 
   // Driver for postgres server connection
-  implementation 'org.postgresql:postgresql:42.1.4'
+  implementation 'org.postgresql:postgresql:42.6.2'
 
   // Apache poi for Excel read/write
   implementation 'org.apache.poi:poi-ooxml:5.1.0'
@@ -153,8 +157,14 @@ dependencies {
   // json read/write
   implementation("com.google.code.gson:gson:2.8.6")
 
-    // Atlantafx theme
+    // Themes
   implementation 'io.github.mkpaz:atlantafx-base:2.0.1'
+//  implementation 'org.jfxtras:jmetro:11.6.16'
+
+  //ribbons
+  implementation 'com.pixelduke:fxribbon:1.2.2'
+
+
 
 
 

@@ -18,14 +18,16 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.effect.Lighting;
+import javafx.scene.effect.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
@@ -36,6 +38,7 @@ import smpro.app.utils.ProjectUtils;
 import smpro.app.utils.Store;
 import smpro.app.utils.Translator;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.*;
@@ -56,6 +59,13 @@ public class EntryController implements Initializable {
     public Label expane_menu;
     public VBox menuitemsVb;
     public HBox settingsContainer;
+
+
+
+    public  ObjectProperty<Stage> thisStage = new SimpleObjectProperty<>();
+
+
+
 
 
     List<String> featureNames = List.of(
@@ -85,6 +95,8 @@ public class EntryController implements Initializable {
 
     ObjectProperty<Node> selectedFeatureProperty = new SimpleObjectProperty<>();
 
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         features.put("dicipline_conduct", "discipline1.png");
@@ -98,6 +110,8 @@ public class EntryController implements Initializable {
     public void configureUi() {
 //        ProjectUtils.animatePaneSide(menupane,'w', Store.MENU_COLLAPSE_WIDTH);
         menupane.setMaxWidth(Store.MENU_COLLAPSE_WIDTH);
+
+
 
         // set menu and setting icons
         menuBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignM.MENU, 70, Paint.valueOf("gray")));
@@ -123,13 +137,13 @@ public class EntryController implements Initializable {
         settingsBtn.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/menu_icons/setting2.png", 50, 50)));
 
         settingsBtn.setOnAction(e -> {
-            ProjectUtils.shakeX(settingsBtn, -5).play();
 
-            if (menuIsExpanded.get()) {
-                menupane.setMinWidth(Store.MENU_COLLAPSE_WIDTH);
-                ProjectUtils.animatePaneSide(menupane, 'w', Store.MENU_COLLAPSE_WIDTH);
-                menuIsExpanded.set(!menuIsExpanded.get());
+            try {
+                ProjectUtils.openSettings(0,thisStage.get());
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
+            ProjectUtils.shakeX(settingsContainer, -5).play();
 
         });
 
@@ -139,8 +153,9 @@ public class EntryController implements Initializable {
         for (HBox h : new HBox[]{menuexpanhb, settingsContainer}) {
             h.addEventHandler(MouseEvent.MOUSE_ENTERED, this::handleMouseEnter);
             h.addEventHandler(MouseEvent.MOUSE_EXITED, this::handleMouseLeave);
-            h.addEventHandler(MouseEvent.MOUSE_PRESSED, this::handleMousePressed);
         }
+          menuexpanhb.addEventHandler(MouseEvent.MOUSE_PRESSED, this::handleMousePressed);
+          settingsContainer.addEventHandler(MouseEvent.MOUSE_PRESSED, this::handleSettingsPressed);
 
         //////////////////////
         insertMenuItems();
@@ -179,11 +194,15 @@ public class EntryController implements Initializable {
             fButton.setTooltip(ProjectUtils.createTooltip(Translator.getIntl(featureName).toUpperCase()));
             fButton.setCursor(Cursor.HAND);
 
+
+
             HBox hb = new HBox(fButton,fLabel);
             hb.setSpacing(20);
             hb.setAlignment(Pos.CENTER_LEFT);
             hb.setPadding(new Insets(5));
             hb.setId(featureName);
+
+//            hb.setEffect(dropshadowEffect);
 
             hb.addEventHandler(MouseEvent.MOUSE_ENTERED,this::handleMouseEnter);
             hb.addEventHandler(MouseEvent.MOUSE_EXITED,this::handleMouseLeave);
@@ -201,7 +220,7 @@ public class EntryController implements Initializable {
 
             if (index==0){
                 selectedFeatureProperty.set(hb);
-                hb.setStyle("-fx-background-color: "+Store.Colors.LightGray);
+                hb.setStyle("-fx-background-color: "+Store.Colors.selectionBg);
             }
 
             menuitemsVb.getChildren().add(hb);
@@ -219,9 +238,13 @@ public class EntryController implements Initializable {
     }
 
 
+
+
+
+
     public void handleMouseEnter(MouseEvent event) {
         HBox source = (HBox) event.getSource();
-        source.setStyle("-fx-background-color: "+Store.Colors.lightestGray);
+        source.setStyle("-fx-background-color: "+Store.Colors.hoverbg);
 
     }
 
@@ -229,14 +252,13 @@ public class EntryController implements Initializable {
         HBox source = (HBox) event.getSource();
 
         if (!Objects.equals(source.getId(), selectedFeatureProperty.get().getId())) source.setStyle("-fx-background-color: transparent");
-        if (Objects.equals(source.getId(), selectedFeatureProperty.get().getId())) source.setStyle("-fx-background-color: "+Store.Colors.LightGray);
+        if (Objects.equals(source.getId(), selectedFeatureProperty.get().getId())) source.setStyle("-fx-background-color: "+Store.Colors.selectionBg);
 
     }
 
     public void handleMousePressed(MouseEvent event) {
         HBox source = (HBox) event.getSource();
 
-//        Animations.pulse(source).play();
         ProjectUtils.shakeX(source, -5).play();
 
 
@@ -244,6 +266,20 @@ public class EntryController implements Initializable {
         ProjectUtils.animatePaneSide(menupane, 'w', Store.MENU_COLLAPSE_WIDTH);
         menuBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignM.MENU, 70, Paint.valueOf("gray")));
         menuIsExpanded.set(false);
+
+    }
+
+
+    public void handleSettingsPressed(MouseEvent event) {
+//        Animations.pulse(source).play();
+
+        try {
+            ProjectUtils.openSettings(0,thisStage.get());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        ProjectUtils.shakeX(settingsContainer, -5).play();
+
 
     }
 
