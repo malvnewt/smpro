@@ -1,32 +1,42 @@
 package smpro.app.utils;
 
+import eu.hansolo.tilesfx.addons.Switch;
 import javafx.animation.*;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.Image;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignM;
-import smpro.app.Entry;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
 import smpro.app.ResourceUtil;
 import smpro.app.SettingsController;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -158,6 +168,7 @@ public class ProjectUtils {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(parent);
         stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
+        stage.setResizable(false);
 
 //        new JMetro(Style.LIGHT).setScene(scene);
 
@@ -186,6 +197,7 @@ public class ProjectUtils {
 
 
 
+
     public static void clickShakeHandler(MouseEvent event,boolean... isVertical) {
         Node source = (Node) event.getSource();
 
@@ -198,6 +210,157 @@ public class ProjectUtils {
 
 
     }
+
+    public static Stage showFloatingNode(
+            Node content,Stage parentStage,
+            Node parent,double hoffset,double voffset,
+            boolean movable,
+            Pos... position
+    ) {
+        // create floating nodestage4
+        Stage s = new Stage(StageStyle.UNDECORATED);
+
+
+        VBox vb = new VBox(content);
+        vb.setPadding(new Insets(5));
+        vb.setStyle("-fx-background-color: " + Store.Colors.black);
+
+
+        if (movable) {
+            vb.setCursor(Cursor.MOVE);
+
+            //apply move login
+
+        }
+
+
+        s.setScene(new Scene(vb));
+        s.show();
+        s.sizeToScene();
+
+
+
+        double parentMinx = parent.getLayoutBounds().getMinX();
+        double parentMinY = parent.getLayoutBounds().getMinY();
+
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+
+        double parentStageWidth = parentStage.getWidth();
+        double parentStageHeight = parentStage.getHeight();
+
+
+
+        Point2D parentInScene = parent.localToScene(parentMinx, parentMinY);
+
+
+        Pos pos = position.length > 0 ? position[0] : Pos.CENTER_RIGHT;
+    if (pos==Pos.CENTER_RIGHT) {
+                hoffset+=parent.getLayoutBounds().getWidth();
+//                voffset += parent.getLayoutBounds().getHeight();
+
+            } else if (pos==Pos.CENTER_LEFT) {
+                hoffset-=parentStageWidth;
+//                voffset += parent.getLayoutBounds().getHeight();
+            }
+
+
+
+
+        s.setX(parentInScene.getX() + (bounds.getWidth()/2)-(parentStageWidth/2)+hoffset);
+        s.setY(parentInScene.getY() + (bounds.getHeight()/2)-(parentStageHeight/2)+voffset);
+
+        return s;
+
+
+
+    }
+
+    public static void showFloatingTooltip(
+            Node content,Stage parentStage,
+            Node parent,double hoffset,double voffset
+
+
+    ) {
+
+        Tooltip tp = new Tooltip();
+        tp.setGraphic(content);
+        tp.setShowDelay(Duration.millis(100));
+        tp.setStyle("-fx-background-color:"+ Store.Colors.black);
+
+        // create floating nodestage4
+
+        double parentMinx = parent.getLayoutBounds().getMinX();
+        double parentMinY = parent.getLayoutBounds().getMinY();
+
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+
+        double parentStageWidth = parentStage.getWidth();
+        double parentStageHeight = parentStage.getHeight();
+
+
+
+        Point2D parentInScene = parent.localToScene(parentMinx, parentMinY);
+
+
+//        double x = parentInScene.getX() + (bounds.getWidth()/2)-(parentStageWidth/2) + parent.getLayoutBounds().getWidth()+hoffset;
+//        double y = parentInScene.getY() + (bounds.getHeight()/2)-(parentStageHeight/2)+voffset;
+        double x = parentInScene.getX() +  parentStage.getX() + parent.getLayoutBounds().getWidth() +hoffset;
+        double y = parentInScene.getY() + parentStage.getY() + parent.getLayoutBounds().getHeight()  +voffset;
+
+        tp.show(parent,x,y);
+
+        tp.setAutoHide(true);
+        parent.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> tp.hide());
+
+
+
+    }
+
+
+    public static Alert showAlert(Stage parent, Alert.AlertType type,String header, String title, String message, ButtonType... buttons) {
+
+        Alert a = new Alert(type,message,buttons);
+        a.setTitle(title);
+//        a.setContentText(message);
+        a.setHeaderText(header);
+        a.initOwner(parent);
+        a.initModality(Modality.WINDOW_MODAL);
+//        a.initStyle(StageStyle.UNDECORATED);
+
+//        a.getDialogPane().getScene().setFill(Paint.valueOf(Store.Colors.lightestGray));
+
+
+
+        switch (type) {
+            case INFORMATION ->
+                    a.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/info.png", 50, 50)));
+
+            case WARNING ->
+                    a.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/warning.png", 50, 50)));
+            case CONFIRMATION ->
+                    a.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/question2.png", 50, 50)));
+
+            default ->
+                    a.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/success.png", 50, 50)));
+        }
+
+
+        return a;
+
+    }
+
+
+
+
+    /// tabpane animation
+
+//    public static Timeline tabTranslationIn(Pane tab, double from, double to) {
+//        Timeline t = new Timeline(
+//                new KeyFrame(Duration.ZERO,new KeyValue(tab.translateXProperty(),400))
+//        )
+//    }
+
+
 
 
 

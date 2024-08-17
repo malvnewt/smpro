@@ -239,9 +239,6 @@ public class EntryController implements Initializable {
 
 
 
-
-
-
     public void handleMouseEnter(MouseEvent event) {
         HBox source = (HBox) event.getSource();
         source.setStyle("-fx-background-color: "+Store.Colors.hoverbg);
@@ -280,6 +277,11 @@ public class EntryController implements Initializable {
         }
         ProjectUtils.shakeX(settingsContainer, -5).play();
 
+
+    }
+
+
+    public void refreshApp() {
 
     }
 

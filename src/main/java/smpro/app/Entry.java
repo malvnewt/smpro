@@ -5,6 +5,7 @@ import atlantafx.base.theme.*;
 import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -14,6 +15,7 @@ import javafx.scene.effect.Light;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import smpro.app.utils.PgConnector;
 import smpro.app.utils.ProjectUtils;
 import smpro.app.utils.Store;
@@ -59,7 +61,7 @@ public class Entry extends Application {
         }
 
 
-        //TODO show academic years and Language Locale window   ->
+
 
         URL mainurl = ResourceUtil.getAppResourceURL("views/entry-view.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader(mainurl);
@@ -104,6 +106,7 @@ class SessionHandler {
         Connection baseconn;
         System.out.println("initialising sessionhandler");
 
+
         try {
              baseconn =  PgConnector.initConnect(PgConnector.baseDbname,PgConnector.dbHost);
             System.out.println(baseconn);
@@ -115,8 +118,9 @@ class SessionHandler {
             Parent root =fxmlLoader.load();
 
 
-            Stage stage = new Stage();
+            Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setScene(new Scene(root));
+
 
 
 
@@ -128,6 +132,12 @@ class SessionHandler {
 
             ConnectController controller = fxmlLoader.getController();
             controller.thisStage.set(stage);
+
+
+            //get databases
+            List<HashMap<String, Object>> dbObjects = PgConnector.fetch("select * from  databases order by id",PgConnector.baseConnection.get()
+            );
+            controller.dbs.set(FXCollections.observableList(dbObjects));
 
             stage.showAndWait();
 
@@ -143,10 +153,7 @@ class SessionHandler {
             System.err.println(e.getLocalizedMessage());
         }
 
-        //get databases
 
-        List<HashMap<String, Object>> dbObjects = PgConnector.fetch("select * from  databases order by id",PgConnector.baseConnection.get()
-        );
 
 
 

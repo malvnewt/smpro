@@ -46,6 +46,18 @@ public class ResourceUtil {
 
 
     }
+    public static String getStystemFilePath(Stage parent,  List<FileChooser.ExtensionFilter> filter) {
+        FileChooser fileDialog = new FileChooser();
+        fileDialog.setTitle(Translator.getIntl("choose_file"));
+//        fileDialog.setInitialDirectory(new File(Store.desktopPath));
+        fileDialog.getExtensionFilters().addAll(filter);
+
+        File file = fileDialog.showOpenDialog(parent);
+
+        return file.getAbsolutePath();
+
+
+    }
 
     public static Image getImageFromResource(String pathname, int w, int h,boolean... preseveAspectRatio) {
 

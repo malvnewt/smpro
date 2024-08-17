@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="548.0" prefWidth="912.0" stylesheets="@../css/global.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.SettingsController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0" prefWidth="912.0" stylesheets="@../css/global.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.SettingsController">
    <center>
       <TabPane fx:id="settingsTabpane" prefHeight="200.0" prefWidth="200.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
@@ -35,7 +35,7 @@
                               <VBox prefHeight="533.0" prefWidth="847.0" spacing="5.0" VBox.vgrow="ALWAYS">
                                  <children>
                                     <Accordion />
-                                    <GridPane hgap="10.0" prefHeight="240.0" prefWidth="892.0" vgap="10.0" VBox.vgrow="ALWAYS">
+                                    <GridPane hgap="10.0" prefHeight="301.0" prefWidth="892.0" vgap="10.0" VBox.vgrow="ALWAYS">
                                       <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="293.0" minWidth="10.0" prefWidth="288.0" />
@@ -43,6 +43,7 @@
                                           <ColumnConstraints hgrow="SOMETIMES" maxWidth="243.0" minWidth="10.0" prefWidth="243.0" />
                                       </columnConstraints>
                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
@@ -50,27 +51,29 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
                                       </rowConstraints>
                                        <children>
-                                          <Label text="%school_name" />
-                                          <Label text="%alt_schoolname" GridPane.rowIndex="1" />
-                                          <Label text="%principal" GridPane.rowIndex="2" />
-                                          <Label text="%institution_type" GridPane.rowIndex="3" />
-                                          <Label text="%motto" GridPane.rowIndex="4" />
-                                          <TextField promptText="governement bilingual high school" GridPane.columnIndex="1" />
-                                          <TextField promptText="GBHS" GridPane.columnIndex="3" />
-                                          <TextField promptText="lycee bilingue d'edea" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                          <TextField promptText="LBE" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                                          <TextField prefHeight="25.0" prefWidth="243.0" promptText="%PRINCIPAL_NAME" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
-                                          <ComboBox prefHeight="25.0" prefWidth="733.0" promptText="%primary_secondary" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                          <TextField promptText="eg Knowledge in the service of humanity" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4" />
-                                          <Label text="%abbreviation" GridPane.columnIndex="2" />
-                                          <Label text="%alt_abbr" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                          <Label text="%bussiness_unit" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                                          <ComboBox prefHeight="25.0" prefWidth="253.0" promptText="%private_public" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                                          <Label text="%school_name" GridPane.rowIndex="1" />
+                                          <Label text="%alt_schoolname" GridPane.rowIndex="2" />
+                                          <Label text="%principal" GridPane.rowIndex="3" />
+                                          <Label text="%institution_type" GridPane.rowIndex="4" />
+                                          <Label text="%motto" GridPane.rowIndex="5" />
+                                          <TextField fx:id="schoolnamefield" promptText="governement bilingual high school" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <TextField fx:id="abbfield" promptText="GBHS" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                          <TextField fx:id="namealtField" promptText="lycee bilingue d'edea" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                          <TextField fx:id="abbrAltfield" promptText="LBE" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                          <TextField fx:id="principalfield" prefHeight="25.0" prefWidth="243.0" promptText="%PRINCIPAL_NAME" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+                                          <ComboBox fx:id="institutionCombo" prefHeight="25.0" prefWidth="733.0" promptText="%primary_secondary" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                          <TextField fx:id="mottofield" promptText="eg Knowledge in the service of humanity" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5" />
+                                          <Label text="%abbreviation" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                          <Label text="%alt_abbr" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                          <Label text="%bussiness_unit" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                                          <ComboBox fx:id="secotorCombo" prefHeight="25.0" prefWidth="253.0" promptText="%private_public" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                                          <Label prefHeight="30.0" prefWidth="117.0" styleClass="section-title" text="%general_info" />
                                        </children>
                                     </GridPane>
                                     <Separator prefWidth="200.0" />
-                                    <HBox alignment="CENTER" prefHeight="184.0" prefWidth="892.0" spacing="20.0" VBox.vgrow="ALWAYS">
+                                    <HBox alignment="CENTER" prefHeight="143.0" prefWidth="892.0" spacing="20.0" VBox.vgrow="ALWAYS">
                                        <children>
+                                          <Label prefHeight="30.0" prefWidth="227.0" styleClass="section-title" text="%school_logo" HBox.hgrow="ALWAYS" />
                                           <Button fx:id="importImgbtn" minHeight="50.0" minWidth="200.0" mnemonicParsing="false" text="%import_dragimage">
                                              <cursor>
                                                 <Cursor fx:constant="HAND" />
@@ -101,10 +104,10 @@
                               <Separator prefWidth="200.0" />
                               <HBox prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <ButtonBar minHeight="50.0" prefHeight="59.0" prefWidth="847.0" HBox.hgrow="ALWAYS">
+                                    <ButtonBar minHeight="44.0" prefHeight="44.0" prefWidth="892.0" HBox.hgrow="ALWAYS">
                                       <buttons>
                                         <Button fx:id="savebaseBtn" mnemonicParsing="false" styleClass="success-btn" text="%save_changes" />
-                                          <Button fx:id="next1" mnemonicParsing="false" text="%next">
+                                          <Button fx:id="nextBtnBase" mnemonicParsing="false" text="%next">
                                              <styleClass>
                                                 <String fx:value="transparent-btn" />
                                                 <String fx:value="link-color" />
@@ -130,7 +133,83 @@
           </Tab>
           <Tab fx:id="addresstab" text="%address_security">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <VBox layoutX="274.0" layoutY="118.0" prefHeight="519.0" prefWidth="912.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <GridPane hgap="10.0" prefHeight="290.0" prefWidth="892.0" vgap="10.0" VBox.vgrow="ALWAYS">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints maxHeight="30.0" minHeight="0.0" prefHeight="32.0" valignment="TOP" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="%regional_del" GridPane.rowIndex="1" />
+                                    <Label text="%divisional_del" GridPane.rowIndex="2" />
+                                    <Label fx:id="townl" text="%town_city" GridPane.rowIndex="3" />
+                                    <Label fx:id="addressl" text="%address_full" GridPane.rowIndex="4" />
+                                    <Label fx:id="phonel" text="%phone_contacts" GridPane.rowIndex="5" />
+                                    <Label fx:id="emall" text="%email" GridPane.rowIndex="6" />
+                                    <Label text="%pobox" GridPane.rowIndex="7" />
+                                    <TextField fx:id="regionfield" promptText="eg Littoral" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                    <TextField fx:id="divisionfield" promptText="eg Sanaga Maritime, Meme ..." GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                    <TextField fx:id="townfield" promptText="eg Douala, Yaounde" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                                    <TextField fx:id="addressField" promptText="eg Rond Point Bonamoussadi" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                                    <TextField fx:id="lineonef" promptText="line 1" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <TextField fx:id="linetwof" promptText="line 2" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                                    <TextField fx:id="emailf" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6" />
+                                    <TextField fx:id="poboxfield" promptText="254,547 ..." GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7" />
+                                    <Label prefWidth="164.0" styleClass="section-title" text="%address_information" GridPane.columnSpan="3" />
+                                 </children>
+                              </GridPane>
+                              <Separator prefWidth="200.0" />
+                              <GridPane hgap="10.0" prefWidth="892.0" vgap="10.0" VBox.vgrow="ALWAYS">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints maxHeight="30.0" minHeight="0.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label fx:id="usernamel" text="%admin_username" GridPane.rowIndex="1" />
+                                    <Label fx:id="passl" text="%admin_password" GridPane.rowIndex="2" />
+                                    <TextField fx:id="passfield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                    <TextField fx:id="usernamefield" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                    <Label styleClass="section-title" text="%access_control" />
+                                 </children>
+                              </GridPane>
+                              <Separator prefWidth="200.0" />
+                              <ButtonBar prefHeight="45.0" prefWidth="892.0">
+                                <buttons>
+                                  <Button fx:id="saveAdressBtn" mnemonicParsing="false" styleClass="success-btn" text="%save_changes" />
+                                    <Button fx:id="nextAdressTab" mnemonicParsing="false" text="%next">
+                                       <styleClass>
+                                          <String fx:value="link-color" />
+                                          <String fx:value="transparent-btn" />
+                                       </styleClass>
+                                    </Button>
+                                </buttons>
+                              </ButtonBar>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </children></AnchorPane>
             </content>
           </Tab>
             <Tab fx:id="academicyeartab" text="%academic_year_setting">

@@ -12,7 +12,15 @@ public class Translator {
     static Locale sysLocale = Locale.getDefault();
     public static ObjectProperty<Locale> localeProperty = new SimpleObjectProperty<>(Locale.ENGLISH);
     public static ObjectProperty<Locale> localeAltProperty = new SimpleObjectProperty<>(Locale.FRENCH);
-    public static List<Locale> supportedLocales = List.of(Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN, Locale.CHINESE, Locale.ITALIAN, Locale.of("es"));
+    public static List<Locale> supportedLocales = List.of(
+            Locale.ENGLISH,
+            Locale.FRENCH,
+            Locale.GERMAN,
+            Locale.CHINESE,
+//            Locale.ITALIAN,
+            Locale.of("ru"),
+            Locale.of("es")
+    );
 
     static {
         localeProperty.addListener(((observableValue, oldloc, newloc) -> {
@@ -52,6 +60,7 @@ public class Translator {
         try {
             res =  ResourceBundle.getBundle(Store.RESOURCE_BASE_URL + "lang", localeProperty.get()).getString(key);
         } catch (Exception err) {
+            System.err.println(err.getLocalizedMessage());
              res =  ResourceBundle.getBundle(Store.RESOURCE_BASE_URL + "lang", Locale.ENGLISH).getString(key);
 
         }

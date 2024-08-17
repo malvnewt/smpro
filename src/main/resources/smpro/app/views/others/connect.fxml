@@ -18,6 +18,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="995.0" stylesheets="@../../css/global.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.ConnectController">
    <center>
@@ -71,9 +72,9 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="Academic Year / Annee Sc." />
+                        <Label text="Academic Year / Annee Scolaire." />
                         <Label text="Language / Langue" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="yearcombo" prefHeight="25.0" prefWidth="228.0" GridPane.columnIndex="1" />
+                        <ComboBox fx:id="yearcombo" prefHeight="25.0" prefWidth="228.0" promptText="%select_project" GridPane.columnIndex="1" />
                         <ComboBox fx:id="langcombo" prefHeight="25.0" prefWidth="229.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                      <padding>
@@ -94,45 +95,65 @@
                         <Label fx:id="usernamel" text="Admin Username *" />
                         <Label fx:id="passl" text="Admin Password *" GridPane.rowIndex="1" />
                         <TextField fx:id="usernamefield" promptText="type..." styleClass="text-field" GridPane.columnIndex="1" />
-                        <TextField fx:id="passfi8eld" promptText="min 4 char ..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="passfi8eld" promptText="min 6 char ..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </GridPane>
                   <Separator prefWidth="200.0" />
-                  <HBox alignment="CENTER" prefHeight="109.0" prefWidth="472.0" spacing="10.0">
+                  <VBox>
                      <children>
-                        <Label fx:id="createnewl" text="New Project" />
-                        <Button fx:id="newProjectbtn" minHeight="40.0" minWidth="40.0" mnemonicParsing="false">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </Button>
-                        <Separator orientation="VERTICAL" prefHeight="200.0" />
-                        <ButtonBar prefHeight="47.0" prefWidth="245.0">
-                          <buttons>
-                            <Button fx:id="cancelbtn" mnemonicParsing="false" text="Quit">
+                        <HBox alignment="CENTER" prefHeight="109.0" prefWidth="472.0" spacing="10.0">
+                           <children>
+                              <Label fx:id="createnewl" text="New Project" />
+                              <Button fx:id="newProjectbtn" minHeight="40.0" minWidth="40.0" mnemonicParsing="false">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </Button>
-                              <Button fx:id="confirmBtn" mnemonicParsing="false" styleClass="success-btn" text="Connect">
-                                 <cursor>
-                                    <Cursor fx:constant="HAND" />
-                                 </cursor>
-                              </Button>
-                          </buttons>
+                              <Separator orientation="VERTICAL" prefHeight="200.0" />
+                              <ButtonBar prefHeight="47.0" prefWidth="245.0">
+                                <buttons>
+                                    <Button fx:id="confirmBtn" mnemonicParsing="false" styleClass="success-btn" text="Connect">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                  <Button fx:id="cancelbtn" mnemonicParsing="false" text="Quit">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                </buttons>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </ButtonBar>
+                           </children>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding>
-                        </ButtonBar>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label prefHeight="17.0" prefWidth="346.0" style="-fx-font-style: italic;" styleClass="advert-text" text="MARVIN NEWTON     ">
+                                 <padding>
+                                    <Insets left="10.0" />
+                                 </padding>
+                                 <font>
+                                    <Font size="10.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="17.0" prefWidth="475.0" style="-fx-font-style: italic;" styleClass="advert-text" text="marvinnewton.dev@gmail.com    671686616 / 690145680" textAlignment="RIGHT" underline="true" />
+                           </children>
+                        </HBox>
                      </children>
-                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding>
-                  </HBox>
+                  </VBox>
                </children>
+               <padding>
+                  <Insets left="10.0" right="10.0" />
+               </padding>
             </VBox>
          </children>
       </HBox>
