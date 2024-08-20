@@ -78,8 +78,6 @@ extraJavaModuleInfo {
   module("commons-codec:commons-codec", "org.apache.commons.codec","1.15") {exports("org.apache.commons.codec")}
 
 
-    // postgres driver
-//  module("org.postgresql:postgresql", "org.postgresql","42.6.2") {exports("org.postgresql") }
 
   //charts
   automaticModule("eu.hansolo:charts", "eu.hansolo")
@@ -159,7 +157,6 @@ dependencies {
 
     // Themes
   implementation 'io.github.mkpaz:atlantafx-base:2.0.1'
-//  implementation 'org.jfxtras:jmetro:11.6.16'
 
   //ribbons
   implementation 'com.pixelduke:fxribbon:1.2.2'

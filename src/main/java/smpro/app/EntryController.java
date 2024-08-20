@@ -69,20 +69,29 @@ public class EntryController implements Initializable {
 
 
     List<String> featureNames = List.of(
-            "dashboard", "students", "teachers", "classes", "human_resource",
-            "score_records", "timetable", "dicipline_conduct", "suiveillance", "reports_transcripts",
-            "announcement", "library"
+            "dashboard",
+//            "students",
+            "teachers",
+            "classes",
+            "human_resource",
+            "score_records",
+            "timetable",
+            "dicipline_conduct",
+            "suiveillance",
+            "reports_transcripts",
+            "announcement",
+            "library"
     );
 
     public HashMap<String, String> features = new HashMap<>(Map.of(
-            "dashboard","dashboard1.png",
-            "students","students.png",
+            "dashboard","dashboard3.png",
+//            "students","students.png",
             "teachers","teachers.png",
             "classes","class.png",
             "score_records","marksheet.png",
             "timetable","timetable.png",
             "human_resource","hr.png",
-            "reports_transcripts","reports2.png",
+            "reports_transcripts","reports3.png",
             "announcement","messages2.png"
     ));
 

@@ -18,6 +18,8 @@ public class Store {
     public static double MENU_COLLAPSE_WIDTH = 75d;
     public static double MENU_EXPAND_WIDTH = 280d;
 
+    public static String baseDateFormat = "EEEE, MMMM dd, uuuu";
+
 
     public static class Colors{
         public static String Gray = "gray";
@@ -61,6 +63,21 @@ public class Store {
         public static String University = "university_institution";
 
         public static List<String> supportedInstitutions = List.of(Primary, Secondary, University);
+
+
+
+    }
+
+    public static class SubjectCategories {
+        public static String Science = "science";
+        public static String SocialScience = "social_science";
+        public  static String Arts = "arts";
+        public static String Professional = "professional";
+        public static String Language = "language";
+        public static String Practical = "practical";
+        public static String Other = "other";
+
+        public static List<String> SupportedCategories = List.of(Science,Arts,Professional,Practical,Language,Other);
 
 
 

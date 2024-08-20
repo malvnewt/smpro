@@ -23,6 +23,7 @@ module smpro.app {
 
     //atlantafx and themes
     requires atlantafx.base;
+    requires org.jfxtras.styles.jmetro;
 
     //ribbons
     requires com.pixelduke.fxribbon;
@@ -33,5 +34,6 @@ module smpro.app {
 
 
     opens smpro.app to javafx.fxml;
+    opens smpro.app.controllers to javafx.fxml;
     exports smpro.app;
 }

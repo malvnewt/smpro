@@ -2,6 +2,8 @@ package smpro.app.utils;
 
 import eu.hansolo.tilesfx.addons.Switch;
 import javafx.animation.*;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -24,7 +26,10 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import javafx.util.Duration;
+import jfxtras.styles.jmetro.JMetro;
+import jfxtras.styles.jmetro.Style;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
@@ -35,10 +40,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Time;
 import java.text.DateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 import static atlantafx.base.util.Animations.EASE;
 
@@ -170,7 +174,7 @@ public class ProjectUtils {
         stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
         stage.setResizable(false);
 
-//        new JMetro(Style.LIGHT).setScene(scene);
+//        new JMetro(Style.DARK).setScene(scene);
 
 
 
@@ -189,11 +193,16 @@ public class ProjectUtils {
 
     }
 
-    public static String getFormatedDate(long epochTime, DateFormat formatter) {
+    public static String getFormatedDate(long epochTime, DateFormat formatter, Locale... locale) {
         Date date = new Date(epochTime);
         return formatter.format(date);
 
     }
+    public static String getFormatedDate(LocalDate ld,DateTimeFormatter dtf){
+        return ld.format(dtf);
+
+    }
+
 
 
 
@@ -285,7 +294,7 @@ public class ProjectUtils {
         Tooltip tp = new Tooltip();
         tp.setGraphic(content);
         tp.setShowDelay(Duration.millis(100));
-        tp.setStyle("-fx-background-color:"+ Store.Colors.black);
+//        tp.setStyle("-fx-background-color:"+ Store.Colors.black);
 
         // create floating nodestage4
 
@@ -330,7 +339,6 @@ public class ProjectUtils {
 //        a.getDialogPane().getScene().setFill(Paint.valueOf(Store.Colors.lightestGray));
 
 
-
         switch (type) {
             case INFORMATION ->
                     a.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/info.png", 50, 50)));
@@ -354,18 +362,96 @@ public class ProjectUtils {
 
     /// tabpane animation
 
-//    public static Timeline tabTranslationIn(Pane tab, double from, double to) {
-//        Timeline t = new Timeline(
-//                new KeyFrame(Duration.ZERO,new KeyValue(tab.translateXProperty(),400))
-//        )
-//    }
+    public static Timeline tabTranslation(Pane rootpane, double from, double to) {
+        Timeline t = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(rootpane.translateXProperty(), from)),
+                new KeyFrame(Duration.millis(200), new KeyValue(rootpane.translateXProperty(), to))
+        );
+        t.setCycleCount(1);
+        t.setDelay(Duration.ZERO);
+
+        return t;
+    }
+
+
+    public static TableColumn<HashMap<String,Object>, String> createTableColumn(String label,String dataKey) {
+
+        TableColumn<HashMap<String,Object>, String> col = new TableColumn<>(label);
+
+        col.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<HashMap<String,Object>, String> call(TableColumn<HashMap<String,Object>, String> colData) {
+                return new TableCell<>(){
+                    @Override
+                    protected void updateItem(String s, boolean b) {
+                        super.updateItem(s, b);
+
+                        if (!b) {
+                            String itemText = String.valueOf(getItem());
+                            setText(itemText);
+//                            setPadding(new Insets(5, 5, 5, 10));
+                            setStyle("-fx-font-family: Consolas;-fx-font-size: 14px");
+
+                            setTooltip(new Tooltip(itemText));
+
+                        }else {
+                            setText(null);
+                            setGraphic(null);
+
+                        }
+                    }
+                };
+
+            }
+        });
+
+        col.setCellValueFactory(coldataitem -> {
+          HashMap<String,Object> dataitem =   coldataitem.getValue();
+            return new SimpleStringProperty(String.valueOf(dataitem.get(dataKey)));
+
+        });
+
+
+        return col;
+
+
+    }
+
+
+    public static TextInputDialog getTextDialog(Stage parent,String title,String headertext,String contentText,Node graphic) {
+        TextInputDialog textInputDialog = new TextInputDialog();
+        textInputDialog.initModality(Modality.WINDOW_MODAL);
+        textInputDialog.initOwner(parent);
+        textInputDialog.setTitle(title);
+        textInputDialog.setHeaderText(headertext);
+        textInputDialog.setContentText(contentText);
+
+        textInputDialog.getEditor().setMinWidth(300);
+
+        textInputDialog.setGraphic(graphic);
+
+
+        return textInputDialog;
+    }
+
+
+    public static Label createErrorLabel(String errText) {
+        return new ErrorLabel(errText);
+    }
 
 
 
 
 
 
+}
 
 
+class ErrorLabel extends Label {
+    private final String labelText;
 
+    ErrorLabel(String labelText) {
+        this.labelText = labelText;
+        this.setStyle("-fx-text-fill: orange;-fx-font-weight: bold;-fx-padding: 5px");
+    }
 }

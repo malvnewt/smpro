@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.security.cert.CertificateRevokedException;
 import java.sql.*;
 import java.util.*;
@@ -91,13 +92,21 @@ public class PgConnector {
 
 
     }
-    public static void insert(String query) throws SQLException {
-        System.out.println(query);
-        Statement statement = connection.get().createStatement();
-        statement.execute(query);
+    public static void insert(String query) {
 
-        statement.close();
-        System.out.printf("insert successfull");
+        try {
+            System.out.println(query);
+            Statement statement = connection.get().createStatement();
+            statement.execute(query);
+
+            statement.close();
+            System.out.printf("insert successfull");
+
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+
+        }
+
 
     }
     public static void update(String query)  {
@@ -192,6 +201,14 @@ public class PgConnector {
         if (Objects.equals(null,val)) return "";
 
         return String.valueOf(val);
+
+    }
+    public static Number getNumberOrNull(HashMap<String, Object> obj, String key) {
+
+        Object val = obj.get(key);
+        if (Objects.equals(null,val)) return null;
+
+        return (Number) val;
 
     }
 

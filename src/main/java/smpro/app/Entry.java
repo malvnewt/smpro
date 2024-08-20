@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
 import smpro.app.utils.PgConnector;
 import smpro.app.utils.ProjectUtils;
 import smpro.app.utils.Store;
@@ -45,8 +46,8 @@ public class Entry extends Application {
 
 
         // Set UI theme
-        Application.setUserAgentStylesheet(new NordLight().getUserAgentStylesheet());
-//        Application.setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
+//        Application.setUserAgentStylesheet(new NordLight().getUserAgentStylesheet());
+        Application.setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
 //        Application.setUserAgentStylesheet(new Dracula().getUserAgentStylesheet());
 //        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
 //        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());****
@@ -70,6 +71,11 @@ public class Entry extends Application {
         Scene scene = new Scene(root, 320, 240);
         scene.getStylesheets().add(ResourceUtil.getAppResourceURL("css/global.css").toExternalForm());
 
+//       JMetro metro =  new JMetro(Style.LIGHT);
+//        metro.setScene(scene);
+//        metro.getOverridingStylesheets().add(ResourceUtil.getAppResourceURL("css/global.css").toExternalForm());
+
+
         String title = String.format("%s %s\u2800 \u2800 \u2800 %s \u2800 \u2800%s %s %s", "SM\u2796PRO",Store.UnicodeSumnbol.tm,
                 ProjectUtils.getFormatedDate(new Date().getTime(), DateFormat.getDateInstance(DateFormat.FULL,
                         Translator.getLocale())),Store.UnicodeSumnbol.leftSquarebracket,"SERVER SESSION",Store.UnicodeSumnbol.rightSquarebracket);
@@ -77,7 +83,6 @@ public class Entry extends Application {
 
         stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
 
-//        new JMetro(Style.DARK).setScene(scene);
 
         stage.setScene(scene);
         stage.show();
@@ -120,6 +125,8 @@ class SessionHandler {
 
             Stage stage = new Stage(StageStyle.UNDECORATED);
             stage.setScene(new Scene(root));
+
+//            new JMetro(Style.DARK).setScene(stage.getScene());
 
 
 
