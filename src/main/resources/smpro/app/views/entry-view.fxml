@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -17,8 +18,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane prefHeight="791.0" prefWidth="1170.0" stylesheets="@../css/global.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.EntryController">
+<BorderPane prefHeight="791.0" prefWidth="1170.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.EntryController">
    <top>
       <VBox fx:id="windowTopvb" prefHeight="69.0" prefWidth="739.0" BorderPane.alignment="CENTER">
          <children>
@@ -67,6 +67,9 @@
                                     </Button>
                                     <Label fx:id="expane_menu" text="%expane_menu" />
                                  </children>
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
                               </HBox>
                               <Separator prefWidth="200.0" />
                               <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="NEVER" VBox.vgrow="ALWAYS">
@@ -88,6 +91,9 @@
                                     </Button>
                                     <Label fx:id="setings_label" text="%settings" />
                                  </children>
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
                               </HBox>
                            </children>
                         </VBox>
@@ -110,4 +116,8 @@
          </children>
       </AnchorPane>
    </center>
+   <stylesheets>
+      <URL value="@../css/global.css" />
+      <URL value="@../css/recaf/all.css" />
+   </stylesheets>
 </BorderPane>

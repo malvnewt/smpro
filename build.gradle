@@ -89,11 +89,17 @@ extraJavaModuleInfo {
   module("xml-apis:xml-apis", "xml.apis") {exports("xml.apis")}
   module("stax:stax-api", "stax.api") {exports("stax.api")}
 
+
   // others
   automaticModule("dom4j:dom4j", "dom4j")
 
   // fxribbon
   automaticModule("com.pixelduke:fxribbon", "com.pixelduke.fxribbon")
+
+  //jmetro
+
+
+
 
 
 

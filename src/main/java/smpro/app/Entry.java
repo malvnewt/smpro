@@ -16,7 +16,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
 import smpro.app.utils.PgConnector;
 import smpro.app.utils.ProjectUtils;
 import smpro.app.utils.Store;
@@ -47,7 +46,7 @@ public class Entry extends Application {
 
         // Set UI theme
 //        Application.setUserAgentStylesheet(new NordLight().getUserAgentStylesheet());
-        Application.setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
+//        Application.setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
 //        Application.setUserAgentStylesheet(new Dracula().getUserAgentStylesheet());
 //        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
 //        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());****
@@ -69,9 +68,11 @@ public class Entry extends Application {
         fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
         Parent root =fxmlLoader.load();
         Scene scene = new Scene(root, 320, 240);
-        scene.getStylesheets().add(ResourceUtil.getAppResourceURL("css/global.css").toExternalForm());
+        scene.getStylesheets().addAll(
+                ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
+        );
 
-//       JMetro metro =  new JMetro(Style.LIGHT);
+//        JMetro metro = new JMetro(Style.DARK);
 //        metro.setScene(scene);
 //        metro.getOverridingStylesheets().add(ResourceUtil.getAppResourceURL("css/global.css").toExternalForm());
 
@@ -124,10 +125,17 @@ class SessionHandler {
 
 
             Stage stage = new Stage(StageStyle.UNDECORATED);
-            stage.setScene(new Scene(root));
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().addAll(
+                    ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
+            );
+
+
+            stage.setScene(scene);
 
 //            new JMetro(Style.DARK).setScene(stage.getScene());
-
+//
 
 
 

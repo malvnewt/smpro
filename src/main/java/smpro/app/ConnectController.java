@@ -44,6 +44,9 @@ public class ConnectController implements Initializable {
 
     public ObjectProperty<Stage> thisStage = new SimpleObjectProperty<>();
     public ListProperty<HashMap<String, Object>> dbs = new SimpleListProperty<>();
+    public Label authorLabel;
+    public Label phoneAdvert;
+    public Label whatsappAdvert;
 
     StringProperty usernamelProperty = new SimpleStringProperty(Translator.getIntl("login_username"));
     StringProperty passlProperty = new SimpleStringProperty(Translator.getIntl("login_pass"));
@@ -194,15 +197,23 @@ public class ConnectController implements Initializable {
     }
 
     public void initUi() {
+        authorLabel.setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CODE_TAGS, 10, Paint.valueOf("#242424")));
+        phoneAdvert.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PHONE_INCOMING, 10, Paint.valueOf("#242424")));
+        whatsappAdvert.setGraphic(ProjectUtils.createFontIcon(MaterialDesignW.WHATSAPP, 10, Paint.valueOf("#242424")));
+
+
         newProjectbtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PLUS, 50, Paint.valueOf("#242424")));
-//        confirmBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CONNECTION,50, Paint.valueOf("#242424")));
-        cancelbtn.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/exit.png", 16, 16)));
+        newProjectbtn.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("create_newproject")));
+
+        cancelbtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignE.EXIT_RUN, 18, Paint.valueOf(Store.Colors.lightestGray)));
 
         usernamel.setGraphic(ProjectUtils.createFontIcon(MaterialDesignA.ACCOUNT, 12, Paint.valueOf(Store.Colors.black)));
         passl.setGraphic(ProjectUtils.createFontIcon(MaterialDesignK.KEY, 12, Paint.valueOf(Store.Colors.black)));
 
-        sideImage.setImage(ResourceUtil.getImageFromResource("images/welcomecolored.jpg", (int) sideImage.getFitWidth(), (int)
+        sideImage.setImage(ResourceUtil.getImageFromResource("images/welcomefinal.jpg", (int) sideImage.getFitWidth(), (int)
                 sideImage.getFitHeight(), false));
+
+
 
 
         usernamErrl.setStyle("-fx-text-fill: orange");

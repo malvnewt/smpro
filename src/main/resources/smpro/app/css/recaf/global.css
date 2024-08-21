@@ -6,10 +6,10 @@
 
 }
 
-.label{
-    -fx-font-family: "Segoe UI Semibold";
-    -fx-opacity: 0.7;
-}
+/*.label{*/
+/*    -fx-font-family: "Segoe UI Semibold";*/
+/*    -fx-opacity: 0.7;*/
+/*}*/
 
 .button:focused {
     -fx-border-width: 0;
@@ -20,7 +20,7 @@
 
 .transparent-btn {
     -fx-border-width: 0;
-    -fx-background-color: transparent;
+    /*-fx-background-color: transparent;*/
     -fx-font-weight: bold;
 }
 
@@ -70,7 +70,7 @@
 }
 
 .success-btn {
-    -fx-background-color: #20aaaa65;
+    /*-fx-background-color: #2bb740;*/
     /*-fx-text-fill: #242424;*/
     /*-fx-text-fill: #242424e3;*/
     -fx-padding: 5px 20px;
@@ -79,19 +79,19 @@
 }
 
 .link-color {
-    -fx-text-fill: #20a9ff;
+    /*-fx-text-fill: #20a9ff;*/
     -fx-cursor: hand;
 }
 
 
 
-.text-field {
-    /*-fx-background-color: #eeeeee90;*/
-    -fx-border-width: 1px;
-    -fx-border-color: lightgray;
-    -fx-font-weight: bold;
-    -fx-font-family: "Segoe UI";
-}
+/*.text-field {*/
+/*    !*-fx-background-color: #eeeeee90;*!*/
+/*    -fx-border-width: 1px;*/
+/*    -fx-border-color: lightgray;*/
+/*    -fx-font-weight: bold;*/
+/*    -fx-font-family: "Segoe UI";*/
+/*}*/
 
 .text-field-error {
     -fx-border-color: orange;
@@ -125,22 +125,19 @@
     -fx-opacity: 1;
 }
 
-.advert-text{
+  .label.advert-text{
     -fx-font-size: 11px;
-    -fx-text-fill: #eeeeeeaa;
     -fx-font-weight: bold;
+    -fx-font-family: "fantasy";
+    -fx-text-fill: #eeeeee50;
+    -fx-underline: none;
 }
 
-.combo-box > .list-cell {
-    -fx-font-size: 14px;
+.label.advert-text > .ikonli-font-icon {
+    -fx-icon-color:#eeeeee50;
 }
 
 
-/*.table-view .table-cell:odd ,.list-view .list-cell:odd {*/
-/*    -fx-background-color: #20aaaa45;*/
-/*}*/
 
-/*.table-view .table-cell:odd,.list-view .list-cell:odd {*/
-/*    -fx-padding: 0;*/
-/*    -fx-font-family: Consolas;*/
-/*}*/
+
+

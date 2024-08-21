@@ -23,7 +23,9 @@ module smpro.app {
 
     //atlantafx and themes
     requires atlantafx.base;
-    requires org.jfxtras.styles.jmetro;
+//    requires org.jfxtras.styles.jmetro;
+
+
 
     //ribbons
     requires com.pixelduke.fxribbon;

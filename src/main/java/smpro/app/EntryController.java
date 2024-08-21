@@ -198,10 +198,17 @@ public class EntryController implements Initializable {
 
             String filename = features.get(featureName);
 
-            fButton.setGraphic(new
-                    ImageView(ResourceUtil.getImageFromResource("images/menu_icons/" + filename, 50, 50)));
+            ImageView buttonImageview = new  ImageView(ResourceUtil.getImageFromResource("images/menu_icons/" + filename, 50, 50));
+
+            fButton.setGraphic(buttonImageview);
             fButton.setTooltip(ProjectUtils.createTooltip(Translator.getIntl(featureName).toUpperCase()));
             fButton.setCursor(Cursor.HAND);
+
+            // add grayscale effect
+            ColorAdjust grayscale = new ColorAdjust();
+            grayscale.setSaturation(0);
+            buttonImageview.setEffect(grayscale);
+
 
 
 

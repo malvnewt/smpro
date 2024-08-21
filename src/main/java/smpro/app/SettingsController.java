@@ -25,7 +25,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import jfxtras.styles.jmetro.JMetroStyleClass;
 import org.kordamp.ikonli.materialdesign2.*;
 import org.postgresql.jdbc.PgArray;
 import org.w3c.dom.events.Event;
@@ -485,7 +484,7 @@ public class SettingsController implements Initializable {
         String t3warning = String.format("\"%s\" %s %s", Translator.getIntl("nextYearresume"),Store.UnicodeSumnbol.blank, Translator.getIntl("t3warning"));
         term3Warning.setText(t3warning);
 
-        term3Warning.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/warning.png", 25, 25, true)));
+        term3Warning.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/warning.png", 40, 40, true)));
 
 
         for (TextField t : new TextField[]{yearFrom, yearTo}) {
@@ -535,7 +534,7 @@ public class SettingsController implements Initializable {
         removeSectionBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TRASH_CAN, 50, Paint.valueOf(Store.Colors.red)));
 
 
-        TableColumn<HashMap<String, Object>, String> sectionnamecol = ProjectUtils.createTableColumn(Translator.getIntl("section").toUpperCase(), "section_name");
+        TableColumn<HashMap<String, Object>, String> sectionnamecol = ProjectUtils.createTableColumn(Translator.getIntl("section").toUpperCase(), "section_name",true);
 //        TableColumn<HashMap<String, Object>, String> sectionnameAbbrcol = ProjectUtils.createTableColumn(Translator.getIntl("abbreviation").toUpperCase(), "section_abbreviation");
         TableColumn<HashMap<String, Object>, String> sectionidcol = ProjectUtils.createTableColumn("ID", "id");
 
@@ -617,7 +616,7 @@ public class SettingsController implements Initializable {
 
 
         TableColumn<HashMap<String, Object>, String> tradenamecol = ProjectUtils.createTableColumn(Translator.getIntl("trade").toUpperCase(), "trade_name");
-        TableColumn<HashMap<String, Object>, String> tradeAbbrcol = ProjectUtils.createTableColumn(Translator.getIntl("abbreviation").toUpperCase(), "trade_abbreviation");
+        TableColumn<HashMap<String, Object>, String> tradeAbbrcol = ProjectUtils.createTableColumn(Translator.getIntl("abbreviation").toUpperCase(), "trade_abbreviation",true);
         TableColumn<HashMap<String, Object>, String> tradeidcol = ProjectUtils.createTableColumn("ID", "id");
 
         List<TableColumn<HashMap<String, Object>, String>> tradecols = List.of(tradeidcol, tradenamecol,tradeAbbrcol);
@@ -648,7 +647,11 @@ public class SettingsController implements Initializable {
                 throw new RuntimeException(ex);
             }
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(ResourceUtil.getAppResourceURL("css/global.css").toExternalForm());
+
+            scene.getStylesheets().addAll(
+                    ResourceUtil.getAppResourceURL("css/global.css").toExternalForm(),
+                    ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
+            );
 
             Stage stage = new Stage();
             stage.setScene(scene);
@@ -706,10 +709,11 @@ public class SettingsController implements Initializable {
         removeSubjectBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TRASH_CAN, 50, Paint.valueOf(Store.Colors.red)));
 
 
+
         TableColumn<HashMap<String, Object>, String> subjectnamecol = ProjectUtils.createTableColumn(Translator.getIntl("subject").toUpperCase(), "subject_name");
-        TableColumn<HashMap<String, Object>, String> categoryCol = ProjectUtils.createTableColumn(Translator.getIntl("category").toUpperCase(), "subject_category");
+        TableColumn<HashMap<String, Object>, String> categoryCol = ProjectUtils.createTableColumn(Translator.getIntl("category").toUpperCase(), "subject_category",true);
         TableColumn<HashMap<String, Object>, String> subjectidcol = ProjectUtils.createTableColumn("ID", "id");
-        TableColumn<HashMap<String, Object>, String> subjectAbbrcol = ProjectUtils.createTableColumn(Translator.getIntl("abbreviation").toUpperCase(), "subject_abbreviation");
+        TableColumn<HashMap<String, Object>, String> subjectAbbrcol = ProjectUtils.createTableColumn(Translator.getIntl("abbreviation").toUpperCase(), "subject_abbreviation",true);
         TableColumn<HashMap<String, Object>, String> subjectcoefcol = ProjectUtils.createTableColumn("COEFF", "subject_coefficient");
         TableColumn<HashMap<String, Object>, String> departmentHeadcol = ProjectUtils.createTableColumn(Translator.getIntl("department_head").toUpperCase(), "department_head");
 
@@ -745,7 +749,11 @@ public class SettingsController implements Initializable {
                 throw new RuntimeException(ex);
             }
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(ResourceUtil.getAppResourceURL("css/global.css").toExternalForm());
+
+            scene.getStylesheets().addAll(
+                    ResourceUtil.getAppResourceURL("css/global.css").toExternalForm(),
+                    ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
+            );
 
             Stage stage = new Stage();
             stage.setScene(scene);

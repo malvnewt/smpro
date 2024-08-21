@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
@@ -20,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="995.0" stylesheets="@../../css/global.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.ConnectController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="995.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.ConnectController">
    <center>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
@@ -106,34 +107,34 @@
                      <children>
                         <HBox alignment="CENTER" prefHeight="109.0" prefWidth="472.0" spacing="10.0">
                            <children>
-                              <Label fx:id="createnewl" text="New Project" />
+                              <Label fx:id="createnewl" prefHeight="20.0" prefWidth="105.0" text="New Project" />
                               <Button fx:id="newProjectbtn" minHeight="40.0" minWidth="40.0" mnemonicParsing="false">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </Button>
-                              <Separator orientation="VERTICAL" prefHeight="200.0" />
-                              <ButtonBar prefHeight="47.0" prefWidth="245.0">
+                              <Separator maxHeight="60.0" orientation="VERTICAL" prefHeight="61.0" prefWidth="29.0" />
+                              <ButtonBar prefHeight="89.0" prefWidth="256.0">
                                 <buttons>
-                                  <Button fx:id="cancelbtn" mnemonicParsing="false" text="Quit">
+                                  <Button fx:id="cancelbtn" mnemonicParsing="false" prefHeight="32.0" prefWidth="144.0" text="Quit">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </Button>
-                                    <Button fx:id="confirmBtn" mnemonicParsing="false" styleClass="success-btn" text="Connect" />
+                                    <Button fx:id="confirmBtn" defaultButton="true" mnemonicParsing="false" styleClass="success-btn" text="Connect" />
                                 </buttons>
                                  <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                    <Insets bottom="10.0" right="10.0" top="10.0" />
                                  </padding>
                               </ButtonBar>
                            </children>
                            <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                              <Insets bottom="10.0" left="10.0" top="10.0" />
                            </padding>
                         </HBox>
-                        <HBox>
+                        <HBox alignment="CENTER_LEFT">
                            <children>
-                              <Label prefHeight="17.0" prefWidth="346.0" style="-fx-font-style: italic;" styleClass="advert-text" text="MARVIN NEWTON     ">
+                              <Label fx:id="authorLabel" prefHeight="17.0" prefWidth="271.0" styleClass="advert-text" text="MARVIN NEWTON     " HBox.hgrow="ALWAYS">
                                  <padding>
                                     <Insets left="10.0" />
                                  </padding>
@@ -141,7 +142,8 @@
                                     <Font size="10.0" />
                                  </font>
                               </Label>
-                              <Label prefHeight="17.0" prefWidth="475.0" style="-fx-padding: 0 0 5 5;" styleClass="advert-text" text="marvinnewton.dev@gmail.com    671686616 / 690145680" textAlignment="RIGHT" underline="true" />
+                              <Label fx:id="phoneAdvert" prefHeight="21.0" prefWidth="121.0" style="-fx-padding: 0 5 0 5;" styleClass="advert-text" text=" 690145680" underline="true" />
+                              <Label fx:id="whatsappAdvert" prefHeight="16.0" prefWidth="114.0" style="-fx-padding: 0 5 0 5;" styleClass="advert-text" text="671686616" />
                            </children>
                         </HBox>
                      </children>
@@ -154,4 +156,7 @@
          </children>
       </HBox>
    </center>
+   <stylesheets>
+      <URL value="@../../css/recaf/all.css" />
+   </stylesheets>
 </BorderPane>

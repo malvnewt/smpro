@@ -28,8 +28,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import jfxtras.styles.jmetro.JMetro;
-import jfxtras.styles.jmetro.Style;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
@@ -165,7 +163,7 @@ public class ProjectUtils {
         fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
         Parent root =fxmlLoader.load();
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(ResourceUtil.getAppResourceURL("css/global.css").toExternalForm());
+//        scene.getStylesheets().add(ResourceUtil.getAppResourceURL("css/global.css").toExternalForm());
 
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -176,6 +174,10 @@ public class ProjectUtils {
 
 //        new JMetro(Style.DARK).setScene(scene);
 
+
+        scene.getStylesheets().addAll(
+                ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
+        );
 
 
         stage.setTitle(Translator.getIntl("app_settings").toUpperCase());
@@ -374,7 +376,9 @@ public class ProjectUtils {
     }
 
 
-    public static TableColumn<HashMap<String,Object>, String> createTableColumn(String label,String dataKey) {
+    public static TableColumn<HashMap<String,Object>, String> createTableColumn(String label,String dataKey,boolean... params) {
+
+        // params = {setToUppercase, }
 
         TableColumn<HashMap<String,Object>, String> col = new TableColumn<>(label);
 
@@ -388,11 +392,17 @@ public class ProjectUtils {
 
                         if (!b) {
                             String itemText = String.valueOf(getItem());
+                            if (params.length > 0) {
+                                boolean setupper = params[0];
+                                if (setupper) itemText = itemText.toUpperCase();
+                            }
                             setText(itemText);
 //                            setPadding(new Insets(5, 5, 5, 10));
                             setStyle("-fx-font-family: Consolas;-fx-font-size: 14px");
 
                             setTooltip(new Tooltip(itemText));
+
+                            setStyle("-fx-max-height: 15px;-fx-padding: 0 5");
 
                         }else {
                             setText(null);
@@ -426,7 +436,11 @@ public class ProjectUtils {
         textInputDialog.setHeaderText(headertext);
         textInputDialog.setContentText(contentText);
 
-        textInputDialog.getEditor().setMinWidth(300);
+        textInputDialog.getDialogPane().getScene().getStylesheets().addAll(
+                ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
+        );
+
+        textInputDialog.getEditor().setMinWidth(280);
 
         textInputDialog.setGraphic(graphic);
 
