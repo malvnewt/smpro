@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
-<?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Accordion?>
@@ -25,7 +24,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0" prefWidth="912.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.SettingsController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="592.0" prefWidth="912.0" stylesheets="@../css/recaf/all.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.SettingsController">
    <center>
       <TabPane fx:id="settingsTabpane" prefHeight="200.0" prefWidth="200.0" side="BOTTOM" styleClass="tab-" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
@@ -451,7 +450,40 @@
             </Tab>
             <Tab fx:id="classestab" text="%classes">
               <content>
-                <AnchorPane fx:id="classesPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane fx:id="classesPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <VBox prefHeight="563.0" prefWidth="912.0" spacing="10.0">
+                           <children>
+                              <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <TableView fx:id="classesTable" prefHeight="200.0" prefWidth="200.0" styleClass="striped" HBox.hgrow="ALWAYS" />
+                                 </children>
+                              </HBox>
+                              <Separator prefWidth="200.0" />
+                              <HBox alignment="CENTER_RIGHT" prefHeight="56.0" prefWidth="892.0" spacing="10.0">
+                                 <children>
+                                    <Button fx:id="newclassBtn" minHeight="20.0" minWidth="100.0" mnemonicParsing="false" text="%new_class" />
+                                    <Button fx:id="deleteClassbtn" minHeight="20.0" minWidth="100.0" mnemonicParsing="false" text="%delete_class" />
+                                    <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                    <ButtonBar prefHeight="52.0" prefWidth="741.0">
+                                       <buttons>
+                                          <Button fx:id="savesectionsBtn111" mnemonicParsing="false" styleClass="success-btn" text="%save_changes" visible="false" />
+                                          <Button fx:id="nextClassesbtn" mnemonicParsing="false" text="%next">
+                                             <styleClass>
+                                                <String fx:value="link-color" />
+                                                <String fx:value="transparent-btn" />
+                                             </styleClass>
+                                          </Button>
+                                       </buttons>
+                                    </ButtonBar>
+                                 </children>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                     </children></AnchorPane>
               </content>
             </Tab>
             <Tab fx:id="userstab" text="%admin_users">
@@ -467,8 +499,4 @@
         </tabs>
       </TabPane>
    </center>
-   <stylesheets>
-      <URL value="@../css/global.css" />
-      <URL value="@../css/recaf/all.css" />
-   </stylesheets>
 </BorderPane>

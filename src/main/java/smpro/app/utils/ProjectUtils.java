@@ -336,9 +336,9 @@ public class ProjectUtils {
         a.setHeaderText(header);
         a.initOwner(parent);
         a.initModality(Modality.WINDOW_MODAL);
-//        a.initStyle(StageStyle.UNDECORATED);
 
-//        a.getDialogPane().getScene().setFill(Paint.valueOf(Store.Colors.lightestGray));
+        a.getDialogPane().setMaxWidth(320);
+        a.getDialogPane().setStyle("-fx-wrap-text: true");
 
 
         switch (type) {
@@ -356,6 +356,8 @@ public class ProjectUtils {
 
 
         return a;
+
+
 
     }
 
@@ -398,11 +400,63 @@ public class ProjectUtils {
                             }
                             setText(itemText);
 //                            setPadding(new Insets(5, 5, 5, 10));
+                            setTooltip(new Tooltip(itemText));
+
+                            setPadding(new Insets(0,0,0,10));
+
+
+                        }else {
+                            setText(null);
+                            setGraphic(null);
+
+                        }
+                    }
+                };
+
+            }
+        });
+
+        col.setCellValueFactory(coldataitem -> {
+          HashMap<String,Object> dataitem =   coldataitem.getValue();
+            return new SimpleStringProperty(String.valueOf(dataitem.get(dataKey)));
+
+        });
+
+
+        return col;
+
+
+    }
+    public static TableColumn<HashMap<String,Object>, String> createTableColumnWithGraphic(String label,String dataKey,
+                                                                                Callback<Object,Node> graphicCallBack,boolean... params) {
+
+        // params = {setToUppercase, }
+
+        TableColumn<HashMap<String,Object>, String> col = new TableColumn<>(label);
+
+        col.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<HashMap<String,Object>, String> call(TableColumn<HashMap<String,Object>, String> colData) {
+                return new TableCell<>(){
+                    @Override
+                    protected void updateItem(String s, boolean b) {
+                        super.updateItem(s, b);
+
+                        if (!b) {
+                            String itemText = String.valueOf(getItem());
+                            if (params.length > 0) {
+                                boolean setupper = params[0];
+                                if (setupper) itemText = itemText.toUpperCase();
+                            }
+                            setText(itemText);
+//                            setPadding(new Insets(5, 5, 5, 10));
                             setStyle("-fx-font-family: Consolas;-fx-font-size: 14px");
 
                             setTooltip(new Tooltip(itemText));
 
-                            setStyle("-fx-max-height: 15px;-fx-padding: 0 5");
+                            setGraphic(graphicCallBack.call(getItem()));
+                            setPadding(new Insets(0,0,0,10));
+
 
                         }else {
                             setText(null);

@@ -205,7 +205,7 @@ public class ConnectController implements Initializable {
         newProjectbtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PLUS, 50, Paint.valueOf("#242424")));
         newProjectbtn.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("create_newproject")));
 
-        cancelbtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignE.EXIT_RUN, 18, Paint.valueOf(Store.Colors.lightestGray)));
+        cancelbtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignE.EXIT_TO_APP, 18, Paint.valueOf(Store.Colors.lightestGray)));
 
         usernamel.setGraphic(ProjectUtils.createFontIcon(MaterialDesignA.ACCOUNT, 12, Paint.valueOf(Store.Colors.black)));
         passl.setGraphic(ProjectUtils.createFontIcon(MaterialDesignK.KEY, 12, Paint.valueOf(Store.Colors.black)));

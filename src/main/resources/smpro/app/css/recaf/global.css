@@ -6,11 +6,6 @@
 
 }
 
-/*.label{*/
-/*    -fx-font-family: "Segoe UI Semibold";*/
-/*    -fx-opacity: 0.7;*/
-/*}*/
-
 .button:focused {
     -fx-border-width: 0;
 }
@@ -25,35 +20,20 @@
 }
 
 .titled-pane {
-    /*-fx-effect: dropshadow(gaussian, #aaa, 10, 0, 0, 0);*/
     -fx-background-radius: 5;
     -fx-background-insets: 0, 1;
-    /*-fx-background-color: linear-gradient(to bottom,#ccc,#aaa);*/
     -fx-background-color: #eee;
 
 }
 
 .titled-pane > .title {
     -fx-text-fill: #fff;
-    /*-fx-font-weight: bold;*/
     -fx-effect: dropshadow(gaussian,#ccc,2,0,0,0);
     -fx-background-color: linear-gradient(to bottom,#ddd,#eee);
     -fx-padding: 5 10;
 
 
 }
-
-/*.titled-pane > .title > .arrow-button > .arrow{*/
-/*    -fx-shape: "M0,4 L8,0 L0,8 Z";*/
-/*    -fx-background-color: #242424;*/
-/*}*/
-
-/*.titled-pane > .content {*/
-/*    -fx-background-color: #fff;*/
-/*    -fx-padding: 10;*/
-/*    -fx-effect: innershadow(gaussian, #ccc, 5, 0, 0, 0);*/
-
-/*}*/
 
 .titled-pane >.title > .text {
     -fx-text-fill: linear-gradient(to bottom, #fff, #cccccc);
@@ -64,34 +44,21 @@
 
 .image-border {
     -fx-border-width: 1;
-    /*-fx-border-color: #242424;*/
     -fx-border-color: #eeeeee80;
     -fx-border-style: dashed;
 }
 
 .success-btn {
-    /*-fx-background-color: #2bb740;*/
-    /*-fx-text-fill: #242424;*/
-    /*-fx-text-fill: #242424e3;*/
     -fx-padding: 5px 20px;
     -fx-border-radius: 10px;
 
 }
 
 .link-color {
-    /*-fx-text-fill: #20a9ff;*/
     -fx-cursor: hand;
 }
 
 
-
-/*.text-field {*/
-/*    !*-fx-background-color: #eeeeee90;*!*/
-/*    -fx-border-width: 1px;*/
-/*    -fx-border-color: lightgray;*/
-/*    -fx-font-weight: bold;*/
-/*    -fx-font-family: "Segoe UI";*/
-/*}*/
 
 .text-field-error {
     -fx-border-color: orange;
@@ -137,6 +104,28 @@
     -fx-icon-color:#eeeeee50;
 }
 
+.report-boldText {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #242424;
+    -fx-font-family: "Bodoni MT Black";
+}
+.report-text {
+    -fx-text-fill: #242424;
+    -fx-font-size: 11px;
+
+}
+
+.report-textsmall {
+    -fx-font-size: 9px;
+    -fx-text-fill: #242424;
+
+}
+
+.report-background{
+    -fx-background-color: white;
+    -fx-border-radius: 10px;
+}
 
 
 

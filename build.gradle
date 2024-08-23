@@ -85,9 +85,13 @@ extraJavaModuleInfo {
 
   // Others | miscellanious
   automaticModule("dom4j:dom4j", "dom4j")
-  automaticModule("org.slf4j:slf4j-api", "org.slf4j")
+  automaticModule("org.slf4j:slf4j-api", "org.slf4j"){overrideModuleName()}
   module("xml-apis:xml-apis", "xml.apis") {exports("xml.apis")}
   module("stax:stax-api", "stax.api") {exports("stax.api")}
+
+  //dansoftowner progress
+  automaticModule("com.nativelibs4java:bridj", "com.nativelibs4java.bridj"){overrideModuleName()}
+  automaticModule("com.google.android.tools:dx","com.google.android.tools.dx"){overrideModuleName()}
 
 
   // others
@@ -95,10 +99,6 @@ extraJavaModuleInfo {
 
   // fxribbon
   automaticModule("com.pixelduke:fxribbon", "com.pixelduke.fxribbon")
-
-  //jmetro
-
-
 
 
 
@@ -166,6 +166,12 @@ dependencies {
 
   //ribbons
   implementation 'com.pixelduke:fxribbon:1.2.2'
+
+  //custom caption title bar
+//  implementation 'net.yetihafen:javafx-customcaption:1.0.0'
+
+  // use native windows progressbar
+  implementation 'com.github.Dansoftowner:FXTaskbarProgressBar:v11.4'
 
 
 

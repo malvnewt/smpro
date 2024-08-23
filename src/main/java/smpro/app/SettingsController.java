@@ -11,6 +11,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -534,15 +535,19 @@ public class SettingsController implements Initializable {
         removeSectionBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TRASH_CAN, 50, Paint.valueOf(Store.Colors.red)));
 
 
-        TableColumn<HashMap<String, Object>, String> sectionnamecol = ProjectUtils.createTableColumn(Translator.getIntl("section").toUpperCase(), "section_name",true);
-//        TableColumn<HashMap<String, Object>, String> sectionnameAbbrcol = ProjectUtils.createTableColumn(Translator.getIntl("abbreviation").toUpperCase(), "section_abbreviation");
-        TableColumn<HashMap<String, Object>, String> sectionidcol = ProjectUtils.createTableColumn("ID", "id");
+        TableColumn<HashMap<String, Object>, String> sectionnamecol =
+                ProjectUtils.createTableColumn(Translator.getIntl("section").toUpperCase(), "section_name",true);
+
+        TableColumn<HashMap<String, Object>, String> sectionidcol = ProjectUtils.createTableColumn("ID", "id" );
+
 
         List<TableColumn<HashMap<String, Object>, String>> sectioncols = List.of(sectionidcol, sectionnamecol);
-        sectioncols.forEach(c -> c.setMinWidth(200));
+        sectionnamecol.setMinWidth(400);
+        sectionidcol.setMinWidth(80);
 
         sectionstable.getColumns().addAll(sectioncols);
         sectionnamecol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT,15,Paint.valueOf(Store.Colors.lightestGray)));
+        sectionidcol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignN.NUMERIC_0_BOX,15,Paint.valueOf(Store.Colors.lightestGray)));
 
 
 
@@ -622,9 +627,11 @@ public class SettingsController implements Initializable {
         List<TableColumn<HashMap<String, Object>, String>> tradecols = List.of(tradeidcol, tradenamecol,tradeAbbrcol);
         tradenamecol.setMinWidth(300);
         tradeAbbrcol.setMinWidth(200);
-        tradeidcol.setMinWidth(50);
+        tradeidcol.setMinWidth(80);
 
         tradenamecol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT,15,Paint.valueOf(Store.Colors.lightestGray)));
+        tradeAbbrcol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT,15,Paint.valueOf(Store.Colors.lightestGray)));
+        tradeidcol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignN.NUMERIC_0_BOX,15,Paint.valueOf(Store.Colors.lightestGray)));
 
 
         tradesTable.getColumns().addAll(tradecols);
@@ -726,7 +733,11 @@ public class SettingsController implements Initializable {
         subjectAbbrcol.setMinWidth(80);
 
         subjectnamecol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT,15,Paint.valueOf(Store.Colors.lightestGray)));
+        subjectAbbrcol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT,15,Paint.valueOf(Store.Colors.lightestGray)));
+        categoryCol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT,15,Paint.valueOf(Store.Colors.lightestGray)));
         departmentHeadcol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignA.ACCOUNT,15,Paint.valueOf(Store.Colors.lightestGray)));
+        subjectcoefcol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignN.NUMERIC,15,Paint.valueOf(Store.Colors.lightestGray)));
+
 
 
 
@@ -932,6 +943,8 @@ public class SettingsController implements Initializable {
         String year = fromYear + "/" + toYEar;
         String updateYear = String.format("update base set academic_year='%s'", year);
         PgConnector.update(updateYear);
+
+
 
 
         Alert a = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.NONE, "INSERTION SUCCESS", "INFO", Translator.getIntl("data_updated"), ButtonType.OK);
