@@ -11,6 +11,7 @@ module smpro.app {
 //    requires net.synedra.validatorfx;
     requires eu.hansolo.tilesfx;
 
+
     //icons
     requires org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.javafx;
@@ -22,7 +23,7 @@ module smpro.app {
 
 
     //atlantafx and themes
-    requires atlantafx.base;
+//    requires atlantafx.base;
 //    requires org.jfxtras.styles.jmetro;
 
 

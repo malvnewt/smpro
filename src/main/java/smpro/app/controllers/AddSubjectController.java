@@ -34,6 +34,7 @@ public class AddSubjectController implements Initializable {
 
 
     public ObjectProperty<Stage> thisStage = new SimpleObjectProperty<>();
+    public TextField subjectCodefield;
 
 
     @Override
@@ -85,17 +86,19 @@ public class AddSubjectController implements Initializable {
             String coefficient = coefField.getText();
             String departmentHead = headField.getText();
             String category = categoryField.getValue();
+            String subjectCode = subjectCodefield.getText();
 
             //validate
             if (name.isEmpty()) ProjectUtils.showFloatingTooltip(ProjectUtils.createErrorLabel(Translator.getIntl("required")), thisStage.get(), namefield, -10, 0);
             if (shortName.isEmpty()) ProjectUtils.showFloatingTooltip(ProjectUtils.createErrorLabel(Translator.getIntl("required")), thisStage.get(), abbrfield, -10, 0);
             if (coefficient.isEmpty()) ProjectUtils.showFloatingTooltip(ProjectUtils.createErrorLabel(Translator.getIntl("required")), thisStage.get(), coefField, -10, 0);
             if (category.isEmpty()) ProjectUtils.showFloatingTooltip(ProjectUtils.createErrorLabel(Translator.getIntl("required")), thisStage.get(), categoryField, -10, 0);
+            if (subjectCode.isEmpty()) ProjectUtils.showFloatingTooltip(ProjectUtils.createErrorLabel(Translator.getIntl("required")), thisStage.get(), subjectCodefield, -10, 0);
 
 
             if (!(name.isEmpty() || shortName.isEmpty() || coefficient.isEmpty() || category.isEmpty())) {
-                String insertsubject = String.format("insert into subjects (subject_name,subject_category,subject_coefficient,subject_abbreviation,department_head)" +
-                        "values ('%s','%s',%d,'%s','%s')", name, category, Integer.parseInt(coefficient), shortName, departmentHead);
+                String insertsubject = String.format("insert into subjects (subject_name,subject_code,subject_category,subject_coefficient,subject_abbreviation,department_head)" +
+                        "values ('%s','%s','%s',%d,'%s','%s')", name,subjectCode, category, Integer.parseInt(coefficient), shortName, departmentHead);
                 PgConnector.insert(insertsubject);
 
                 thisStage.get().close();

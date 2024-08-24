@@ -1,21 +1,15 @@
 package smpro.app;
 
-import atlantafx.base.util.Animations;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
-import javafx.animation.Timeline;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -27,8 +21,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import org.kordamp.ikonli.materialdesign2.*;
-import org.postgresql.jdbc.PgArray;
-import org.w3c.dom.events.Event;
+import smpro.app.controllers.AddClassController;
 import smpro.app.controllers.AddSubjectController;
 import smpro.app.controllers.AddTradeController;
 import smpro.app.utils.PgConnector;
@@ -36,17 +29,15 @@ import smpro.app.utils.ProjectUtils;
 import smpro.app.utils.Store;
 import smpro.app.utils.Translator;
 
-import javax.swing.tree.TreeNode;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.*;
 
 public class SettingsController implements Initializable {
@@ -130,6 +121,11 @@ public class SettingsController implements Initializable {
     public Button addSubjectBtn;
     public Button removeSubjectBtn;
     public Button nextSubjects;
+    public TableView<HashMap<String,Object>> classesTable;
+    public Button newclassBtn;
+    public Button changeClassSettingsBtn;
+    public Button deleteClassbtn;
+    public Button nextClassesbtn;
 
 
     ObjectProperty<Image> logoProperty = new SimpleObjectProperty<>();
@@ -168,6 +164,66 @@ public class SettingsController implements Initializable {
     IntegerProperty currentTabIndexProperty = new SimpleIntegerProperty(0);
 
 
+    HashMap<Integer, Callback<Object,Void>> buildTabCallableMap = new HashMap<>(
+            Map.of(
+                    0, o -> {
+                        try {
+                            buildBase();
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        return null;
+                    },
+                    1, o -> {
+                         buildAddress();
+
+                        return null;
+                    },
+                    2, o -> {
+                        buildAcademicYear();
+
+                        return null;
+                    },
+                    3, o -> {
+                        buildSections();
+                        return null;
+                    },
+                    4, o -> {
+                        buildTrades();
+
+                        return null;
+                    },
+                    5, o -> {
+                        buildSubjects();
+
+                        return null;
+                    },
+                    6, o -> {
+                        buildClasses();
+                        return null;
+                    }
+
+
+
+            )
+    );
+
+    HashMap<Integer, Boolean> builtTabMap = new HashMap<>(
+            Map.of(
+                    0, true,
+                    1, false,
+                    2, false,
+                    3, false,
+                    4, false,
+                    5, false,
+                    6, false,
+                    7, false,
+                    8, false
+            )
+    );
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -189,16 +245,33 @@ public class SettingsController implements Initializable {
         tradestab.setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CIRCLE_DOUBLE,20, Paint.valueOf(Store.Colors.Gray)));
 
 
+        //set some button icons
+        newclassBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PLUS, 20, Paint.valueOf(Store.Colors.lightestGray)));
+        changeClassSettingsBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PENCIL, 20, Paint.valueOf(Store.Colors.lightestGray)));
+        deleteClassbtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TRASH_CAN, 20, Paint.valueOf(Store.Colors.lightestGray)));
+
+
 
 
 
         try {
             buildBase();
-            buildAddress();
-            buildAcademicYear();
-            buildSections();
-            buildTrades();
-            buildSubjects();
+//            buildAddress();
+//            buildAcademicYear();
+//            buildSections();
+//            buildTrades();
+//            buildSubjects();
+
+            settingsTabpane.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, selectedTabIndex) -> {
+
+                if (!builtTabMap.get(selectedTabIndex.intValue())) {
+                    System.out.println("Callback to build tab with index == "+selectedTabIndex);
+                    buildTabCallableMap.get(selectedTabIndex.intValue()).call(null);
+                    builtTabMap.replace(selectedTabIndex.intValue(), true);
+                }
+
+
+            });
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -656,7 +729,6 @@ public class SettingsController implements Initializable {
             Scene scene = new Scene(root);
 
             scene.getStylesheets().addAll(
-                    ResourceUtil.getAppResourceURL("css/global.css").toExternalForm(),
                     ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
             );
 
@@ -711,6 +783,76 @@ public class SettingsController implements Initializable {
 
     }
 
+    public void buildClasses() {
+
+        // populate class table
+        TableColumn<HashMap<String, Object>, String> classnamecol = ProjectUtils.createTableColumn(Translator.getIntl("classname").toUpperCase(), "classname");
+        TableColumn<HashMap<String, Object>, String> classSectioncol = ProjectUtils.createTableColumn(Translator.getIntl("section").toUpperCase(), "section");
+        TableColumn<HashMap<String, Object>, String> classmastercol = ProjectUtils.createTableColumn(Translator.getIntl("class_master").toUpperCase(), "class_master");
+        TableColumn<HashMap<String, Object>, String> classcyclecol = ProjectUtils.createTableColumn(Translator.getIntl("cycle").toUpperCase(), "cycle",true);
+        TableColumn<HashMap<String, Object>, String> classlevelcol = ProjectUtils.createTableColumn(Translator.getIntl("level_short").toUpperCase(), "level",true);
+        TableColumn<HashMap<String, Object>, String> classcodecol = ProjectUtils.createTableColumnWithGraphic(Translator.getIntl("classid"), "class_abbreviation",
+                o -> ProjectUtils.createFontIcon(MaterialDesignC.CIRCLE, 6, Paint.valueOf("gray")));
+
+
+        for (TableColumn<HashMap<String, Object>, String> col : new TableColumn[]{classSectioncol, classmastercol, classnamecol}) {
+            col.setCellFactory(hashMapStringTableColumn -> new TableCell<>(){
+                @Override
+                protected void updateItem(String s, boolean b) {
+                    super.updateItem(s, b);
+                    if (!b) {
+                        setText(ProjectUtils.capitalize(s));
+                    }else {
+                        setText(null);
+                        setGraphic(null);
+
+                    }
+                }
+            });
+
+        }
+
+
+;
+
+
+        List<TableColumn<HashMap<String, Object>, String>> classcols = List.of(classnamecol, classcodecol, classSectioncol, classcyclecol, classlevelcol, classmastercol);
+
+        classcodecol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CODE_TAGS, 15, Paint.valueOf("gray")));
+        classmastercol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignA.ACCOUNT, 15, Paint.valueOf("gray")));
+
+        classnamecol.setMinWidth(180);
+        classmastercol.setMinWidth(180);
+        classSectioncol.setMinWidth(180);
+
+        classcodecol.setMinWidth(100);
+        classlevelcol.setMinWidth(100);
+        classcyclecol.setMinWidth(100);
+
+        classesTable.getColumns().addAll(classcols);
+
+        //fill current class items
+        List<HashMap<String, Object>> dbClasses = PgConnector.fetch("select * from classes order by level, classname", PgConnector.getConnection());
+        classesTable.getItems().addAll(dbClasses);
+
+
+
+        newclassBtn.setOnAction(e->openClassWindow(false));
+
+        nextClassesbtn.setOnAction(e -> changeTab(7));
+
+        changeClassSettingsBtn.setOnAction(e->{
+            HashMap<String, Object> selectedClass = classesTable.getSelectionModel().getSelectedItem();
+            if (!Objects.equals(null, selectedClass)) {
+                openClassWindow(true);
+
+            }
+        });
+
+
+
+    }
+
     public void buildSubjects() {
         addSubjectBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PLUS, 50, Paint.valueOf(Store.Colors.black)));
         removeSubjectBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TRASH_CAN, 50, Paint.valueOf(Store.Colors.red)));
@@ -719,7 +861,7 @@ public class SettingsController implements Initializable {
 
         TableColumn<HashMap<String, Object>, String> subjectnamecol = ProjectUtils.createTableColumn(Translator.getIntl("subject").toUpperCase(), "subject_name");
         TableColumn<HashMap<String, Object>, String> categoryCol = ProjectUtils.createTableColumn(Translator.getIntl("category").toUpperCase(), "subject_category",true);
-        TableColumn<HashMap<String, Object>, String> subjectidcol = ProjectUtils.createTableColumn("ID", "id");
+        TableColumn<HashMap<String, Object>, String> subjectCodecol = ProjectUtils.createTableColumn(Translator.getIntl("subject_code"), "subject_code");
         TableColumn<HashMap<String, Object>, String> subjectAbbrcol = ProjectUtils.createTableColumn(Translator.getIntl("abbreviation").toUpperCase(), "subject_abbreviation",true);
         TableColumn<HashMap<String, Object>, String> subjectcoefcol = ProjectUtils.createTableColumn("COEFF", "subject_coefficient");
         TableColumn<HashMap<String, Object>, String> departmentHeadcol = ProjectUtils.createTableColumn(Translator.getIntl("department_head").toUpperCase(), "department_head");
@@ -762,7 +904,6 @@ public class SettingsController implements Initializable {
             Scene scene = new Scene(root);
 
             scene.getStylesheets().addAll(
-                    ResourceUtil.getAppResourceURL("css/global.css").toExternalForm(),
                     ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
             );
 
@@ -951,6 +1092,41 @@ public class SettingsController implements Initializable {
         a.showAndWait();
 
     }
+
+    public void openClassWindow(boolean isupdate) {
+        URL url = ResourceUtil.getAppResourceURL("views/others/add-class.fxml");
+
+        FXMLLoader fxmlLoader = new FXMLLoader(url);
+        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
+        Parent root = null;
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(thisStage.get());
+        stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
+        stage.setResizable(true);
+
+        AddClassController addClassController = fxmlLoader.getController();
+        addClassController.thisStage.set(stage);
+        addClassController.isUpdate.set(isupdate);
+
+        scene.getStylesheets().addAll(
+                ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
+        );
+
+
+        stage.setTitle(Translator.getIntl("class_settings").toUpperCase());
+        stage.showAndWait();
+
+
+    }
+
 
 
 

@@ -1077,7 +1077,9 @@ Text {
   -fx-border-color: transparent -color-cell-border transparent transparent;
 }
 .table-view.bordered .table-row-cell > .table-cell:empty {
-  -fx-border-color: transparent;
+  -fx-border-color: transparent -color-cell-border transparent transparent;
+
+  /*-fx-border-color: transparent;  UPDATE*/
 }
 .table-view.dense > .column-header-background .column-header {
   -fx-size: 34px;
@@ -1095,6 +1097,10 @@ Text {
   -fx-background-color: -color-cell-border, -color-cell-bg-odd;
 }
 
+/*.table-view.striped .table-row-cell:empty:odd {*/
+/*  -fx-background-color: -color-cell-border, -color-cell-bg-odd;*/
+/*}*/
+
 /*Add support for NO_HEADER tweak in tables */
 .table-view.no-header > .column-header-background {
   -fx-max-height: 0;
@@ -1108,6 +1114,7 @@ Text {
   -fx-cell-size: 2.8em;
 }
 .table-view .table-row-cell:empty {
+  /*-fx-background-color: -color-cell-border, -color-cell-bg;*/
   -fx-background-color: transparent;
   -fx-background-insets: 0;
 }

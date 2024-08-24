@@ -1,7 +1,6 @@
 package smpro.app;
 
-import atlantafx.base.controls.ModalPane;
-import atlantafx.base.theme.*;
+
 import javafx.application.Application;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

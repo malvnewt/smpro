@@ -1,14 +1,19 @@
 package smpro.app.utils;
 
+import javafx.beans.property.MapProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.effect.Light;
+import javafx.stage.Stage;
 
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 
 public class Store {
+    public static ObjectProperty<HashMap<String, Object>> AuthUser = new SimpleObjectProperty<>();
+    public static ObjectProperty<Stage> SessionStage = new SimpleObjectProperty<>(null);
 
     public static ObjectProperty<HashMap<String, Object>> currentProjectProperty = new SimpleObjectProperty<>(null);
 
@@ -22,6 +27,7 @@ public class Store {
 
 
     public static class Colors{
+
         public static String Gray = "gray";
         public static String black = "#242424";
         public static String White = "white";
@@ -32,7 +38,7 @@ public class Store {
 //        public static String hoverbg = "#20aaaa25";
         public static String selectionBg = "#444444";
 //        public static String selectionBg = "#20aaaa65";
-        public static String red = "#ff6060";
+        public static String red = "#b33029";
 
 
 
@@ -54,9 +60,6 @@ public class Store {
 
         public static List<String> supportedSectors = List.of(Public, Private);
 
-
-
-
     }
 
     public static class Insitutions {
@@ -66,9 +69,10 @@ public class Store {
 
         public static List<String> supportedInstitutions = List.of(Primary, Secondary, University);
 
-
-
     }
+
+    public static List<Integer> supportedCycles = List.of(1, 2);
+    public static List<Integer> supportedLevels = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12,13,14,15);
 
     public static class SubjectCategories {
         public static String Science = "science";

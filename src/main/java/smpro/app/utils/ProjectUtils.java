@@ -1,10 +1,7 @@
 package smpro.app.utils;
 
-import eu.hansolo.tilesfx.addons.Switch;
 import javafx.animation.*;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -18,7 +15,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
@@ -30,19 +26,17 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
 import smpro.app.ResourceUtil;
 import smpro.app.SettingsController;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Time;
 import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static atlantafx.base.util.Animations.EASE;
+
 
 public class ProjectUtils {
 
@@ -120,31 +114,34 @@ public class ProjectUtils {
     }
 
 
-    public static Timeline shakeY(Node node, double offset) {
+    public static Timeline shakeY(Node node, double offset,int... cyclecount) {
         Objects.requireNonNull(node, "Node cannot be null!");
         Timeline t = new Timeline(new KeyFrame(Duration.ZERO,
-                new KeyValue(node.translateYProperty(), 0, EASE)), new KeyFrame(Duration.millis(100.0),
-                new KeyValue(node.translateYProperty(), offset, EASE)));
+                new KeyValue(node.translateYProperty(), 0, Interpolator.EASE_BOTH)), new KeyFrame(Duration.millis(100.0),
+                new KeyValue(node.translateYProperty(), offset, Interpolator.EASE_BOTH)));
         t.statusProperty().addListener((obs, old, val) -> {
             if (val == Animation.Status.STOPPED) {
                 node.setTranslateY(0.0);
             }
 
         });
+        if (cyclecount.length>0) t.setCycleCount(cyclecount[0]);
+
         return t;
     }
 
-    public static Timeline shakeX(Node node, double offset) {
+    public static Timeline shakeX(Node node, double offset,int... cyclecount) {
         Objects.requireNonNull(node, "Node cannot be null!");
         Timeline t = new Timeline(new KeyFrame(Duration.ZERO,
-                new KeyValue(node.translateXProperty(), 0, EASE)), new KeyFrame(Duration.millis(100.0),
-                new KeyValue(node.translateXProperty(), offset, EASE)));
+                new KeyValue(node.translateXProperty(), 0, Interpolator.EASE_BOTH)), new KeyFrame(Duration.millis(100.0),
+                new KeyValue(node.translateXProperty(), offset, Interpolator.EASE_BOTH)));
         t.statusProperty().addListener((obs, old, val) -> {
             if (val == Animation.Status.STOPPED) {
                 node.setTranslateX(0.0);
             }
 
         });
+        if (cyclecount.length>0) t.setCycleCount(cyclecount[0]);
         return t;
     }
 
@@ -163,7 +160,6 @@ public class ProjectUtils {
         fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
         Parent root =fxmlLoader.load();
         Scene scene = new Scene(root);
-//        scene.getStylesheets().add(ResourceUtil.getAppResourceURL("css/global.css").toExternalForm());
 
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -171,8 +167,6 @@ public class ProjectUtils {
         stage.initOwner(parent);
         stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
         stage.setResizable(false);
-
-//        new JMetro(Style.DARK).setScene(scene);
 
 
         scene.getStylesheets().addAll(
@@ -222,46 +216,15 @@ public class ProjectUtils {
 
     }
 
-    public static Stage showFloatingNode(
-            Node content,Stage parentStage,
-            Node parent,double hoffset,double voffset,
-            boolean movable,
+    public static void positionFloatingStage(Stage parentStage,Stage contentStage, Node parent,double hoffset,double voffset,
             Pos... position
     ) {
-        // create floating nodestage4
-        Stage s = new Stage(StageStyle.UNDECORATED);
-
-
-        VBox vb = new VBox(content);
-        vb.setPadding(new Insets(5));
-        vb.setStyle("-fx-background-color: " + Store.Colors.black);
-
-
-        if (movable) {
-            vb.setCursor(Cursor.MOVE);
-
-            //apply move login
-
-        }
-
-
-        s.setScene(new Scene(vb));
-        s.show();
-        s.sizeToScene();
-
-
 
         double parentMinx = parent.getLayoutBounds().getMinX();
         double parentMinY = parent.getLayoutBounds().getMinY();
 
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-
-        double parentStageWidth = parentStage.getWidth();
-        double parentStageHeight = parentStage.getHeight();
-
-
-
         Point2D parentInScene = parent.localToScene(parentMinx, parentMinY);
+
 
 
         Pos pos = position.length > 0 ? position[0] : Pos.CENTER_RIGHT;
@@ -269,52 +232,34 @@ public class ProjectUtils {
                 hoffset+=parent.getLayoutBounds().getWidth();
 //                voffset += parent.getLayoutBounds().getHeight();
 
-            } else if (pos==Pos.CENTER_LEFT) {
-                hoffset-=parentStageWidth;
+            } else{
+                hoffset-=contentStage.getWidth();
 //                voffset += parent.getLayoutBounds().getHeight();
             }
 
 
 
 
-        s.setX(parentInScene.getX() + (bounds.getWidth()/2)-(parentStageWidth/2)+hoffset);
-        s.setY(parentInScene.getY() + (bounds.getHeight()/2)-(parentStageHeight/2)+voffset);
-
-        return s;
+        contentStage.setX(parentInScene.getX() + parentStage.getX()+hoffset);
+        contentStage.setY(parentInScene.getY() + parentStage.getY() + voffset);
 
 
 
     }
 
-    public static void showFloatingTooltip(
-            Node content,Stage parentStage,
-            Node parent,double hoffset,double voffset
-
-
-    ) {
+    public static void showFloatingTooltip( Node content,Stage parentStage,Node parent,double hoffset,double voffset ) {
 
         Tooltip tp = new Tooltip();
         tp.setGraphic(content);
         tp.setShowDelay(Duration.millis(100));
-//        tp.setStyle("-fx-background-color:"+ Store.Colors.black);
 
         // create floating nodestage4
 
         double parentMinx = parent.getLayoutBounds().getMinX();
         double parentMinY = parent.getLayoutBounds().getMinY();
 
-        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
-
-        double parentStageWidth = parentStage.getWidth();
-        double parentStageHeight = parentStage.getHeight();
-
-
-
         Point2D parentInScene = parent.localToScene(parentMinx, parentMinY);
 
-
-//        double x = parentInScene.getX() + (bounds.getWidth()/2)-(parentStageWidth/2) + parent.getLayoutBounds().getWidth()+hoffset;
-//        double y = parentInScene.getY() + (bounds.getHeight()/2)-(parentStageHeight/2)+voffset;
         double x = parentInScene.getX() +  parentStage.getX() + parent.getLayoutBounds().getWidth() +hoffset;
         double y = parentInScene.getY() + parentStage.getY() + parent.getLayoutBounds().getHeight()  +voffset;
 
@@ -347,8 +292,8 @@ public class ProjectUtils {
 
             case WARNING ->
                     a.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/warning.png", 50, 50)));
-            case CONFIRMATION ->
-                    a.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/question2.png", 50, 50)));
+            case CONFIRMATION -> a.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/question2.png", 50, 50)));
+            case ERROR -> a.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/critical.png", 50, 50)));
 
             default ->
                     a.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/success.png", 50, 50)));
@@ -507,6 +452,25 @@ public class ProjectUtils {
         return new ErrorLabel(errText);
     }
 
+    public static String capitalize(String s) {
+        StringBuilder out = new StringBuilder();
+        try{
+            List<String> parts = Arrays.stream(s.strip().replaceAll("  "," ").split(" ")).toList();
+
+            for (String part : parts) {
+                out.append(String.valueOf(part.charAt(0)).toUpperCase()).append(part.substring(1));
+                out.append(" ");
+
+            }
+            return out.toString().strip();
+
+
+        }catch (Exception err) {
+
+            return s;
+        }
+    }
+
 
 
 
@@ -520,6 +484,6 @@ class ErrorLabel extends Label {
 
     ErrorLabel(String labelText) {
         this.labelText = labelText;
-        this.setStyle("-fx-text-fill: orange;-fx-font-weight: bold;-fx-padding: 5px");
+        this.setStyle("-fx-font-weight: bold;-fx-padding: 5px;-fx-text-fill: "+Store.Colors.red);
     }
 }

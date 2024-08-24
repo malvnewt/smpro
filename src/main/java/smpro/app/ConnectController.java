@@ -1,5 +1,6 @@
 package smpro.app;
 
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.binding.When;
@@ -7,12 +8,14 @@ import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Paint;
 import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
@@ -201,6 +204,11 @@ public class ConnectController implements Initializable {
         phoneAdvert.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PHONE_INCOMING, 10, Paint.valueOf("#242424")));
         whatsappAdvert.setGraphic(ProjectUtils.createFontIcon(MaterialDesignW.WHATSAPP, 10, Paint.valueOf("#242424")));
 
+        for (TextField tf : new TextField[]{usernamefield, passfi8eld}) {
+            System.out.println("removing error class");
+            tf.textProperty().addListener((observableValue, eventHandler, t1) -> tf.getStyleClass().remove("error-textfield"));
+        }
+
 
         newProjectbtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PLUS, 50, Paint.valueOf("#242424")));
         newProjectbtn.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("create_newproject")));
@@ -216,17 +224,21 @@ public class ConnectController implements Initializable {
 
 
 
-        usernamErrl.setStyle("-fx-text-fill: orange");
-        passerrl.setStyle("-fx-text-fill: orange");
+        usernamErrl.setStyle("-fx-text-fill: "+Store.Colors.red);
+        passerrl.setStyle("-fx-text-fill: "+Store.Colors.red);
 
         cancelbtn.setTooltip(new Tooltip(Translator.getIntl("close_app")));
+
+
+        usernamefield.requestFocus();
 
     }
 
     public void initActions() {
         cancelbtn.setOnAction(e->{
             thisStage.get().close();
-            Platform.exit();
+            System.exit(0);
+//            Platform.exit();
         });
 
 
@@ -242,16 +254,44 @@ public class ConnectController implements Initializable {
             boolean isvalidpass = password.equals(passProperty.get());
 
 
-            if (!isvalidpass)
-                ProjectUtils.showFloatingTooltip(passerrl, thisStage.get(), passfi8eld, 0, vAdjustment);
+            if (!isvalidpass){
+
+                ProjectUtils.showFloatingTooltip(passerrl, thisStage.get(),
+                        passfi8eld, 0, vAdjustment);
+                passfi8eld.getStyleClass().add("error-textfield");
+                Timeline timeline =  ProjectUtils.shakeX(passfi8eld, -15, 8);
+                timeline.play();
+            }
 
 
-            if (!isvalidUsername)
+            if (!isvalidUsername){
+                usernamefield.getStyleClass().add("error-textfield");
                 ProjectUtils.showFloatingTooltip(usernamErrl, thisStage.get(), usernamefield, 0, vAdjustment);
+               Timeline timeline =  ProjectUtils.shakeX(usernamefield, -15, 8);
+               timeline.play();
+
+            }
 
 
             if (isvalidpass && isvalidUsername) {
-                thisStage.get().close();
+                usernamefield.getStyleClass().remove("error-textfield");
+                passfi8eld.getStyleClass().remove("error-textfield");
+
+                Store.SessionStage.set(thisStage.get());
+
+                HashMap<String, Object> authuser = new HashMap<>(Map.of(
+                        "username", username,
+                        "password", password
+                ));
+                Store.AuthUser.set(authuser);
+
+                usernamefield.clear();
+                passfi8eld.clear();
+
+
+                thisStage.get().hide();
+
+            } else {
 
             }
 

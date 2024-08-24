@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ComboBox?>
@@ -9,6 +11,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -16,9 +19,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:controller="smpro.app.controllers.AddClassController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="777.0" prefWidth="884.0" stylesheets="@../../css/recaf/all.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="777.0" prefWidth="884.0" stylesheets="@../../css/recaf/all.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.AddClassController">
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
          <padding>
@@ -51,16 +55,22 @@
                         <Insets left="20.0" />
                      </GridPane.margin></Label>
                   <Label styleClass="section-title" text="%class_info" />
-                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" />
-                  <TextField fx:id="classnamefiled" promptText="eg Form five science, Terminal D ..." GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1" />
-                  <TextField fx:id="shortnamefield" promptText="ef F5, USS,LSA ..." GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <ComboBox fx:id="classmastercombo" prefHeight="25.0" prefWidth="298.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                  <ComboBox fx:id="cyclecombo" prefHeight="25.0" prefWidth="296.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                  <ComboBox fx:id="sectioncombo" prefHeight="25.0" prefWidth="287.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <ImageView fx:id="iconView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" />
+                  <TextField fx:id="classnamefiled" promptText="eg Form five science, Terminal D ..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="shortnamefield" promptText="eg  F5, USS,LSA ..." GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <ComboBox fx:id="classmastercombo" prefHeight="25.0" prefWidth="298.0" promptText="%select" styleClass="alt-icon" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                  <ComboBox fx:id="cyclecombo" prefHeight="25.0" prefWidth="296.0" promptText="%select" styleClass="alt-icon" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                  <ComboBox fx:id="sectioncombo" prefHeight="25.0" prefWidth="287.0" promptText="%select" styleClass="alt-icon" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Label text="%class_level" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </Label>
+                  <ComboBox fx:id="levelcombo" prefHeight="32.0" prefWidth="264.0" promptText="%select" styleClass="alt-icon" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                </children>
             </GridPane>
             <Separator prefWidth="200.0" />
-            <GridPane hgap="4.0" vgap="4.0" VBox.vgrow="ALWAYS">
+            <GridPane hgap="10.0" vgap="4.0" VBox.vgrow="ALWAYS">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -74,81 +84,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label styleClass="section-title" text="%subject_groups" />
-                  <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
-                     <children>
-                        <HBox spacing="2.0">
-                           <children>
-                              <Label prefHeight="17.0" prefWidth="85.0" text="%group_a" />
-                              <TextField fx:id="gAlabel" promptText="eg Science" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="groupAbtn" minWidth="30.0" mnemonicParsing="false" />
-                           </children>
-                           <padding>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </padding>
-                        </HBox>
-                        <ListView fx:id="galv" prefHeight="200.0" prefWidth="200.0" />
-                     </children>
-                  </VBox>
-                  <VBox layoutX="10.0" layoutY="40.0" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
-                     <children>
-                        <HBox spacing="2.0">
-                           <children>
-                              <Label prefHeight="17.0" prefWidth="85.0" text="%group_b" />
-                              <TextField fx:id="gbLabel" promptText="eg Arts" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="groupBbtn" minWidth="30.0" mnemonicParsing="false" />
-                           </children>
-                           <padding>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </padding>
-                        </HBox>
-                        <ListView fx:id="gblv" prefHeight="200.0" prefWidth="200.0" />
-                     </children>
-                  </VBox>
-                  <VBox layoutX="10.0" layoutY="126.0" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="3">
-                     <children>
-                        <HBox spacing="2.0">
-                           <children>
-                              <Label prefHeight="17.0" prefWidth="85.0" text="%group_c" />
-                              <TextField fx:id="gclable" promptText="eg Social Science" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="groupCbtn" minWidth="30.0" mnemonicParsing="false" />
-                           </children>
-                           <padding>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </padding>
-                        </HBox>
-                        <ListView fx:id="gclv" prefHeight="200.0" prefWidth="200.0" />
-                     </children>
-                  </VBox>
-                  <VBox layoutX="10.0" layoutY="212.0" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="4">
-                     <children>
-                        <HBox spacing="2.0">
-                           <children>
-                              <Label prefHeight="17.0" prefWidth="85.0" text="%group_d" />
-                              <TextField fx:id="gdLabel" promptText="eg Others" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="groupDbtn" minWidth="30.0" mnemonicParsing="false" />
-                           </children>
-                           <padding>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </padding>
-                        </HBox>
-                        <ListView fx:id="gdlv" prefHeight="200.0" prefWidth="200.0" />
-                     </children>
-                  </VBox>
-                  <VBox layoutX="10.0" layoutY="126.0" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="5">
-                     <children>
-                        <HBox spacing="2.0">
-                           <children>
-                              <Label prefHeight="17.0" prefWidth="408.0" text="%choose_compulsory_subs" HBox.hgrow="ALWAYS" />
-                              <Button fx:id="compulsoryBtn" minWidth="30.0" mnemonicParsing="false" />
-                           </children>
-                           <padding>
-                              <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-                           </padding>
-                        </HBox>
-                        <ListView fx:id="compulsorylv" prefHeight="200.0" prefWidth="200.0" />
-                     </children>
-                  </VBox>
+                  <Label styleClass="section-title" text="%class_subject_groups" />
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" styleClass="report-background" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="5">
                      <children>
                         <HBox alignment="CENTER" prefHeight="33.0" prefWidth="430.0">
@@ -158,7 +94,11 @@
                                     <Label styleClass="report-boldText" text="INFO 1" />
                                  </children>
                               </HBox>
-                              <ImageView fx:id="previewImageview" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                              <VBox fx:id="logoContainer">
+                                 <children>
+                                    <ImageView fx:id="previewImageview" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+                                 </children>
+                              </VBox>
                               <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Label styleClass="report-boldText" text="INFO 2" />
@@ -172,9 +112,10 @@
                               <Label minWidth="60.0" styleClass="report-text" text="GROUP A " />
                               <ScrollPane hbarPolicy="NEVER" minWidth="330.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                                 <content>
-                                  <AnchorPane fx:id="gaPreview" minHeight="0.0" minWidth="0.0" prefHeight="63.0" prefWidth="362.0" style="-fx-background-color: #eeeeee90;">
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="63.0" prefWidth="362.0" style="-fx-background-color: #eeeeee90;">
                                        <children>
                                           <VBox layoutX="14.0" layoutY="-70.0" prefHeight="94.0" prefWidth="200.0" AnchorPane.bottomAnchor="106.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <TilePane fx:id="gaPreview" layoutY="-68.0" prefHeight="63.0" prefWidth="362.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                 </content>
@@ -189,9 +130,10 @@
                               <Label minWidth="60.0" styleClass="report-text" text="GROUP B" />
                               <ScrollPane hbarPolicy="NEVER" minWidth="330.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                                  <content>
-                                    <AnchorPane fx:id="gbPreview" minHeight="0.0" minWidth="0.0" prefHeight="63.0" prefWidth="362.0" style="-fx-background-color: #eeeeee90;">
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="63.0" prefWidth="362.0" style="-fx-background-color: #eeeeee90;">
                                        <children>
                                           <VBox layoutX="14.0" layoutY="-70.0" prefHeight="94.0" prefWidth="200.0" AnchorPane.bottomAnchor="106.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <TilePane fx:id="gbPreview" layoutX="54.0" layoutY="-58.0" prefHeight="63.0" prefWidth="362.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                  </content>
@@ -206,9 +148,10 @@
                               <Label minWidth="60.0" styleClass="report-text" text="GROUP C" />
                               <ScrollPane hbarPolicy="NEVER" minWidth="360.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                                  <content>
-                                    <AnchorPane fx:id="gcPreview" minHeight="0.0" minWidth="0.0" prefHeight="61.0" prefWidth="362.0" style="-fx-background-color: #eeeeee90;">
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="61.0" prefWidth="362.0" style="-fx-background-color: #eeeeee90;">
                                        <children>
                                           <VBox layoutX="14.0" layoutY="-70.0" prefHeight="94.0" prefWidth="200.0" AnchorPane.bottomAnchor="106.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <TilePane fx:id="gcPreview" layoutX="14.0" layoutY="-86.0" prefHeight="61.0" prefWidth="362.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                  </content>
@@ -223,9 +166,10 @@
                               <Label minWidth="60.0" styleClass="report-text" text="GROUP D" />
                               <ScrollPane hbarPolicy="NEVER" minWidth="360.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                                  <content>
-                                    <AnchorPane fx:id="gdPreview" minHeight="0.0" minWidth="0.0" prefHeight="55.0" prefWidth="362.0" style="-fx-background-color: #eeeeee90;">
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="55.0" prefWidth="362.0" style="-fx-background-color: #eeeeee90;">
                                        <children>
                                           <VBox layoutX="14.0" layoutY="-70.0" prefHeight="94.0" prefWidth="200.0" AnchorPane.bottomAnchor="106.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <TilePane fx:id="gdPreview" layoutX="-10.0" layoutY="-79.0" prefHeight="55.0" prefWidth="362.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                  </content>
@@ -238,15 +182,173 @@
                         <Separator prefWidth="200.0" />
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #eeeeee90;" />
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #eeeeee90;">
+                                 <children>
+                                    <Label alignment="CENTER" prefHeight="24.0" prefWidth="94.0" styleClass="report-boldText" text="%grade" wrapText="true" />
+                                 </children></VBox>
                               <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <Label prefHeight="24.0" prefWidth="130.0" styleClass="report-boldText" text="%report_summary" />
+                                    <Label alignment="CENTER" prefHeight="24.0" prefWidth="220.0" style="-fx-font-size: 16px;" styleClass="report-boldText" text="%report_summary" />
                                  </children>
                               </VBox>
-                              <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #eeeeee90;" />
+                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #eeeeee90;">
+                                 <children>
+                                    <Label alignment="CENTER" prefHeight="24.0" prefWidth="90.0" styleClass="report-boldText" text="%stamp" wrapText="true" />
+                                 </children></VBox>
                            </children>
                         </HBox>
+                     </children>
+                  </VBox>
+                  <Label layoutX="10.0" layoutY="10.0" styleClass="section-title" text="%placement_preview" GridPane.columnIndex="1" />
+                  <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1" GridPane.rowSpan="5">
+                     <children>
+                        <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="444.0" prefWidth="423.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <Accordion VBox.vgrow="ALWAYS">
+                                 <panes>
+                                    <TitledPane fx:id="groupAtpane" text="%group_a">
+                                       <content>
+                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <VBox prefHeight="180.0" prefWidth="598.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <children>
+                                                      <HBox spacing="2.0">
+                                                         <children>
+                                                            <Label prefHeight="20.0" prefWidth="168.0" text="%group_name" />
+                                                            <TextField fx:id="gAlabel" maxWidth="200.0" minWidth="200.0" promptText="eg Science" HBox.hgrow="ALWAYS" />
+                                                            <Button fx:id="groupAbtn" minWidth="30.0" mnemonicParsing="false" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                                         </padding>
+                                                      </HBox>
+                                                      <ListView fx:id="galv" prefHeight="200.0" prefWidth="200.0" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
+                                       <styleClass>
+                                          <String fx:value="alt-icon" />
+                                          <String fx:value="dense" />
+                                          <String fx:value="elevated-2" />
+                                       </styleClass>
+                                    </TitledPane>
+                                    <TitledPane expanded="false" text="%group_b">
+                                       <content>
+                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <VBox prefHeight="180.0" prefWidth="598.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <children>
+                                                      <HBox spacing="2.0">
+                                                         <children>
+                                                            <Label prefHeight="20.0" prefWidth="133.0" text="%group_name" />
+                                                            <TextField fx:id="gbLabel" maxWidth="200.0" minWidth="200.0" promptText="eg Arts" HBox.hgrow="ALWAYS" />
+                                                            <Button fx:id="groupBbtn" minWidth="30.0" mnemonicParsing="false" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                                         </padding>
+                                                      </HBox>
+                                                      <ListView fx:id="gblv" prefHeight="200.0" prefWidth="200.0" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
+                                       <styleClass>
+                                          <String fx:value="alt-icon" />
+                                          <String fx:value="dense" />
+                                          <String fx:value="elevated-2" />
+                                       </styleClass>
+                                    </TitledPane>
+                                    <TitledPane expanded="false" text="%group_c">
+                                       <content>
+                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <VBox prefHeight="180.0" prefWidth="598.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <children>
+                                                      <HBox spacing="2.0">
+                                                         <children>
+                                                            <Label prefHeight="20.0" prefWidth="124.0" text="%group_name" />
+                                                            <TextField fx:id="gclable" maxWidth="200.0" minWidth="200.0" prefHeight="32.0" prefWidth="137.0" promptText="eg Social Science" HBox.hgrow="ALWAYS" />
+                                                            <Button fx:id="groupCbtn" minWidth="30.0" mnemonicParsing="false" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                                         </padding>
+                                                      </HBox>
+                                                      <ListView fx:id="gclv" prefHeight="200.0" prefWidth="200.0" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
+                                       <styleClass>
+                                          <String fx:value="alt-icon" />
+                                          <String fx:value="dense" />
+                                          <String fx:value="elevated-2" />
+                                       </styleClass>
+                                    </TitledPane>
+                                    <TitledPane expanded="false" text="%group_d">
+                                       <content>
+                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <VBox prefHeight="180.0" prefWidth="598.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <children>
+                                                      <HBox spacing="2.0">
+                                                         <children>
+                                                            <Label prefHeight="20.0" prefWidth="122.0" text="%group_name" />
+                                                            <TextField fx:id="gdLabel" maxWidth="200.0" minWidth="200.0" promptText="eg Others" HBox.hgrow="ALWAYS" />
+                                                            <Button fx:id="groupDbtn" minWidth="30.0" mnemonicParsing="false" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                                         </padding>
+                                                      </HBox>
+                                                      <ListView fx:id="gdlv" prefHeight="200.0" prefWidth="200.0" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
+                                       <styleClass>
+                                          <String fx:value="alt-icon" />
+                                          <String fx:value="dense" />
+                                          <String fx:value="elevated-2" />
+                                       </styleClass>
+                                    </TitledPane>
+                                    <TitledPane expanded="false" layoutX="10.0" layoutY="85.0" text="%compulstory_subjects">
+                                       <content>
+                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <VBox prefHeight="180.0" prefWidth="598.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <children>
+                                                      <HBox spacing="2.0">
+                                                         <children>
+                                                            <Label prefHeight="17.0" prefWidth="408.0" text="%choose_compulsory_subs" HBox.hgrow="ALWAYS" />
+                                                            <Button fx:id="compulsoryBtn" minWidth="30.0" mnemonicParsing="false" />
+                                                         </children>
+                                                         <padding>
+                                                            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                                         </padding>
+                                                      </HBox>
+                                                      <ListView fx:id="compulsorylv" prefHeight="200.0" prefWidth="200.0" />
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </AnchorPane>
+                                       </content>
+                                       <styleClass>
+                                          <String fx:value="alt-icon" />
+                                          <String fx:value="dense" />
+                                          <String fx:value="elevated-2" />
+                                       </styleClass>
+                                    </TitledPane>
+                                 </panes>
+                              </Accordion>
+                           </children>
+                        </VBox>
                      </children>
                   </VBox>
                </children>
@@ -257,7 +359,7 @@
             <HBox alignment="CENTER_RIGHT" spacing="20.0">
                <children>
                   <Label prefHeight="20.0" prefWidth="183.0" text="%use_format_from" />
-                  <ComboBox fx:id="formatsCombo" prefHeight="32.0" prefWidth="227.0" />
+                  <ComboBox fx:id="formatsCombo" prefHeight="32.0" prefWidth="227.0" promptText="%select_class" styleClass="alt-icon" />
                   <HBox prefHeight="10.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                   <ButtonBar prefHeight="40.0" prefWidth="337.0">
                     <buttons>

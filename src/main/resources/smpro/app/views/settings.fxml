@@ -63,12 +63,12 @@
                                           <TextField fx:id="namealtField" promptText="lycee bilingue d'edea" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                           <TextField fx:id="abbrAltfield" promptText="LBE" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                                           <TextField fx:id="principalfield" prefHeight="25.0" prefWidth="243.0" promptText="%PRINCIPAL_NAME" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
-                                          <ComboBox fx:id="institutionCombo" prefHeight="25.0" prefWidth="733.0" promptText="%primary_secondary" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                          <ComboBox fx:id="institutionCombo" prefHeight="25.0" prefWidth="733.0" promptText="%primary_secondary" styleClass="alt-icon" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                           <TextField fx:id="mottofield" promptText="eg Knowledge in the service of humanity" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="5" />
                                           <Label text="%abbreviation" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                           <Label text="%alt_abbr" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                           <Label text="%bussiness_unit" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                                          <ComboBox fx:id="secotorCombo" prefHeight="25.0" prefWidth="253.0" promptText="%private_public" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                                          <ComboBox fx:id="secotorCombo" prefHeight="25.0" prefWidth="253.0" promptText="%private_public" styleClass="alt-icon" GridPane.columnIndex="3" GridPane.rowIndex="4" />
                                           <Label prefHeight="30.0" prefWidth="117.0" styleClass="section-title" text="%general_info" />
                                        </children>
                                     </GridPane>
@@ -291,7 +291,12 @@
                            <children>
                               <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <TableView fx:id="sectionstable" prefHeight="200.0" prefWidth="200.0" styleClass="striped" HBox.hgrow="ALWAYS" />
+                                    <TableView fx:id="sectionstable" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                                       <styleClass>
+                                          <String fx:value="striped" />
+                                          <String fx:value="dense" />
+                                          <String fx:value="bordered" />
+                                       </styleClass></TableView>
                                     <VBox prefHeight="480.0" prefWidth="238.0">
                                        <children>
                                           <GridPane hgap="5.0" prefHeight="190.0" prefWidth="238.0" vgap="5.0">
@@ -346,7 +351,12 @@
                            <children>
                               <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <TableView fx:id="tradesTable" prefHeight="200.0" prefWidth="200.0" styleClass="striped" HBox.hgrow="ALWAYS" />
+                                    <TableView fx:id="tradesTable" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                                       <styleClass>
+                                          <String fx:value="striped" />
+                                          <String fx:value="dense" />
+                                          <String fx:value="bordered" />
+                                       </styleClass></TableView>
                                     <VBox prefHeight="480.0" prefWidth="238.0">
                                        <children>
                                           <GridPane hgap="5.0" prefHeight="190.0" prefWidth="238.0" vgap="5.0">
@@ -401,7 +411,12 @@
                            <children>
                               <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <TableView fx:id="subjectsTable" prefHeight="200.0" prefWidth="200.0" styleClass="striped" HBox.hgrow="ALWAYS" />
+                                    <TableView fx:id="subjectsTable" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                                       <styleClass>
+                                          <String fx:value="striped" />
+                                          <String fx:value="dense" />
+                                          <String fx:value="bordered" />
+                                       </styleClass></TableView>
                                     <VBox prefHeight="480.0" prefWidth="238.0">
                                        <children>
                                           <GridPane hgap="5.0" prefHeight="190.0" prefWidth="238.0" vgap="5.0">
@@ -456,14 +471,21 @@
                            <children>
                               <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <TableView fx:id="classesTable" prefHeight="200.0" prefWidth="200.0" styleClass="striped" HBox.hgrow="ALWAYS" />
+                                    <TableView fx:id="classesTable" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                                       <styleClass>
+                                          <String fx:value="striped" />
+                                          <String fx:value="bordered" />
+                                          <String fx:value="dense" />
+                                       </styleClass>
+                                    </TableView>
                                  </children>
                               </HBox>
                               <Separator prefWidth="200.0" />
                               <HBox alignment="CENTER_RIGHT" prefHeight="56.0" prefWidth="892.0" spacing="10.0">
                                  <children>
-                                    <Button fx:id="newclassBtn" minHeight="20.0" minWidth="100.0" mnemonicParsing="false" text="%new_class" />
-                                    <Button fx:id="deleteClassbtn" minHeight="20.0" minWidth="100.0" mnemonicParsing="false" text="%delete_class" />
+                                    <Button fx:id="newclassBtn" minHeight="20.0" minWidth="150.0" mnemonicParsing="false" text="%new_class" />
+                                    <Button fx:id="changeClassSettingsBtn" minHeight="20.0" minWidth="150.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="127.0" text="%change_settings" />
+                                    <Button fx:id="deleteClassbtn" minHeight="20.0" minWidth="150.0" mnemonicParsing="false" text="%delete_class" />
                                     <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                                     <ButtonBar prefHeight="52.0" prefWidth="741.0">
                                        <buttons>

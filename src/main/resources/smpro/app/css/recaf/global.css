@@ -1,46 +1,11 @@
 
 
-.button{
-    -fx-font-weight: bold;
-    -fx-border-width: 0;
-
-}
-
-.button:focused {
-    -fx-border-width: 0;
-}
-.button:pressed {
-    -fx-background-color: #eee;
-}
 
 .transparent-btn {
     -fx-border-width: 0;
     /*-fx-background-color: transparent;*/
     -fx-font-weight: bold;
 }
-
-.titled-pane {
-    -fx-background-radius: 5;
-    -fx-background-insets: 0, 1;
-    -fx-background-color: #eee;
-
-}
-
-.titled-pane > .title {
-    -fx-text-fill: #fff;
-    -fx-effect: dropshadow(gaussian,#ccc,2,0,0,0);
-    -fx-background-color: linear-gradient(to bottom,#ddd,#eee);
-    -fx-padding: 5 10;
-
-
-}
-
-.titled-pane >.title > .text {
-    -fx-text-fill: linear-gradient(to bottom, #fff, #cccccc);
-    -fx-effect: dropshadow(gaussian, #fff, 2, 0, 0, 0);
-
-}
-
 
 .image-border {
     -fx-border-width: 1;
@@ -75,15 +40,6 @@
     -fx-font-family: "Segoe UI"
 }
 
-.combo-box-popup .list-view .list-cell {
-    -fx-font-weight: bold;
-    -fx-font-family: Consolas;
-    -fx-padding: 4px;
-}
-
-.combo-box .text-input {
-    -fx-background-color: #eeeeee90;
-}
 
 .section-title{
     -fx-font-size: 14px;
@@ -97,7 +53,7 @@
     -fx-font-weight: bold;
     -fx-font-family: "fantasy";
     -fx-text-fill: #eeeeee50;
-    -fx-underline: none;
+    -fx-underline: false;
 }
 
 .label.advert-text > .ikonli-font-icon {
@@ -125,6 +81,14 @@
 .report-background{
     -fx-background-color: white;
     -fx-border-radius: 10px;
+}
+
+.round-left{
+    -fx-border-radius: 0 0 10px 10px;
+}
+
+.error-textfield{
+    -fx-border-color: #b33029;
 }
 
 

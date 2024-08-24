@@ -1,7 +1,5 @@
 package smpro.app;
 
-import atlantafx.base.controls.*;
-import atlantafx.base.util.Animations;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;

@@ -146,7 +146,6 @@ public class PgConnector {
 
         try {
             System.out.println(ps.toString());
-
             ps.execute();
             System.out.println("binary data inserted");
             return true;
@@ -163,6 +162,7 @@ public class PgConnector {
     }
 
     public static InputStream readBinarydata( PreparedStatement ps) {
+        System.out.println("===============Inserting binary data ============== \n");
         InputStream is = null;
 
         try {
@@ -170,7 +170,7 @@ public class PgConnector {
 
             if (rs.next()) {
                 System.out.println("file data found");
-                is = rs.getBinaryStream(1);
+                if (!Objects.equals(null,rs.getBinaryStream(1))) is = rs.getBinaryStream(1);
             }
             ps.close();
         } catch (SQLException err) {

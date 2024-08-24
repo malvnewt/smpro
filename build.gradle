@@ -13,7 +13,7 @@ group 'smpro.app'
 version '1.0-SNAPSHOT'
 
 repositories {
-  google()
+
   mavenCentral()
   maven {
     url "https://plugins.gradle.org/m2/"
@@ -21,6 +21,8 @@ repositories {
   maven {
     url "https://jitpack.io"
   }
+
+
 
 }
 
@@ -113,8 +115,6 @@ extraJavaModuleInfo {
 
 dependencies {
 
-//  implementation("org.gradlex:extra-java-module-info:1.8")
-
   implementation('org.controlsfx:controlsfx:11.1.2')
   implementation('com.dlsc.formsfx:formsfx-core:11.6.0') {
     exclude(group: 'org.openjfx')
@@ -161,7 +161,7 @@ dependencies {
   // json read/write
   implementation("com.google.code.gson:gson:2.8.6")
 
-    // Themes
+    // Themes :: USING RECAF stylesheet
   implementation 'io.github.mkpaz:atlantafx-base:2.0.1'
 
   //ribbons

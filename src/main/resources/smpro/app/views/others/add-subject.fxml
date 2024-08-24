@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="384.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.AddSubjectController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="431.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.AddSubjectController">
    <children>
       <GridPane hgap="5.0" vgap="5.0" VBox.vgrow="ALWAYS">
         <columnConstraints>
@@ -29,14 +29,15 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label styleClass="section-title" text="%new_subject" />
-            <Label text="%subject_name" GridPane.rowIndex="1" />
+            <Label text="%short_name" GridPane.rowIndex="1" />
             <Label text="%subject_abbreviation" GridPane.rowIndex="2" />
-            <Label text="%subject_category" GridPane.rowIndex="3" />
-            <Label text="%general_coefficient" GridPane.rowIndex="4" />
-            <Label text="%department_head" GridPane.rowIndex="5" />
+            <Label text="%subject_category" GridPane.rowIndex="4" />
+            <Label text="%general_coefficient" GridPane.rowIndex="5" />
+            <Label text="%department_head" GridPane.rowIndex="6" />
             <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="306.0" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
                <children>
                   <ImageView fx:id="iconview" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
@@ -44,9 +45,11 @@
             </HBox>
             <TextField fx:id="namefield" promptText="eg computer science" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="abbrfield" promptText="eg C.S" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField fx:id="coefField" promptText="eg 5" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <TextField fx:id="headField" promptText="eg Mr John Doe" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <ComboBox fx:id="categoryField" prefHeight="30.0" prefWidth="345.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="coefField" promptText="eg 5" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <TextField fx:id="headField" promptText="eg Mr John Doe" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <ComboBox fx:id="categoryField" prefHeight="30.0" prefWidth="345.0" promptText="%select" styleClass="alt-icon" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="%subject_code" GridPane.rowIndex="3" />
+            <TextField fx:id="subjectCodefield" promptText="eg 680, M21 ..." GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
       <Separator prefWidth="200.0" />
@@ -61,7 +64,6 @@
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
    <stylesheets>
-      <URL value="@../../css/global.css" />
       <URL value="@../../css/recaf/all.css" />
    </stylesheets>
 </VBox>
