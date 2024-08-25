@@ -426,6 +426,31 @@ public class ProjectUtils {
 
     }
 
+    public static void setCustomCellFactory(TableColumn<HashMap<String, Object>, String> column,Callback<String,String> callback,Node... g) {
+
+        column.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<HashMap<String, Object>, String> call(TableColumn<HashMap<String, Object>, String> hashMapStringTableColumn) {
+                return new TableCell<>() {
+                    @Override
+                    protected void updateItem(String s, boolean b) {
+                        super.updateItem(s, b);
+                        if (!b) {
+                            setText(callback.call(s));
+                            if (g.length>0)setGraphic(g[0]);
+                        }else {
+                            setText(null);
+                            setGraphic(null);
+
+                        }
+                    }
+                };
+            }
+        });
+
+
+
+    }
 
     public static TextInputDialog getTextDialog(Stage parent,String title,String headertext,String contentText,Node graphic) {
         TextInputDialog textInputDialog = new TextInputDialog();

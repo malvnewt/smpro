@@ -46,10 +46,24 @@ public class AddSubjectController implements Initializable {
         // restrict coeff input\
         coefField.textProperty().addListener(((observableValue, s, t1) -> coefField.setText(t1.replaceAll("\\D", ""))));
 
+        //validation remover
+        for (TextField t : new TextField[]{namefield, coefField, headField, subjectCodefield,abbrfield}) {
+            t.textProperty().addListener((a,b,c)-> {
+                if (!c.isEmpty()) {
+                    t.getStyleClass().remove("error-textfield");
+                }
+            });
+
+        }
+
 
         //populate category
         categoryField.getItems().addAll(Store.SubjectCategories.SupportedCategories);
         categoryField.setValue(Store.SubjectCategories.SupportedCategories.get(0));
+        categoryField.valueProperty().addListener((a,b,c)->{
+            if (!c.isEmpty())categoryField.getStyleClass().remove("error-textfield");
+        });
+
 
         categoryField.setCellFactory(new Callback<>() {
             @Override
@@ -89,11 +103,11 @@ public class AddSubjectController implements Initializable {
             String subjectCode = subjectCodefield.getText();
 
             //validate
-            if (name.isEmpty()) ProjectUtils.showFloatingTooltip(ProjectUtils.createErrorLabel(Translator.getIntl("required")), thisStage.get(), namefield, -10, 0);
-            if (shortName.isEmpty()) ProjectUtils.showFloatingTooltip(ProjectUtils.createErrorLabel(Translator.getIntl("required")), thisStage.get(), abbrfield, -10, 0);
-            if (coefficient.isEmpty()) ProjectUtils.showFloatingTooltip(ProjectUtils.createErrorLabel(Translator.getIntl("required")), thisStage.get(), coefField, -10, 0);
-            if (category.isEmpty()) ProjectUtils.showFloatingTooltip(ProjectUtils.createErrorLabel(Translator.getIntl("required")), thisStage.get(), categoryField, -10, 0);
-            if (subjectCode.isEmpty()) ProjectUtils.showFloatingTooltip(ProjectUtils.createErrorLabel(Translator.getIntl("required")), thisStage.get(), subjectCodefield, -10, 0);
+            if (name.isEmpty()) namefield.getStyleClass().add("error-textfield");
+            if (shortName.isEmpty())abbrfield.getStyleClass().add("error-textfield");
+            if (coefficient.isEmpty()) coefField.getStyleClass().add("error-textfield");
+            if (category.isEmpty())categoryField.getStyleClass().add("error-textfield");
+            if (subjectCode.isEmpty()) subjectCodefield.getStyleClass().add("error-textfield");
 
 
             if (!(name.isEmpty() || shortName.isEmpty() || coefficient.isEmpty() || category.isEmpty())) {
@@ -101,11 +115,11 @@ public class AddSubjectController implements Initializable {
                         "values ('%s','%s','%s',%d,'%s','%s')", name,subjectCode, category, Integer.parseInt(coefficient), shortName, departmentHead);
                 PgConnector.insert(insertsubject);
 
-                thisStage.get().close();
 
                 Alert a = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.NONE, "INSERTION SUCCESS", "INFO",
                         Translator.getIntl("data_updated"), ButtonType.OK);
                 a.showAndWait();
+                thisStage.get().close();
 
             }
 

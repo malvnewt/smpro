@@ -256,11 +256,6 @@ public class SettingsController implements Initializable {
 
         try {
             buildBase();
-//            buildAddress();
-//            buildAcademicYear();
-//            buildSections();
-//            buildTrades();
-//            buildSubjects();
 
             settingsTabpane.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, selectedTabIndex) -> {
 
@@ -609,9 +604,14 @@ public class SettingsController implements Initializable {
 
 
         TableColumn<HashMap<String, Object>, String> sectionnamecol =
-                ProjectUtils.createTableColumn(Translator.getIntl("section").toUpperCase(), "section_name",true);
+                ProjectUtils.createTableColumn(Translator.getIntl("section").toUpperCase(), "section_name");
 
         TableColumn<HashMap<String, Object>, String> sectionidcol = ProjectUtils.createTableColumn("ID", "id" );
+
+        for (TableColumn<HashMap<String, Object>, String> col : new TableColumn[]{sectionnamecol}) {
+            ProjectUtils.setCustomCellFactory(col, s -> ProjectUtils.capitalize(s));
+
+        }
 
 
         List<TableColumn<HashMap<String, Object>, String>> sectioncols = List.of(sectionidcol, sectionnamecol);
@@ -668,14 +668,26 @@ public class SettingsController implements Initializable {
             if (!Objects.equals(null, selectedSection)) {
                 Number sectionid = PgConnector.getNumberOrNull(selectedSection, "id");
 
-                String delete = String.format("delete from sections where id=%d", sectionid.intValue());
-                PgConnector.update(delete);
+                Alert warning = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.WARNING,
+                        Translator.getIntl("attention").toUpperCase(), "PROMPT",
+                        Translator.getIntl("delete_item") + String.format(" %s%s %s ?", Store.UnicodeSumnbol.blank,
+                                Store.UnicodeSumnbol.rightArrow, PgConnector.getFielorBlank(selectedSection, "section_name").toUpperCase()), ButtonType.NO, ButtonType.YES);
+                Optional<ButtonType> res = warning.showAndWait();
 
-                Alert a = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.NONE, "DELETE SUCCESS", "INFO", Translator.getIntl("data_updated"), ButtonType.OK);
-                a.showAndWait();
-                //update sections table items
-                sectionstable.getItems().clear();
-                sectionstable.setItems(FXCollections.observableList(PgConnector.fetch("select * from sections", PgConnector.getConnection())));
+                res.ifPresent(b->{
+                    if (Objects.equals(b, ButtonType.YES)) {
+                        String delete = String.format("delete from sections where id=%d", sectionid.intValue());
+                        PgConnector.update(delete);
+
+                        Alert a = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.NONE, "DELETE SUCCESS", "INFO", Translator.getIntl("data_updated"), ButtonType.OK);
+                        a.showAndWait();
+                        //update sections table items
+                        sectionstable.getItems().clear();
+                        sectionstable.setItems(FXCollections.observableList(PgConnector.fetch("select * from sections", PgConnector.getConnection())));
+
+                    } else warning.close();
+                });
+
 
 
             }
@@ -694,17 +706,22 @@ public class SettingsController implements Initializable {
 
 
         TableColumn<HashMap<String, Object>, String> tradenamecol = ProjectUtils.createTableColumn(Translator.getIntl("trade").toUpperCase(), "trade_name");
-        TableColumn<HashMap<String, Object>, String> tradeAbbrcol = ProjectUtils.createTableColumn(Translator.getIntl("abbreviation").toUpperCase(), "trade_abbreviation",true);
+        TableColumn<HashMap<String, Object>, String> tradeAbbrcol = ProjectUtils.createTableColumn(Translator.getIntl("abbreviation").toUpperCase(), "trade_abbreviation", true);
         TableColumn<HashMap<String, Object>, String> tradeidcol = ProjectUtils.createTableColumn("ID", "id");
 
-        List<TableColumn<HashMap<String, Object>, String>> tradecols = List.of(tradeidcol, tradenamecol,tradeAbbrcol);
+        for (TableColumn<HashMap<String, Object>, String> col : new TableColumn[]{tradenamecol}) {
+            ProjectUtils.setCustomCellFactory(col, s -> ProjectUtils.capitalize(s));
+
+        }
+
+        List<TableColumn<HashMap<String, Object>, String>> tradecols = List.of(tradeidcol, tradenamecol, tradeAbbrcol);
         tradenamecol.setMinWidth(300);
         tradeAbbrcol.setMinWidth(200);
         tradeidcol.setMinWidth(80);
 
-        tradenamecol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT,15,Paint.valueOf(Store.Colors.lightestGray)));
-        tradeAbbrcol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT,15,Paint.valueOf(Store.Colors.lightestGray)));
-        tradeidcol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignN.NUMERIC_0_BOX,15,Paint.valueOf(Store.Colors.lightestGray)));
+        tradenamecol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT, 15, Paint.valueOf(Store.Colors.lightestGray)));
+        tradeAbbrcol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT, 15, Paint.valueOf(Store.Colors.lightestGray)));
+        tradeidcol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignN.NUMERIC_0_BOX, 15, Paint.valueOf(Store.Colors.lightestGray)));
 
 
         tradesTable.getColumns().addAll(tradecols);
@@ -713,13 +730,13 @@ public class SettingsController implements Initializable {
         List<HashMap<String, Object>> trades = PgConnector.fetch("select * from trades order by trade_name", PgConnector.getConnection());
         tradesTable.getItems().addAll(trades);
 
-        addTradeBtn.setOnAction(e->{
+        addTradeBtn.setOnAction(e -> {
 
 
             URL url = ResourceUtil.getAppResourceURL("views/others/two-inputs.fxml");
 
             FXMLLoader fxmlLoader = new FXMLLoader(url);
-            fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
+            fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL + "lang"));
             Parent root = null;
             try {
                 root = fxmlLoader.load();
@@ -749,37 +766,39 @@ public class SettingsController implements Initializable {
             tradesTable.setItems(FXCollections.observableList(PgConnector.fetch("select * from trades order by trade_name", PgConnector.getConnection())));
 
 
-
-
         });
 
 
-
-        removeTradeBtn.setOnAction(e->{
-           HashMap<String,Object> selectedTrade =  tradesTable.getSelectionModel().getSelectedItem();
+        removeTradeBtn.setOnAction(e -> {
+            HashMap<String, Object> selectedTrade = tradesTable.getSelectionModel().getSelectedItem();
             if (!Objects.equals(null, selectedTrade)) {
                 Number tradeid = PgConnector.getNumberOrNull(selectedTrade, "id");
 
-                String delete = String.format("delete from trades where id=%d", tradeid.intValue());
-                PgConnector.update(delete);
+                Alert warning = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.WARNING,
+                        Translator.getIntl("attention").toUpperCase(), "PROMPT",
+                        Translator.getIntl("delete_item") + String.format(" %s%s %s ?", Store.UnicodeSumnbol.blank, Store.UnicodeSumnbol.rightArrow, PgConnector.getFielorBlank(selectedTrade, "trade_name").toUpperCase()), ButtonType.NO, ButtonType.YES);
+                Optional<ButtonType> res = warning.showAndWait();
 
-                Alert a = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.NONE, "DELETE SUCCESS", "INFO", Translator.getIntl("data_updated"), ButtonType.OK);
-                a.showAndWait();
-                //update sections table items
-                tradesTable.getItems().clear();
-                tradesTable.setItems(FXCollections.observableList(PgConnector.fetch("select * from trades order by trade_name", PgConnector.getConnection())));
+                res.ifPresent(type -> {
+                    if (Objects.equals(type, ButtonType.YES)) {
+                        String delete = String.format("delete from trades where id=%d", tradeid.intValue());
+                        PgConnector.update(delete);
+                        //update sections table items
+                        tradesTable.getItems().clear();
+                        tradesTable.setItems(FXCollections.observableList(PgConnector.fetch("select * from trades order by trade_name", PgConnector.getConnection())));
 
+
+                    } else {
+                        warning.close();
+                    }
+
+
+                });
 
             }
 
         });
-
-        nextTradesBtn.setOnAction(e -> changeTab(5));
-
-
-
-
-
+            nextTradesBtn.setOnAction(e -> changeTab(5));
 
     }
 
@@ -839,6 +858,35 @@ public class SettingsController implements Initializable {
 
         newclassBtn.setOnAction(e->openClassWindow(false));
 
+        deleteClassbtn.setOnAction(e->{
+            HashMap<String, Object> selectedClass = classesTable.getSelectionModel().getSelectedItem();
+
+            if (!Objects.equals(null, selectedClass)) {
+
+                Alert warning = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.WARNING,
+                         Translator.getIntl("attention").toUpperCase(),"PROMPT",
+                        Translator.getIntl("delete_item") + String.format(" %s%s %s ?", Store.UnicodeSumnbol.blank, Store.UnicodeSumnbol.rightArrow, PgConnector.getFielorBlank(selectedClass, "classname").toUpperCase()), ButtonType.NO, ButtonType.YES);
+               Optional<ButtonType> res =  warning.showAndWait();
+
+               res.ifPresent(type->{
+                   if (Objects.equals(type, ButtonType.YES)) {
+                        PgConnector.update(String.format("delete from classes where id=%d", Objects.requireNonNull(PgConnector.getNumberOrNull(selectedClass, "id")).intValue()));
+                        classesTable.getItems().clear();
+                        List<HashMap<String, Object>> updatedClasses = PgConnector.fetch("select * from classes order by level, classname", PgConnector.getConnection());
+                           classesTable.getItems().addAll(updatedClasses);
+                   }else {
+                       warning.close();
+                   }
+               });
+
+
+
+
+
+
+            }
+        });
+
         nextClassesbtn.setOnAction(e -> changeTab(7));
 
         changeClassSettingsBtn.setOnAction(e->{
@@ -860,23 +908,30 @@ public class SettingsController implements Initializable {
 
 
         TableColumn<HashMap<String, Object>, String> subjectnamecol = ProjectUtils.createTableColumn(Translator.getIntl("subject").toUpperCase(), "subject_name");
-        TableColumn<HashMap<String, Object>, String> categoryCol = ProjectUtils.createTableColumn(Translator.getIntl("category").toUpperCase(), "subject_category",true);
+        TableColumn<HashMap<String, Object>, String> categoryCol = ProjectUtils.createTableColumn(Translator.getIntl("category").toUpperCase(), "subject_category");
         TableColumn<HashMap<String, Object>, String> subjectCodecol = ProjectUtils.createTableColumn(Translator.getIntl("subject_code"), "subject_code");
-        TableColumn<HashMap<String, Object>, String> subjectAbbrcol = ProjectUtils.createTableColumn(Translator.getIntl("abbreviation").toUpperCase(), "subject_abbreviation",true);
+        TableColumn<HashMap<String, Object>, String> subjectAbbrcol = ProjectUtils.createTableColumn(Translator.getIntl("abbreviation_short").toUpperCase(), "subject_abbreviation",true);
         TableColumn<HashMap<String, Object>, String> subjectcoefcol = ProjectUtils.createTableColumn("COEFF", "subject_coefficient");
         TableColumn<HashMap<String, Object>, String> departmentHeadcol = ProjectUtils.createTableColumn(Translator.getIntl("department_head").toUpperCase(), "department_head");
 
 
-        List<TableColumn<HashMap<String, Object>, String>> subjectCols = List.of(subjectnamecol,subjectAbbrcol,categoryCol,subjectcoefcol,departmentHeadcol);
+        List<TableColumn<HashMap<String, Object>, String>> subjectCols = List.of(subjectnamecol,subjectAbbrcol,subjectCodecol,categoryCol,subjectcoefcol,departmentHeadcol);
 
-        for (TableColumn<HashMap<String, Object>, String> col:new TableColumn[]{subjectnamecol,categoryCol,departmentHeadcol})
+        for (TableColumn<HashMap<String, Object>, String> col : new TableColumn[]{subjectnamecol,subjectCodecol, categoryCol, departmentHeadcol}) {
             col.setMinWidth(150);
+            if (!(col == categoryCol)) {
+                ProjectUtils.setCustomCellFactory(col, s -> ProjectUtils.capitalize(s));
+
+            }
+        }
+
         subjectcoefcol.setMinWidth(80);
         subjectAbbrcol.setMinWidth(80);
+        departmentHeadcol.setMinWidth(200);
 
-        subjectnamecol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT,15,Paint.valueOf(Store.Colors.lightestGray)));
-        subjectAbbrcol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT,15,Paint.valueOf(Store.Colors.lightestGray)));
-        categoryCol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT,15,Paint.valueOf(Store.Colors.lightestGray)));
+//        subjectnamecol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT,15,Paint.valueOf(Store.Colors.lightestGray)));
+        subjectCodecol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CODE_TAGS,15,Paint.valueOf(Store.Colors.lightestGray)));
+//        categoryCol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TEXT,15,Paint.valueOf(Store.Colors.lightestGray)));
         departmentHeadcol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignA.ACCOUNT,15,Paint.valueOf(Store.Colors.lightestGray)));
         subjectcoefcol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignN.NUMERIC,15,Paint.valueOf(Store.Colors.lightestGray)));
 
@@ -938,15 +993,28 @@ public class SettingsController implements Initializable {
             if (!Objects.equals(null, selectedSubject)) {
                 Number subjectid = PgConnector.getNumberOrNull(selectedSubject, "id");
 
-                String delete = String.format("delete from subjects where id=%d", subjectid.intValue());
-                PgConnector.update(delete);
+                Alert warning = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.WARNING,
+                        Translator.getIntl("attention").toUpperCase(),"PROMPT",
+                        Translator.getIntl("delete_item") + String.format(" %s%s %s ?", Store.UnicodeSumnbol.blank, Store.UnicodeSumnbol.rightArrow, PgConnector.getFielorBlank(selectedSubject,
+                                "subject_name").toUpperCase()), ButtonType.NO, ButtonType.YES);
+                Optional<ButtonType> res =  warning.showAndWait();
 
-                Alert a = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.NONE, "DELETE SUCCESS", "INFO", Translator.getIntl("data_updated"), ButtonType.OK);
-                a.showAndWait();
-                //update sections table items
-                subjectsTable.getItems().clear();
-                subjectsTable.setItems(FXCollections.observableList(PgConnector.fetch("select * from subjects order  by subject_name",
-                        PgConnector.getConnection())));
+                res.ifPresent(b->{
+                    if (Objects.equals(b, ButtonType.YES)) {
+                        String delete = String.format("delete from subjects where id=%d", subjectid.intValue());
+                        PgConnector.update(delete);
+
+//                        Alert a = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.NONE, "DELETE SUCCESS", "INFO", Translator.getIntl("data_updated"), ButtonType.OK);
+//                        a.showAndWait();
+                        //update sections table items
+                        subjectsTable.getItems().clear();
+                        subjectsTable.setItems(FXCollections.observableList(PgConnector.fetch("select * from subjects order  by subject_name",
+                                PgConnector.getConnection())));
+                    }else warning.close();
+                });
+
+
+
 
 
             }
@@ -1115,6 +1183,41 @@ public class SettingsController implements Initializable {
         AddClassController addClassController = fxmlLoader.getController();
         addClassController.thisStage.set(stage);
         addClassController.isUpdate.set(isupdate);
+
+        if (isupdate) {
+            HashMap<String, Object> selectedClass = classesTable.getSelectionModel().getSelectedItem();
+            try {
+                addClassController.prepareUpdate(PgConnector.getNumberOrNull(selectedClass,"id").intValue());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        addClassController.saveClassBtn.setOnAction(e->{
+            if (isupdate) {
+                try {
+                    HashMap<String, Object> selectedClass = classesTable.getSelectionModel().getSelectedItem();
+                    addClassController.update(PgConnector.getNumberOrNull(selectedClass,"id").intValue());
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }else {
+                try {
+                    boolean saved = addClassController.save();
+                    if (saved) {
+                        classesTable.getItems().clear();
+                        List<HashMap<String, Object>> dbClasses = PgConnector.fetch("select * from classes order by level, classname", PgConnector.getConnection());
+                        classesTable.getItems().addAll(dbClasses);
+
+                    }
+
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+
 
         scene.getStylesheets().addAll(
                 ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()

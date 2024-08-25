@@ -51,6 +51,9 @@ public class Store {
         public static String atSymbole = "\u0040";
         public static String blank = "\u2800";
         public static String dash = "\u2796";
+        public static String rightArrow = "\u27A1";
+        public static String bullet = "\u2022";
+        public static String bolddash = "\u2501";
     }
 
 
@@ -83,7 +86,7 @@ public class Store {
         public static String Practical = "practical";
         public static String Other = "other";
 
-        public static List<String> SupportedCategories = List.of(Science,Arts,Professional,Practical,Language,Other);
+        public static List<String> SupportedCategories = List.of(Science,SocialScience,Arts,Professional,Practical,Language,Other);
 
 
 

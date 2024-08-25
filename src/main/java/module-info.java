@@ -5,6 +5,7 @@ module smpro.app {
     requires java.base;
     requires javafx.base;
     requires java.desktop;
+    requires javafx.graphics;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;

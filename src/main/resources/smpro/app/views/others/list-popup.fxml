@@ -4,26 +4,30 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="559.0" prefWidth="385.0" spacing="10.0" stylesheets="@../../css/recaf/all.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.ListDisplayController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="385.0" spacing="10.0" stylesheets="@../../css/recaf/all.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.ListDisplayController">
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
    <children>
       <Label fx:id="title" prefHeight="17.0" prefWidth="277.0" styleClass="section-title" stylesheets="@../../css/recaf/all.css" text="%select_subjets" />
       <Separator prefWidth="200.0" />
-      <HBox>
+      <HBox alignment="CENTER_LEFT">
          <children>
-            <Label minWidth="60.0" />
-            <TextField fx:id="searchfield" promptText="%filter" styleClass="rounded" HBox.hgrow="ALWAYS" />
+            <Label fx:id="searchLabel" minWidth="30.0" />
+            <TextField fx:id="searchfield" prefHeight="32.0" prefWidth="316.0" promptText="%filter" styleClass="rounded" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
-      <ListView fx:id="lv" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+      <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+         <content>
+            <VBox fx:id="itemcvb" prefHeight="200.0" prefWidth="100.0" />
+         </content>
+      </ScrollPane>
       <Separator prefWidth="200.0" />
       <HBox alignment="CENTER_RIGHT" spacing="5.0">
          <children>

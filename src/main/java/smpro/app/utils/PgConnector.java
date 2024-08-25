@@ -2,6 +2,7 @@ package smpro.app.utils;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import org.postgresql.jdbc.PgArray;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -210,6 +211,22 @@ public class PgConnector {
 
         return (Number) val;
 
+    }
+
+    public static List<String> parsePgArray(ResultSet rs, String key) {
+        List<String> out;
+        try {
+            Array pglist = rs.getArray(key);
+            String[] stringArray = (String[]) pglist.getArray();
+            out = Arrays.stream(stringArray).toList();
+
+
+        } catch (SQLException e) {
+            out = new ArrayList<>();
+            e.printStackTrace();
+//            throw new RuntimeException(e);
+        }
+        return out;
     }
 
 

@@ -169,6 +169,7 @@ dependencies {
 
   //custom caption title bar
 //  implementation 'net.yetihafen:javafx-customcaption:1.0.0'
+//  implementation 'com.github.plushaze.traynotification:TrayNotification:0.3'
 
   // use native windows progressbar
   implementation 'com.github.Dansoftowner:FXTaskbarProgressBar:v11.4'
