@@ -35,10 +35,8 @@ public class Store {
         public static String lightestGray = "#eeee";
 //
         public static String hoverbg = "#373737";
-//        public static String hoverbg = "#20aaaa25";
         public static String selectionBg = "#444444";
-//        public static String selectionBg = "#20aaaa65";
-        public static String red = "#b33029";
+        public static String red = "#ff6158";
 
 
 

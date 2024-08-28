@@ -1,10 +1,7 @@
 package smpro.app.controllers;
 
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -13,20 +10,20 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SearchableComboBox;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignB;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignP;
-import org.postgresql.jdbc.PgArray;
 import smpro.app.ResourceUtil;
 import smpro.app.utils.PgConnector;
 import smpro.app.utils.ProjectUtils;
@@ -36,7 +33,10 @@ import smpro.app.utils.Translator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 public class AddClassController implements Initializable {
@@ -193,6 +193,8 @@ public class AddClassController implements Initializable {
 
 
     }
+
+
     public void initUi() throws SQLException {
 
         //add searchable combo for classmaster
@@ -432,25 +434,18 @@ public class AddClassController implements Initializable {
             }
 
 
-
-
-
             classnamefiled.setText(name);
             shortnamefield.setText(abbreviation);
             sectioncombo.setValue(section);
             cyclecombo.setValue(cyc);
             levelcombo.setValue(levle);
-            classmastercombo.setValue(ProjectUtils.capitalize(cmaster));
+            classmastercombo.setValue(cmaster);
 
 
 
         }
 
 
-
-    }
-
-    public void loadCurrentClassSettings() {
 
     }
 
@@ -472,11 +467,13 @@ public class AddClassController implements Initializable {
         fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
         Parent root =fxmlLoader.load();
         Scene scene = new Scene(root);
+//        root.getStylesheets().add(ResourceUtil.getAppResourceURL("css/recaf/all.css").toExternalForm());
+
 
         ListDisplayController listDisplayController = fxmlLoader.getController();
         listDisplayController.title.setText(popupTitle);
 
-        listDisplayController.loadDataItems(dbSubjects, new ArrayList<>());
+        listDisplayController.loadDataItems(dbSubjects, lv.getItems());
 
         listDisplayController.confirmBtn.setOnAction(e->{
             List<String> selectedItems = listDisplayController.dataItems.stream().filter(CheckBox::isSelected).map(CheckBox::getId).sorted().toList();
@@ -492,7 +489,22 @@ public class AddClassController implements Initializable {
         stage.initOwner(thisStage.get());
         stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
         stage.setResizable(false);
-        listDisplayController.PopupStageProperty.set(stage);
+
+        PopOver subjectsPopup = ProjectUtils.showPopover("", root, PopOver.ArrowLocation.LEFT_CENTER, true, true);
+
+        subjectsPopup.setOnHiding(e->{
+            textField.getStyleClass().remove("error-textfield");
+            List<Node> selectItems = listDisplayController.itemcvb.getChildren();
+            for (Node n : selectItems) {
+                if (((CheckBox) n).isSelected() && textField.getText().isEmpty()) {
+                    textField.getStyleClass().add("error-textfield");
+                    break;
+                }
+            }
+        });
+
+        listDisplayController.closetP.setOnAction(e->subjectsPopup.hide());
+
 
         listDisplayController.confirmBtn.setOnAction(e->{
             List<String> selectedSubs = new ArrayList<>();
@@ -506,7 +518,6 @@ public class AddClassController implements Initializable {
             lv.getItems().addAll(selectedSubs);
 
             // fill preview
-            System.out.println("binding pane "+tilePane);
             tilePane.setHgap(4);
             tilePane.setVgap(2);
             tilePane.setPadding(new Insets(2));
@@ -523,17 +534,21 @@ public class AddClassController implements Initializable {
 
             }
 
-            stage.close();
+//            stage.close();
+            subjectsPopup.hide();
 
         });
 
 
-        stage.show();
-        ProjectUtils.positionFloatingStage(thisStage.get(), stage, lv, 20, 0);
 
 
 
 
+
+//        stage.show();
+        subjectsPopup.show(iscompulsory.length == 0 ? textField : lv);
+
+//        ProjectUtils.positionFloatingStage(thisStage.get(), stage, lv, 20, 0);
 
 
     }
@@ -541,13 +556,27 @@ public class AddClassController implements Initializable {
     public boolean save() throws SQLException {
         System.out.println("==============  saving class    ===================");
 
+        //check if class exitst
+        String checkExist = String.format("""
+                select * from classes where classname='%s' or class_abbreviation='%s' """, classnameP.get(), shortNameP.get());
+        List<?> res = PgConnector.fetch(checkExist, PgConnector.getConnection());
+
+        if (!res.isEmpty()) {
+            String errMessage = String.format("%s \n%s %s", Translator.getIntl("class_exists"), Store.UnicodeSumnbol.rightArrow, classnameP.get().toUpperCase());
+            Alert a = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.ERROR, Translator.getIntl("validation_err").toUpperCase(),
+                    "ERR", errMessage, ButtonType.CLOSE);
+            a.showAndWait();
+            return false;
+
+        }
+
 
         //validate
         boolean isvalidForm = true;
         StringBuilder errMessageBuilder = new StringBuilder();
 
 
-        List<ComboBox> numberFields = List.of(cyclecombo,levelcombo,sectioncombo);
+        List<ComboBox<?>> numberFields = List.of(cyclecombo,levelcombo,sectioncombo);
         List<TextField> textFields = List.of(classnamefiled,shortnamefield);
 
         List<String> stringErrors = List.of(
@@ -574,7 +603,7 @@ public class AddClassController implements Initializable {
 
         }
 
-        for (ComboBox field : numberFields) {
+        for (ComboBox<?> field : numberFields) {
             String errt =  numberErrors.get(numberFields.indexOf(field));
             field.valueProperty().addListener((ob,o,n)->field.getStyleClass().remove("error-textfield"));
 
@@ -606,8 +635,15 @@ public class AddClassController implements Initializable {
             if ((!view.getItems().isEmpty()) && tf.getText().isEmpty()) {
                 isvalidForm = false;
                 grounnameErrBuilder.append(String.format("%s %s\n", Store.UnicodeSumnbol.bullet, names.get(index)));
-                missingCount+=1;
+                missingCount += 1;
+            } else {
+                // add groupname to the list
+                String gname = tf.getText();
+                ListProperty<String> groupProperty = categorySubjectsProperties.get(index);
+                groupProperty.add(0, gname);
+
             }
+
 
         }
 
@@ -680,7 +716,144 @@ public class AddClassController implements Initializable {
 
     }
 
-    public void update(int cid) throws SQLException {
+    public boolean update(int cid) throws SQLException {
+        System.out.println("==============  saving class    ===================");
+
+        //validate
+        boolean isvalidForm = true;
+        StringBuilder errMessageBuilder = new StringBuilder();
+
+
+        List<ComboBox<?>> numberFields = List.of(cyclecombo,levelcombo,sectioncombo);
+        List<TextField> textFields = List.of(classnamefiled,shortnamefield);
+
+        List<String> stringErrors = List.of(
+                Translator.getIntl("classname"), Translator.getIntl("abbreviation")
+        );
+
+        List<String> numberErrors = List.of(
+                Translator.getIntl("cycle"), Translator.getIntl("class_level"),
+                Translator.getIntl("section"), Translator.getIntl("class_master")
+        );
+
+
+        for (TextField field : textFields) {
+            String errt =  stringErrors.get(textFields.indexOf(field));
+            field.textProperty().addListener((ob,o,n)->field.getStyleClass().remove("error-textfield"));
+
+            if (field.getText().isEmpty()) {
+                field.getStyleClass().add("error-textfield");
+                errMessageBuilder.append(Store.UnicodeSumnbol.bullet).append(" ").append(ProjectUtils.capitalize(errt)).append("\n");
+                isvalidForm = false;
+            }else {
+                field.getStyleClass().remove("error-textfield");
+            }
+
+        }
+
+        for (ComboBox<?> field : numberFields) {
+            String errt =  numberErrors.get(numberFields.indexOf(field));
+            field.valueProperty().addListener((ob,o,n)->field.getStyleClass().remove("error-textfield"));
+
+
+            if (field.getValue() ==null) {
+                field.getStyleClass().add("error-textfield");
+                errMessageBuilder.append(Store.UnicodeSumnbol.bullet).append(" ").append(ProjectUtils.capitalize(errt)).append("\n");
+                isvalidForm = false;
+            }else {
+                field.getStyleClass().remove("error-textfield");
+            }
+
+        }
+
+
+        StringBuilder grounnameErrBuilder = new StringBuilder();
+
+        int missingCount = 0;
+        List<String> names = List.of(
+                Translator.getIntl("group_a"),
+                Translator.getIntl("group_b"),
+                Translator.getIntl("group_c"),
+                Translator.getIntl("group_d")
+        );
+
+        for (ListView<String> view : editLview ) {
+            int index =editLview.indexOf(view);
+            TextField tf = editFields.get(index);
+            if ((!view.getItems().isEmpty()) && tf.getText().isEmpty()) {
+                isvalidForm = false;
+                grounnameErrBuilder.append(String.format("%s %s\n", Store.UnicodeSumnbol.bullet, names.get(index)));
+                missingCount += 1;
+            } else {
+                // add groupname to the list
+                String gname = tf.getText();
+                ListProperty<String> groupProperty = categorySubjectsProperties.get(index);
+                groupProperty.add(0, gname);
+
+            }
+
+
+        }
+
+        if (missingCount>0){
+            errMessageBuilder.append("\n");
+            for (int i = 0; i < 18; i++) errMessageBuilder.append(Store.UnicodeSumnbol.dash).append(" ");
+            errMessageBuilder.append("\n").append(String.format("%d %s %s\n", missingCount,Store.UnicodeSumnbol.blank, Translator.getIntl("labels_missing")));
+            errMessageBuilder.append(grounnameErrBuilder.toString());
+
+        }
+
+
+
+
+
+
+        if (!isvalidForm) {
+            Alert errAlert = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.ERROR,
+                    Translator.getIntl("invalid_form"), "ERR INFO", errMessageBuilder.toString(), ButtonType.CLOSE);
+            errAlert.showAndWait();
+            return false;
+        }
+
+
+
+
+        String updateQuery = """
+                update classes set classname=?,class_abbreviation=?,section=?,class_master=?,cycle=?,
+                level=?,subjects_ga=?,subjects_gb=?,subjects_gc=?,subjects_gd=?,compulsory_subjects=? where id=?
+                """;
+
+
+        Connection con = PgConnector.getConnection();
+        PreparedStatement insertStatement = con.prepareStatement(updateQuery);
+
+        insertStatement.setString(1, classnameP.get());
+        insertStatement.setString(2, shortNameP.get());
+        insertStatement.setString(3, sectionP.get());
+        insertStatement.setString(4, classMasterP.get());
+
+        insertStatement.setInt(5, cycleP.get());
+        insertStatement.setInt(6, levelP.get());
+
+        insertStatement.setArray(7, con.createArrayOf("text", catAsubs.get().toArray()));
+        insertStatement.setArray(8,  con.createArrayOf("text", catBsubs.get().toArray()));
+        insertStatement.setArray(9, con.createArrayOf("text", catCsubs.get().toArray()));
+        insertStatement.setArray(10, con.createArrayOf("text", catDsubs.get().toArray()));
+        insertStatement.setArray(11, con.createArrayOf("text", compulsorySubsP.get().toArray()));
+        insertStatement.setInt(12, cid);
+
+        System.out.println(insertStatement);
+
+        insertStatement.executeUpdate();
+
+        Alert successAlert = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.INFORMATION,
+                "INFO", Translator.getIntl("info").toUpperCase(),
+                Translator.getIntl("update_complete") + String.format(" %s%s %s",
+                        Store.UnicodeSumnbol.blank,Store.UnicodeSumnbol.rightArrow,classnameP.get().toUpperCase()), ButtonType.OK);
+        successAlert.showAndWait();
+
+
+        return true;
 
 
     }

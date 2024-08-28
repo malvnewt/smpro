@@ -1,34 +1,36 @@
 package smpro.app;
 
 import javafx.animation.Timeline;
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.beans.binding.When;
 import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
+import javafx.stage.Modality;
 import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.controlsfx.control.HiddenSidesPane;
+import org.controlsfx.control.ListSelectionView;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.control.textfield.TextFields;
+import org.controlsfx.dialog.Wizard;
+import org.controlsfx.dialog.WizardPane;
+import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
-import smpro.app.utils.PgConnector;
-import smpro.app.utils.ProjectUtils;
-import smpro.app.utils.Store;
-import smpro.app.utils.Translator;
+import smpro.app.custom_nodes.MyPasswordField;
+import smpro.app.utils.*;
 
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ConnectController implements Initializable {
     public ImageView sideImage;
@@ -38,11 +40,13 @@ public class ConnectController implements Initializable {
     public Label usernamel;
     public Label passl;
     public TextField usernamefield;
-    public TextField passfi8eld;
+//    public TextField passfi8eld;
     public Label createnewl;
     public Button newProjectbtn;
     public Button cancelbtn;
     public Button confirmBtn;
+
+    public MyPasswordField passfi8eld;
 
 
     public ObjectProperty<Stage> thisStage = new SimpleObjectProperty<>();
@@ -50,6 +54,8 @@ public class ConnectController implements Initializable {
     public Label authorLabel;
     public Label phoneAdvert;
     public Label whatsappAdvert;
+    public GridPane loginGrid;
+    public Label passHint;
 
     StringProperty usernamelProperty = new SimpleStringProperty(Translator.getIntl("login_username"));
     StringProperty passlProperty = new SimpleStringProperty(Translator.getIntl("login_pass"));
@@ -67,6 +73,21 @@ public class ConnectController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
+        passfi8eld = new MyPasswordField(passHint);
+
+
+        loginGrid.add(passfi8eld, 1, 1);
+        passfi8eld.setPromptText("min char 6+");
+        passfi8eld.setMinHeight(35);
+
+        passfi8eld.addEventHandler(MouseEvent.MOUSE_RELEASED,passfi8eld::handleMouseReleased);
+        passfi8eld.addEventHandler(MouseEvent.MOUSE_PRESSED,passfi8eld::handleMousePressed);
+
+        passHint.setGraphic(ProjectUtils.createFontIcon(MaterialDesignL.LIGHTBULB, 8, Paint.valueOf("gray")));
+        passHint.setStyle("-fx-text-fill: gray;-fx-border-width: 0;-fx-background-color: transparent;-fx-font-size: 13.5px");
+        passHint.setVisible(false);
         bindFields();
         initUi();
         initActions();
@@ -224,8 +245,14 @@ public class ConnectController implements Initializable {
 
 
 
-        usernamErrl.setStyle("-fx-text-fill: "+Store.Colors.red);
-        passerrl.setStyle("-fx-text-fill: "+Store.Colors.red);
+
+        for (Label l : new Label[]{usernamErrl, passerrl}) {
+            FontIcon warning = ProjectUtils.createFontIcon(MaterialDesignA.ALERT_CIRCLE, 10, Paint.valueOf(Store.Colors.red));
+            l.setGraphic(warning);
+            warning.setStrokeWidth(1);
+            l.getStyleClass().addAll("text", "warning","text-bold");
+
+        }
 
         cancelbtn.setTooltip(new Tooltip(Translator.getIntl("close_app")));
 
@@ -255,19 +282,25 @@ public class ConnectController implements Initializable {
 
 
             if (!isvalidpass){
+//                ProjectUtils.showFloatingTooltip(passerrl, thisStage.get(), passfi8eld, 0, vAdjustment);
 
-                ProjectUtils.showFloatingTooltip(passerrl, thisStage.get(),
-                        passfi8eld, 0, vAdjustment);
                 passfi8eld.getStyleClass().add("error-textfield");
-                Timeline timeline =  ProjectUtils.shakeX(passfi8eld, -15, 8);
+                PopOver passwordErrpop = ProjectUtils.showPopover("", passerrl, PopOver.ArrowLocation.LEFT_CENTER, false,true);
+                passwordErrpop.show(passfi8eld);
+
+                Timeline timeline =  ProjectUtils.shakeX(passfi8eld, -10, 6);
                 timeline.play();
             }
 
 
             if (!isvalidUsername){
                 usernamefield.getStyleClass().add("error-textfield");
-                ProjectUtils.showFloatingTooltip(usernamErrl, thisStage.get(), usernamefield, 0, vAdjustment);
-               Timeline timeline =  ProjectUtils.shakeX(usernamefield, -15, 8);
+
+                PopOver usernameErrPop = ProjectUtils.showPopover("", usernamErrl, PopOver.ArrowLocation.BOTTOM_LEFT, false,true);
+                usernameErrPop.show(usernamefield);
+
+//                ProjectUtils.showFloatingTooltip(usernamErrl, thisStage.get(), usernamefield, 0, vAdjustment);
+               Timeline timeline =  ProjectUtils.shakeX(usernamefield, -10, 6);
                timeline.play();
 
             }

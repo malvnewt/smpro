@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
@@ -20,6 +21,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.textfield.CustomTextField;
 import org.kordamp.ikonli.materialdesign2.*;
 import smpro.app.controllers.AddClassController;
 import smpro.app.controllers.AddSubjectController;
@@ -72,16 +75,16 @@ public class SettingsController implements Initializable {
     public TextField divisionfield;
     public TextField townfield;
     public TextField addressField;
-    public TextField lineonef;
-    public TextField linetwof;
-    public TextField emailf;
+//    public TextField lineonef;
+//    public TextField linetwof;
+//    public TextField emailf;
     public Label usernamel;
     public Label passl;
     public TextField passfield;
     public TextField usernamefield;
     public Button saveAdressBtn;
     public Button nextAdressTab;
-    public TextField poboxfield;
+//    public TextField poboxfield;
     public Button togglePass;
     public Label townl;
     public Label addressl;
@@ -126,6 +129,8 @@ public class SettingsController implements Initializable {
     public Button changeClassSettingsBtn;
     public Button deleteClassbtn;
     public Button nextClassesbtn;
+    public Label locationLabel;
+    public GridPane locationgrid;
 
 
     ObjectProperty<Image> logoProperty = new SimpleObjectProperty<>();
@@ -224,6 +229,11 @@ public class SettingsController implements Initializable {
     );
 
 
+    public CustomTextField lineonef = new CustomTextField();
+    public CustomTextField linetwof = new CustomTextField();
+    public CustomTextField emailf = new CustomTextField();
+    public CustomTextField poboxfield = new CustomTextField();
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -250,7 +260,23 @@ public class SettingsController implements Initializable {
         changeClassSettingsBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PENCIL, 20, Paint.valueOf(Store.Colors.lightestGray)));
         deleteClassbtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TRASH_CAN, 20, Paint.valueOf(Store.Colors.lightestGray)));
 
+        //icons
+        lineonef.setRight(ProjectUtils.createFontIcon(MaterialDesignP.PHONE_INCOMING, 15, Paint.valueOf("gray")));
+        linetwof.setRight(ProjectUtils.createFontIcon(MaterialDesignP.PHONE_INCOMING, 15, Paint.valueOf("gray")));
+        emailf.setRight(ProjectUtils.createFontIcon(MaterialDesignE.EMAIL, 15, Paint.valueOf("gray")));
+        poboxfield.setRight(ProjectUtils.createFontIcon(MaterialDesignN.NUMERIC, 15, Paint.valueOf("gray")));
+        locationLabel.setGraphic(ProjectUtils.createFontIcon(MaterialDesignL.LOCATION_ENTER, 15, Paint.valueOf("gray")));
 
+        //custom fields
+        locationgrid.add(lineonef, 1, 5);
+        locationgrid.add(linetwof, 2, 5);
+        locationgrid.add(emailf, 1,6,2,1);
+        locationgrid.add(poboxfield, 1,7,2,1);
+
+        poboxfield.setPromptText("eg 254");
+        emailf.setPromptText("eg schoolname@gmail.com ...");
+        lineonef.setPromptText("eg 123456789 ...");
+        linetwof.setPromptText("eg 123456789 ...");
 
 
 
@@ -495,8 +521,8 @@ public class SettingsController implements Initializable {
         usernamel.setGraphic(ProjectUtils.createFontIcon(MaterialDesignA.ACCOUNT, 12, Paint.valueOf(Store.Colors.black)));
         passl.setGraphic(ProjectUtils.createFontIcon(MaterialDesignK.KEY, 12, Paint.valueOf(Store.Colors.black)));
 
-        phonel.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PHONE, 12, Paint.valueOf(Store.Colors.black)));
-        emall.setGraphic(ProjectUtils.createFontIcon(MaterialDesignE.EMAIL, 12, Paint.valueOf(Store.Colors.black)));
+//        phonel.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PHONE, 12, Paint.valueOf(Store.Colors.black)));
+//        emall.setGraphic(ProjectUtils.createFontIcon(MaterialDesignE.EMAIL, 12, Paint.valueOf(Store.Colors.black)));
 //        addressl.setGraphic(ProjectUtils.createFontIcon(MaterialDesignM.MAP, 12, Paint.valueOf(Store.Colors.black)));
 //        townl.setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CITY, 12, Paint.valueOf(Store.Colors.black)));
 
@@ -1077,14 +1103,18 @@ public class SettingsController implements Initializable {
 
         if (invalidUser) {
             Label errusername = new Label(Translator.getIntl("min_len_user"));
-            errusername.setStyle("-fx-text-fill: orange;-fx-font-weight: bold");
-            ProjectUtils.showFloatingTooltip(errusername,thisStage.get(),usernamefield,0,0);
+            errusername.setStyle("-fx-font-weight: bold;-fx-text-fill: "+Store.Colors.red);
+//            ProjectUtils.showFloatingTooltip(errusername,thisStage.get(),usernamefield,0,0);
+            PopOver passwordErrpop = ProjectUtils.showPopover("", errusername, PopOver.ArrowLocation.TOP_LEFT, false,true);
+            passwordErrpop.show(usernamefield);
         }
 
         if (invalidpass) {
             Label errpass = new Label(Translator.getIntl("min_len_pass"));
-            errpass.setStyle("-fx-text-fill: orange;-fx-font-weight: bold");
-            ProjectUtils.showFloatingTooltip(errpass,thisStage.get(),passfield,0,0);
+            errpass.setStyle("-fx-font-weight: bold;-fx-text-fill: "+Store.Colors.red);
+//            ProjectUtils.showFloatingTooltip(errpass,thisStage.get(),passfield,0,0);
+            PopOver passwordErrpop = ProjectUtils.showPopover("", errpass, PopOver.ArrowLocation.TOP_LEFT, false,true);
+            passwordErrpop.show(passfield);
         }
 
         if (invalidpass | invalidUser) return;
@@ -1123,8 +1153,10 @@ public class SettingsController implements Initializable {
 
         if (Objects.equals(fromYear, "") || fromYear == null) {
             Label errYearfroml = new Label(Translator.getIntl("invalid_year"));
-            errYearfroml.setStyle("-fx-text-fill: orange;-fx-font-weight: bold");
-            ProjectUtils.showFloatingTooltip(errYearfroml, thisStage.get(), yearFrom, -150, 0);
+            errYearfroml.setStyle("-fx-font-weight: bold;-fx-text-fill: "+Store.Colors.red);
+//            ProjectUtils.showFloatingTooltip(errYearfroml, thisStage.get(), yearFrom, -150, 0);
+            PopOver popup = ProjectUtils.showPopover("", errYearfroml, PopOver.ArrowLocation.TOP_LEFT, false,true);
+            popup.show(yearFrom);
             validFrom = false;
 
         }
@@ -1132,7 +1164,9 @@ public class SettingsController implements Initializable {
         if (Objects.equals(toYEar, "") || toYEar == null) {
             Label errYearfroml = new Label(Translator.getIntl("invalid_year"));
             errYearfroml.setStyle("-fx-text-fill: orange;-fx-font-weight: bold");
-            ProjectUtils.showFloatingTooltip(errYearfroml, thisStage.get(), yearTo, -150, 0);
+//            ProjectUtils.showFloatingTooltip(errYearfroml, thisStage.get(), yearTo, -150, 0);
+            PopOver popup = ProjectUtils.showPopover("", errYearfroml, PopOver.ArrowLocation.TOP_LEFT, false,true);
+            popup.show(yearTo);
             validto = false;
 
         }
@@ -1197,7 +1231,14 @@ public class SettingsController implements Initializable {
             if (isupdate) {
                 try {
                     HashMap<String, Object> selectedClass = classesTable.getSelectionModel().getSelectedItem();
-                    addClassController.update(PgConnector.getNumberOrNull(selectedClass,"id").intValue());
+                   boolean updated =  addClassController.update(PgConnector.getNumberOrNull(selectedClass,"id").intValue());
+                    if (updated) {
+                        classesTable.getItems().clear();
+                        List<HashMap<String, Object>> dbClasses = PgConnector.fetch("select * from classes order by level, classname", PgConnector.getConnection());
+                        classesTable.getItems().addAll(dbClasses);
+                        stage.close();
+
+                    }
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }

@@ -6,23 +6,22 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="385.0" spacing="10.0" stylesheets="@../../css/recaf/all.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.ListDisplayController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="325.0" spacing="10.0" style="-fx-border-radius: 5em;" stylesheets="@../../css/recaf/all.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.ListDisplayController">
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
    <children>
-      <Label fx:id="title" prefHeight="17.0" prefWidth="277.0" styleClass="section-title" stylesheets="@../../css/recaf/all.css" text="%select_subjets" />
-      <Separator prefWidth="200.0" />
-      <HBox alignment="CENTER_LEFT">
+      <HBox>
          <children>
-            <Label fx:id="searchLabel" minWidth="30.0" />
-            <TextField fx:id="searchfield" prefHeight="32.0" prefWidth="316.0" promptText="%filter" styleClass="rounded" HBox.hgrow="ALWAYS" />
+            <Label fx:id="title" prefHeight="17.0" prefWidth="277.0" styleClass="section-title" stylesheets="@../../css/recaf/all.css" text="%select_subjets" />
+            <Button fx:id="closetP" mnemonicParsing="false" styleClass="transparent-btn" />
          </children>
       </HBox>
+      <Separator prefWidth="200.0" />
+      <HBox fx:id="searchcontainer" alignment="CENTER_LEFT" />
       <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
          <content>
             <VBox fx:id="itemcvb" prefHeight="200.0" prefWidth="100.0" />
@@ -37,7 +36,6 @@
             <Separator maxHeight="30.0" orientation="VERTICAL" prefHeight="200.0" />
             <ButtonBar maxWidth="100.0" prefHeight="40.0" prefWidth="159.0">
               <buttons>
-                  <Button fx:id="returnBtn" maxWidth="50.0" minHeight="30.0" mnemonicParsing="false" prefHeight="25.0" />
                   <Button fx:id="confirmBtn" defaultButton="true" maxWidth="50.0" minHeight="30.0" mnemonicParsing="false" text="OK" />
               </buttons>
             </ButtonBar>

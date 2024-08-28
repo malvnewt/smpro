@@ -5,12 +5,17 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.controlsfx.control.textfield.CustomTextField;
 import org.kordamp.ikonli.materialdesign2.*;
 import smpro.app.utils.ProjectUtils;
 import smpro.app.utils.Store;
@@ -23,24 +28,35 @@ import java.util.ResourceBundle;
 
 public class ListDisplayController implements Initializable {
     public Label title;
-    public Label searchLabel;
-    public TextField searchfield;
+//    public Label searchLabel;
+//    public TextField searchfield;
     public Button toffleselectAllBtn;
     public Button viewSelectedBtn;
-    public Button returnBtn;
+//    public Button returnBtn;
     public Button confirmBtn;
 //    public ListView<CheckBox> lv;
     public VBox itemcvb;
 
-    public ObjectProperty<Stage> PopupStageProperty = new SimpleObjectProperty<>();
 
     public BooleanProperty viewSelectedP = new SimpleBooleanProperty(false);
     public BooleanProperty selectAllP = new SimpleBooleanProperty(false);
 
     public List<CheckBox> dataItems = new ArrayList<>();
+    public Button closetP;
+    public HBox searchcontainer;
+
+    CustomTextField searchfield = new CustomTextField();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        searchfield.setRight(ProjectUtils.createFontIcon(MaterialDesignS.SELECT_SEARCH,15,Paint.valueOf("gray")));
+        searchfield.setPromptText(Translator.getIntl("type_"));
+        searchcontainer.getChildren().add(searchfield);
+        searchcontainer.setAlignment(Pos.CENTER_LEFT);
+        HBox.setHgrow(searchfield, Priority.ALWAYS);
+
+        closetP.setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CLOSE,20,Paint.valueOf("gray")));
+
 
         initUi();
 
@@ -48,12 +64,14 @@ public class ListDisplayController implements Initializable {
 
     public void initUi() {
 //        returnBtn.setVisible(false);
+        closetP.setStyle("-fx-background-color: transparent;-fx-border-width: 0");
+        closetP.getStyleClass().add("danger");
+        closetP.setCursor(Cursor.HAND);
 
-        returnBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignA.ARROW_LEFT_BOLD_BOX, 50, Paint.valueOf(Store.Colors.lightestGray)));
+
         viewSelectedBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignE.EYE, 50, Paint.valueOf(Store.Colors.lightestGray)));
         toffleselectAllBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignS.SELECT_GROUP, 50, Paint.valueOf(Store.Colors.lightestGray)));
 
-        searchLabel.setGraphic(ProjectUtils.createFontIcon(MaterialDesignF.FILTER, 15, Paint.valueOf(Store.Colors.lightestGray)));
 
         toffleselectAllBtn.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("toggle_selectall")));
         viewSelectedBtn.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("toggle_show_selections")));
@@ -61,7 +79,7 @@ public class ListDisplayController implements Initializable {
         viewSelectedBtn.setOnAction(e->viewSelectedP.set(!viewSelectedP.get()));
         toffleselectAllBtn.setOnAction(e->selectAllP.set(!selectAllP.get()));
 
-        returnBtn.setOnAction(e -> PopupStageProperty.get().close());
+
 
 
         itemcvb.setPadding(new Insets(5));
@@ -116,10 +134,13 @@ public class ListDisplayController implements Initializable {
 
 
     public void loadDataItems(List<String> data,List<String> selectedOptions) {
+
         for (String item : data) {
             CheckBox cb = new CheckBox(item.toUpperCase());
             cb.setId(item);
+            cb.setStyle("-fx-font-size: 14px;-fx-font-weight: bold;");
             if (selectedOptions.contains(item))cb.setSelected(true);
+
             dataItems.add(cb);
         }
 

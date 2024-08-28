@@ -1,0 +1,16 @@
+.caption .button {
+
+    -fx-pref-height: Infinity;
+    -fx-border-radius: 0;
+    -fx-border-style: none;
+
+    -fx-pref-width: 46px;
+    -fx-min-width: 46px;
+    -fx-max-width: 46px;
+}
+
+.caption {
+    -fx-min-height: 31px;
+    -fx-pref-height: 31px;
+    -fx-max-width: 138px;
+}

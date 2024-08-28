@@ -1,36 +1,25 @@
 package smpro.app;
 
-import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.effect.*;
-import javafx.scene.image.Image;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import javafx.util.Duration;
-import org.controlsfx.control.PopOver;
-import org.controlsfx.control.cell.ImageGridCell;
-import org.kordamp.ikonli.Ikon;
+import org.controlsfx.control.StatusBar;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignM;
 import smpro.app.utils.ProjectUtils;
 import smpro.app.utils.Store;
@@ -38,7 +27,6 @@ import smpro.app.utils.Translator;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.*;
 
 public class EntryController implements Initializable {
@@ -61,9 +49,7 @@ public class EntryController implements Initializable {
 
 
     public  ObjectProperty<Stage> thisStage = new SimpleObjectProperty<>();
-
-
-
+    public BorderPane borderPane;
 
 
     List<String> featureNames = List.of(
@@ -101,6 +87,9 @@ public class EntryController implements Initializable {
     BooleanProperty menuIsExpanded = new SimpleBooleanProperty(false);
 
     ObjectProperty<Node> selectedFeatureProperty = new SimpleObjectProperty<>();
+
+
+    StatusBar statusBar = new StatusBar();
 
 
 
@@ -247,6 +236,14 @@ public class EntryController implements Initializable {
         }
 
 
+
+
+    }
+
+
+    public void configureStausBar() {
+        statusBar.setProgress(100);
+        borderPane.setBottom(statusBar);
 
 
     }

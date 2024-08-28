@@ -217,7 +217,13 @@ public class PgConnector {
         List<String> out;
         try {
             Array pglist = rs.getArray(key);
-            String[] stringArray = (String[]) pglist.getArray();
+
+            String[] stringArray = new String[]{};
+
+            if (pglist != null) {
+                stringArray = (String[]) pglist.getArray();
+            }
+
             out = Arrays.stream(stringArray).toList();
 
 

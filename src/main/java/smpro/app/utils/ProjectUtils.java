@@ -18,12 +18,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
-import javafx.stage.Modality;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import org.controlsfx.control.PopOver;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 import smpro.app.ResourceUtil;
@@ -49,8 +47,6 @@ public class ProjectUtils {
         icon.setIconSize(size);
         return icon;
     }
-
-
 
     public static void animatePaneSide(AnchorPane pane, char sideInitial,  double end) {
         Timeline timeline;
@@ -82,38 +78,6 @@ public class ProjectUtils {
         timeline.play();
 
     }
-    public static void animateTabOut(AnchorPane pane, char sideInitial,  double end) {
-        Timeline timeline;
-
-        if (sideInitial == 'w') { //ANIMATE PANE WIDTH
-            double currentWdith = pane.getWidth();
-            if (currentWdith > end) {
-//                pane.setMinWidth(0);
-                timeline = new Timeline(new KeyFrame(Duration.millis(200), new KeyValue(pane.maxWidthProperty(), end, Interpolator.EASE_BOTH)));
-
-            } else {
-//                pane.setMaxWidth(Double.POSITIVE_INFINITY);
-                timeline = new Timeline(new KeyFrame(Duration.millis(400), new KeyValue(pane.minWidthProperty(), end, Interpolator.EASE_BOTH)));
-
-            }
-
-
-        } else {// ANIMATE PANE HEIGHT
-            double currentHeight = pane.getHeight();
-            if (currentHeight > end) {
-                timeline = new Timeline(new KeyFrame(Duration.millis(200), new KeyValue(pane.maxHeightProperty(), end, Interpolator.EASE_BOTH)));
-            } else {
-                timeline = new Timeline(new KeyFrame(Duration.millis(400), new KeyValue(pane.minHeightProperty(), end, Interpolator.EASE_BOTH)));
-            }
-
-        }
-
-
-        timeline.play();
-
-    }
-
-
     public static Timeline shakeY(Node node, double offset,int... cyclecount) {
         Objects.requireNonNull(node, "Node cannot be null!");
         Timeline t = new Timeline(new KeyFrame(Duration.ZERO,
@@ -199,22 +163,6 @@ public class ProjectUtils {
 
     }
 
-
-
-
-
-    public static void clickShakeHandler(MouseEvent event,boolean... isVertical) {
-        Node source = (Node) event.getSource();
-
-        if (isVertical.length > 0) {
-            ProjectUtils.shakeY(source, -5).play();
-        } else {
-
-        ProjectUtils.shakeX(source, -5).play();
-        }
-
-
-    }
 
     public static void positionFloatingStage(Stage parentStage,Stage contentStage, Node parent,double hoffset,double voffset,
             Pos... position
@@ -306,21 +254,23 @@ public class ProjectUtils {
 
     }
 
+    public static PopOver showPopover(String title, Node content, PopOver.ArrowLocation arrowLocation, boolean detachable,boolean autohide,double... maxheight) {
+        PopOver p = new PopOver(content);
+        p.setAnimated(true);
+        p.setTitle(title);
+        p.setArrowLocation(arrowLocation);
+//        p.setAnchorLocation(anchorLocation);
+        p.setDetachable(detachable);
+        p.setAutoHide(autohide);
+//        p.setStyle("-fx-background-color:#373737");
 
+        if (maxheight.length>0)p.setMaxHeight(maxheight[0]);
+        p.getStyleClass().add("MyPopover");
 
-
-    /// tabpane animation
-
-    public static Timeline tabTranslation(Pane rootpane, double from, double to) {
-        Timeline t = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(rootpane.translateXProperty(), from)),
-                new KeyFrame(Duration.millis(200), new KeyValue(rootpane.translateXProperty(), to))
-        );
-        t.setCycleCount(1);
-        t.setDelay(Duration.ZERO);
-
-        return t;
+        p.setCloseButtonEnabled(true);
+        return p;
     }
+
 
 
     public static TableColumn<HashMap<String,Object>, String> createTableColumn(String label,String dataKey,boolean... params) {
@@ -472,11 +422,6 @@ public class ProjectUtils {
         return textInputDialog;
     }
 
-
-    public static Label createErrorLabel(String errText) {
-        return new ErrorLabel(errText);
-    }
-
     public static String capitalize(String s) {
         StringBuilder out = new StringBuilder();
         try{
@@ -499,16 +444,5 @@ public class ProjectUtils {
 
 
 
-
-
 }
 
-
-class ErrorLabel extends Label {
-    private final String labelText;
-
-    ErrorLabel(String labelText) {
-        this.labelText = labelText;
-        this.setStyle("-fx-font-weight: bold;-fx-padding: 5px;-fx-text-fill: "+Store.Colors.red);
-    }
-}

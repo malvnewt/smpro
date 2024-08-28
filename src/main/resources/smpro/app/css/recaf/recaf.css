@@ -4085,30 +4085,30 @@ Text {
   -fx-background-color: transparent, -color-accent-emphasis;
 }
 
-.popover {
+.MyPopover {
   -fx-background-color: -color-bg-overlay;
   -fx-effect: dropshadow(three-pass-box, -color-shadow-default, 8px, 0px, 0, 2);
 }
-.popover > .border {
+.MyPopover > .border {
   -fx-stroke: -color-border-default;
   -fx-stroke-width: 1px;
   -fx-fill: -color-bg-overlay;
 }
-.popover > .content {
+.MyPopover > .content {
   -fx-padding: 10px 10px 10px 10px;
 }
-.popover > .content > .title {
+.MyPopover > .content > .title {
   -fx-padding: 0 0 1em 0;
 }
-.popover > .content > .title > .text {
+.MyPopover > .content > .title > .text {
   -fx-text-fill: -color-fg-default;
   -fx-font-size: 1.25em;
   -fx-alignment: CENTER_LEFT;
 }
-.popover > .content > .title > .icon > .graphics > .circle {
+.MyPopover > .content > .title > .icon > .graphics > .circle {
   -fx-fill: transparent;
 }
-.popover > .content > .title > .icon > .graphics > .line {
+.MyPopover > .content > .title > .icon > .graphics > .line {
   -fx-stroke: -color-fg-default;
   -fx-stroke-width: 1px;
 }

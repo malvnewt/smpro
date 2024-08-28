@@ -10,11 +10,16 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
 import javafx.scene.effect.Light;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import smpro.app.custom_titlebar.CaptionConfiguration;
+import smpro.app.custom_titlebar.CustomCaption;
 import smpro.app.utils.PgConnector;
 import smpro.app.utils.ProjectUtils;
 import smpro.app.utils.Store;
@@ -86,6 +91,15 @@ public class Entry extends Application {
 
         stage.setScene(scene);
         stage.show();
+
+
+        MenuBar menuBar = (MenuBar) fxmlLoader.getNamespace().get("menubar");
+
+        CustomCaption.useForStage(stage, new CaptionConfiguration().setCaptionHeight(40)
+                .setIconColor(Color.WHITE)
+                .setControlBackgroundColor(Color.web("#373737")).setCaptionDragRegion(menuBar).
+                useControls(true)
+        );
 
         EntryController controller = fxmlLoader.getController();
         controller.thisStage.set(stage);

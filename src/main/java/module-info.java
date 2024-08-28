@@ -25,7 +25,6 @@ module smpro.app {
 
     //atlantafx and themes
 //    requires atlantafx.base;
-//    requires org.jfxtras.styles.jmetro;
 
 
 
@@ -36,8 +35,19 @@ module smpro.app {
     requires java.sql;
     requires org.postgresql.jdbc;
 
+    //custom caption
+//    requires lombok;
+    requires org.jetbrains.annotations;
+    requires com.sun.jna.platform;
+    requires com.sun.jna;
+    requires lombok;
+
 
     opens smpro.app to javafx.fxml;
     opens smpro.app.controllers to javafx.fxml;
+    exports smpro.app.custom_titlebar.internal.structs to com.sun.jna;
+    exports  smpro.app.custom_titlebar.internal to  javafx.fxml;
     exports smpro.app;
+
+
 }

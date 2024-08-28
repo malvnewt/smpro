@@ -167,9 +167,11 @@ dependencies {
   //ribbons
   implementation 'com.pixelduke:fxribbon:1.2.2'
 
-  //custom caption title bar
-//  implementation 'net.yetihafen:javafx-customcaption:1.0.0'
-//  implementation 'com.github.plushaze.traynotification:TrayNotification:0.3'
+  //custom caption dependencies
+  implementation 'net.java.dev.jna:jna-platform:5.12.1'
+  implementation 'net.java.dev.jna:jna:5.12.1'
+  implementation 'org.jetbrains:annotations:23.0.0'
+  implementation 'org.projectlombok:lombok:1.18.24'
 
   // use native windows progressbar
   implementation 'com.github.Dansoftowner:FXTaskbarProgressBar:v11.4'
