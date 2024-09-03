@@ -23,8 +23,15 @@ module smpro.app {
     requires eu.hansolo;
 
 
-    //atlantafx and themes
-//    requires atlantafx.base;
+   // ITEXT 7 FOR PDF
+    requires com.itextpdf.layout;
+    requires com.itextpdf.barcodes;
+    requires com.itextpdf.kernel;
+    requires com.itextpdf.io;
+    requires com.itextpdf.pdfa;
+
+
+
 
 
 

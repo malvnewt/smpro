@@ -863,6 +863,7 @@ Text {
 .tree-table-view > .virtual-flow > .clipped-container > .sheet > .tree-table-row-cell:filled:selected {
   -color-cell-fg: -color-cell-fg-selected;
   -fx-background-color: -color-cell-border, -color-cell-bg-selected;
+  -fx-background-color: #a3d1ff70;
 }
 
 .list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected,
@@ -871,17 +872,20 @@ Text {
 .tree-table-view:focused > .virtual-flow > .clipped-container > .sheet > .tree-table-row-cell:filled:selected {
   -color-cell-fg: -color-cell-fg-selected-focused;
   -fx-background-color: -color-cell-border, -color-cell-bg-selected-focused;
+  -fx-background-color: #a3d1ff70;
 }
 
 .table-view > .virtual-flow > .clipped-container > .sheet > .table-row-cell .table-cell:selected,
 .tree-table-view > .virtual-flow > .clipped-container > .sheet > .tree-table-row-cell .tree-table-cell:selected {
   -fx-background-color: -color-cell-bg-selected;
+  -fx-background-color: #a3d1ff70;
   -fx-background-insets: 0 0 2 0;
 }
 
 .table-view:focused > .virtual-flow > .clipped-container > .sheet > .table-row-cell .table-cell:selected,
 .tree-table-view:focused > .virtual-flow > .clipped-container > .sheet > .tree-table-row-cell .tree-table-cell:selected {
   -fx-background-color: -color-cell-bg-selected-focused;
+  -fx-background-color: #a3d1ff70;
 }
 
 .cell .text-input {

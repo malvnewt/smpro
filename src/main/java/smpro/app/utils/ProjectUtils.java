@@ -17,6 +17,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.*;
 import javafx.util.Callback;
@@ -24,8 +25,11 @@ import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
 import smpro.app.ResourceUtil;
 import smpro.app.SettingsController;
+import smpro.app.custom_titlebar.CaptionConfiguration;
+import smpro.app.custom_titlebar.CustomCaption;
 
 import java.io.IOException;
 import java.net.URL;
@@ -43,6 +47,7 @@ public class ProjectUtils {
 
     public static FontIcon createFontIcon(Ikon code, int size, Paint color) {
         FontIcon icon = new FontIcon(code);
+        icon.getStyleClass().removeAll("ikonli","ikonli-icon");
         icon.setFill(color);
         icon.setIconSize(size);
         return icon;
@@ -78,6 +83,38 @@ public class ProjectUtils {
         timeline.play();
 
     }
+    public static void animateVContainer(VBox box, char sideInitial,  double end) {
+        Timeline timeline;
+
+        if (sideInitial == 'w') { //ANIMATE PANE WIDTH
+            double currentWdith = box.getWidth();
+            if (currentWdith > end) {
+//                pane.setMinWidth(0);
+                timeline = new Timeline(new KeyFrame(Duration.millis(200), new KeyValue(box.maxWidthProperty(), end, Interpolator.EASE_BOTH)));
+
+            } else {
+//                pane.setMaxWidth(Double.POSITIVE_INFINITY);
+                timeline = new Timeline(new KeyFrame(Duration.millis(400), new KeyValue(box.minWidthProperty(), end, Interpolator.EASE_BOTH)));
+
+            }
+
+
+        } else {// ANIMATE PANE HEIGHT
+            double currentHeight = box.getHeight();
+            if (currentHeight > end) {
+                timeline = new Timeline(new KeyFrame(Duration.millis(200), new KeyValue(box.maxHeightProperty(), end, Interpolator.EASE_BOTH)));
+            } else {
+                timeline = new Timeline(new KeyFrame(Duration.millis(400), new KeyValue(box.minHeightProperty(), end, Interpolator.EASE_BOTH)));
+            }
+
+        }
+
+
+        timeline.play();
+
+    }
+
+
     public static Timeline shakeY(Node node, double offset,int... cyclecount) {
         Objects.requireNonNull(node, "Node cannot be null!");
         Timeline t = new Timeline(new KeyFrame(Duration.ZERO,
@@ -132,6 +169,9 @@ public class ProjectUtils {
         stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
         stage.setResizable(false);
 
+        SettingsController settingsController = fxmlLoader.getController();
+        applyDialogCaption(stage, settingsController.dragbox);
+
 
         scene.getStylesheets().addAll(
                 ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
@@ -141,15 +181,9 @@ public class ProjectUtils {
         stage.setTitle(Translator.getIntl("app_settings").toUpperCase());
         stage.show();
 
-        SettingsController  settingsController = fxmlLoader.getController();
+
         settingsController.changeTab(tabindex);
         settingsController.thisStage.set(stage);
-
-
-
-
-
-
 
     }
 
@@ -232,6 +266,7 @@ public class ProjectUtils {
 
         a.getDialogPane().setMaxWidth(320);
         a.getDialogPane().setStyle("-fx-wrap-text: true");
+        a.getDialogPane().getStylesheets().add(ResourceUtil.getAppResourceURL("css/recaf/all.css").toExternalForm());
 
 
         switch (type) {
@@ -439,6 +474,21 @@ public class ProjectUtils {
 
             return s;
         }
+    }
+
+    public static void applyDialogCaption(Stage s,Node dragArea) {
+
+
+        CustomCaption.useForStage(s,true, new CaptionConfiguration()
+                .setCaptionHeight(35)
+                .setIconColor(Color.web(Store.Colors.LightGray))
+                .setIconHoverColor(Color.web(Store.Colors.White))
+                .setControlBackgroundColor(Color.web(Store.Colors.transparent))
+                .setButtonHoverColor(Color.web("#aaaaaa30"))
+                .setCaptionDragRegion(dragArea).
+                useControls(false).
+                setCloseButtonHoverColor(Color.web(Store.Colors.deepRed))
+        );
     }
 
 

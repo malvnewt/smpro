@@ -12,7 +12,7 @@ public class StageManager {
 
     private final HashMap<Stage, CustomizedStage> customizedStages = new HashMap<>();
 
-    public void registerStage(@NotNull Stage stage, @NotNull CaptionConfiguration config) {
+    public void registerStage(@NotNull Stage stage, @NotNull CaptionConfiguration config,boolean... isdlg) {
         if(customizedStages.containsKey(stage)) throw new IllegalArgumentException("stage was already registered");
 
         CustomizedStage customStage = new CustomizedStage(stage, config);
@@ -22,13 +22,13 @@ public class StageManager {
             stage.showingProperty().addListener(new ChangeListener<>() {
                 @Override
                 public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                    customStage.inject();
+                    customStage.inject(isdlg);
                     stage.showingProperty().removeListener(this);
                 }
             });
 
         } else {
-            customStage.inject();
+            customStage.inject(isdlg);
         }
         customizedStages.put(stage, customStage);
     }

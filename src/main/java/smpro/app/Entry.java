@@ -48,15 +48,6 @@ public class Entry extends Application {
 
 
 
-        // Set UI theme
-//        Application.setUserAgentStylesheet(new NordLight().getUserAgentStylesheet());
-//        Application.setUserAgentStylesheet(new NordDark().getUserAgentStylesheet());
-//        Application.setUserAgentStylesheet(new Dracula().getUserAgentStylesheet());
-//        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
-//        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());****
-//        Application.setUserAgentStylesheet(new CupertinoDark().getUserAgentStylesheet());
-//        Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
-
         //check database connectivity and show error window if any
         try {
             SessionHandler.connectToProjectDb();
@@ -76,11 +67,6 @@ public class Entry extends Application {
                 ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
         );
 
-//        JMetro metro = new JMetro(Style.DARK);
-//        metro.setScene(scene);
-//        metro.getOverridingStylesheets().add(ResourceUtil.getAppResourceURL("css/global.css").toExternalForm());
-
-
         String title = String.format("%s %s\u2800 \u2800 \u2800 %s \u2800 \u2800%s %s %s", "SM\u2796PRO",Store.UnicodeSumnbol.tm,
                 ProjectUtils.getFormatedDate(new Date().getTime(), DateFormat.getDateInstance(DateFormat.FULL,
                         Translator.getLocale())),Store.UnicodeSumnbol.leftSquarebracket,"SERVER SESSION",Store.UnicodeSumnbol.rightSquarebracket);
@@ -93,13 +79,20 @@ public class Entry extends Application {
         stage.show();
 
 
+
         MenuBar menuBar = (MenuBar) fxmlLoader.getNamespace().get("menubar");
+        menuBar.setStyle("-fx-border-width: 0 0 1px 0;-fx-border-color: "+Store.Colors.lightestGray);
 
         CustomCaption.useForStage(stage, new CaptionConfiguration().setCaptionHeight(40)
-                .setIconColor(Color.WHITE)
-                .setControlBackgroundColor(Color.web("#373737")).setCaptionDragRegion(menuBar).
-                useControls(true)
+                .setIconColor(Color.web(Store.Colors.LightGray))
+                .setIconHoverColor(Color.web(Store.Colors.White))
+                .setControlBackgroundColor(Color.web(Store.Colors.transparent))
+                        .setButtonHoverColor(Color.web("#aaaaaa30"))
+                .setCaptionDragRegion(menuBar).
+                useControls(true).
+                setCloseButtonHoverColor(Color.web(Store.Colors.deepRed))
         );
+
 
         EntryController controller = fxmlLoader.getController();
         controller.thisStage.set(stage);
@@ -108,6 +101,7 @@ public class Entry extends Application {
         stage.setMinHeight(0.8 * screenHeight);
         stage.setMinWidth(0.7 * screenWidth);
         stage.centerOnScreen();
+        menuBar.requestFocus();
 
 
 

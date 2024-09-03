@@ -163,7 +163,6 @@ public class ConnectController implements Initializable {
 
         yearcombo.valueProperty().addListener((observableValue, stringObjectHashMap, project) -> {
             Store.currentProjectProperty.set(project);
-
             String name = String.valueOf(project.get("name"));
 
             try {
@@ -250,7 +249,8 @@ public class ConnectController implements Initializable {
             FontIcon warning = ProjectUtils.createFontIcon(MaterialDesignA.ALERT_CIRCLE, 10, Paint.valueOf(Store.Colors.red));
             l.setGraphic(warning);
             warning.setStrokeWidth(1);
-            l.getStyleClass().addAll("text", "warning","text-bold");
+//            l.getStyleClass().addAll("text", "warning","text-bold");
+            l.getStyleClass().addAll("text", "danger","text-bold");
 
         }
 

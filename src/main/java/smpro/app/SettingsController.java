@@ -3,18 +3,20 @@ package smpro.app;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -24,6 +26,8 @@ import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.kordamp.ikonli.materialdesign2.*;
+import org.w3c.dom.ls.LSOutput;
+import smpro.app.controllers.AddAdminController;
 import smpro.app.controllers.AddClassController;
 import smpro.app.controllers.AddSubjectController;
 import smpro.app.controllers.AddTradeController;
@@ -38,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -131,6 +136,18 @@ public class SettingsController implements Initializable {
     public Button nextClassesbtn;
     public Label locationLabel;
     public GridPane locationgrid;
+    public Label caption;
+    public ImageView appIcon;
+    public HBox dragArea;
+    public Button closedlg;
+    public HBox dragbox;
+    public Button addUserbtn;
+    public Button removeuserbtn;
+    public Button nextusers;
+    public Button toggleselectFeature;
+    public Button updateFeatures;
+    public TableView<HashMap<String,Object>> adminsTable;
+    public VBox accessItemsVb;
 
 
     ObjectProperty<Image> logoProperty = new SimpleObjectProperty<>();
@@ -177,35 +194,59 @@ public class SettingsController implements Initializable {
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
-
+                        caption.setText(Translator.getIntl("base_school_settings"));
                         return null;
                     },
                     1, o -> {
                          buildAddress();
+                        caption.setText(Translator.getIntl("address_security_settings"));
+
 
                         return null;
                     },
                     2, o -> {
                         buildAcademicYear();
+                        caption.setText(Translator.getIntl("academic_year_settings"));
+
 
                         return null;
                     },
                     3, o -> {
                         buildSections();
+                        caption.setText(Translator.getIntl("sections_in"));
+
                         return null;
                     },
                     4, o -> {
                         buildTrades();
+                        caption.setText(Translator.getIntl("supported_trades"));
+
 
                         return null;
                     },
                     5, o -> {
                         buildSubjects();
+                        caption.setText(Translator.getIntl("subjects_taught"));
+
 
                         return null;
                     },
                     6, o -> {
                         buildClasses();
+                        caption.setText(Translator.getIntl("classes_in"));
+
+                        return null;
+                    },
+                    7, o -> {
+                        buildAdmins();
+                        caption.setText(Translator.getIntl("school_administrators"));
+
+                        return null;
+                    },
+                    8, o -> {
+                        buildTimetable();
+                        caption.setText(Translator.getIntl("school_administrators"));
+
                         return null;
                     }
 
@@ -213,6 +254,7 @@ public class SettingsController implements Initializable {
 
             )
     );
+
 
     HashMap<Integer, Boolean> builtTabMap = new HashMap<>(
             Map.of(
@@ -235,8 +277,43 @@ public class SettingsController implements Initializable {
     public CustomTextField poboxfield = new CustomTextField();
 
 
+    List<String> tabTitles = List.of(
+            Translator.getIntl("base_school_settings"),
+            Translator.getIntl("address_security_settings"),
+            Translator.getIntl("academic_year_settings"),
+            Translator.getIntl("sections_in"),
+            Translator.getIntl("supported_trades"),
+            Translator.getIntl("subjects_taught"),
+            Translator.getIntl("classes_in"),
+            Translator.getIntl("school_administrators"),
+            Translator.getIntl("timetable_configuration")
+
+
+    );
+
+    List<CheckBox> featureCbs = new ArrayList<>();
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        for (String f : Store.appFeatures.stream().sorted().toList()) {
+            CheckBox cb = new CheckBox(Translator.getIntl(f).toUpperCase());
+            cb.setId(f);
+            featureCbs.add(cb);
+
+        }
+
+
+        closedlg.setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CLOSE, 30, Paint.valueOf("transparent")));
+        closedlg.setOnAction(e->thisStage.get().close());
+        closedlg.addEventHandler(MouseEvent.MOUSE_EXITED,e->{
+            closedlg.setStyle("-fx-background-color: transparent");
+        });
+        closedlg.addEventHandler(MouseEvent.MOUSE_ENTERED,e->{
+            closedlg.setStyle("-fx-background-color: "+Store.Colors.deepRed);
+        });
+
+
+
         tabRootPanes.addAll(List.of(basePane, addressPane, academicPane,
                 sectionsPane, tradePane, subjectsPane, classesPane, addressPane, timetablePane));
         settingsTabpane.getTabs().forEach(t->t.setClosable(false));
@@ -256,9 +333,12 @@ public class SettingsController implements Initializable {
 
 
         //set some button icons
-        newclassBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PLUS, 20, Paint.valueOf(Store.Colors.lightestGray)));
         changeClassSettingsBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PENCIL, 20, Paint.valueOf(Store.Colors.lightestGray)));
+        newclassBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PLUS, 20, Paint.valueOf(Store.Colors.lightestGray)));
         deleteClassbtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TRASH_CAN, 20, Paint.valueOf(Store.Colors.lightestGray)));
+
+        addUserbtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PLUS, 20, Paint.valueOf(Store.Colors.lightestGray)));
+        removeuserbtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TRASH_CAN, 20, Paint.valueOf(Store.Colors.lightestGray)));
 
         //icons
         lineonef.setRight(ProjectUtils.createFontIcon(MaterialDesignP.PHONE_INCOMING, 15, Paint.valueOf("gray")));
@@ -266,6 +346,12 @@ public class SettingsController implements Initializable {
         emailf.setRight(ProjectUtils.createFontIcon(MaterialDesignE.EMAIL, 15, Paint.valueOf("gray")));
         poboxfield.setRight(ProjectUtils.createFontIcon(MaterialDesignN.NUMERIC, 15, Paint.valueOf("gray")));
         locationLabel.setGraphic(ProjectUtils.createFontIcon(MaterialDesignL.LOCATION_ENTER, 15, Paint.valueOf("gray")));
+
+        appIcon.setImage(ResourceUtil.getImageFromResource("images/logo-server.png", (int) appIcon.getFitWidth(), (int) appIcon.getFitHeight(), true));
+        caption.getStyleClass().add("caption-text");
+        caption.setText(Translator.getIntl("project_configurations"));
+        dragArea.getStyleClass().add("caption-container");
+
 
         //custom fields
         locationgrid.add(lineonef, 1, 5);
@@ -290,6 +376,8 @@ public class SettingsController implements Initializable {
                     buildTabCallableMap.get(selectedTabIndex.intValue()).call(null);
                     builtTabMap.replace(selectedTabIndex.intValue(), true);
                 }
+                caption.setText(ProjectUtils.capitalize(tabTitles.get(selectedTabIndex.intValue())));
+
 
 
             });
@@ -299,6 +387,8 @@ public class SettingsController implements Initializable {
         }
 
     }
+
+
 
     public void changeTab(int inex) {
         System.out.println("Changing settings tab");
@@ -404,6 +494,11 @@ public class SettingsController implements Initializable {
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
+
+    private void buildTimetable() {
+        System.out.println("building timetable");
+    }
+
     public void buildBase() throws SQLException {
         mainimgview.imageProperty().bind(logoProperty);
         secodimgivew.imageProperty().bind(logoProperty);
@@ -786,6 +881,10 @@ public class SettingsController implements Initializable {
             addTradeController.thisStage.set(stage);
 
             stage.setTitle("PROMPT");
+
+
+            ProjectUtils.applyDialogCaption(stage,addTradeController.dragArea);
+
             stage.showAndWait();
 
             tradesTable.getItems().clear();
@@ -998,6 +1097,8 @@ public class SettingsController implements Initializable {
             AddSubjectController addSubjectController = fxmlLoader.getController();
             addSubjectController.thisStage.set(stage);
 
+            ProjectUtils.applyDialogCaption(stage,addSubjectController.dragArea);
+
             stage.setTitle("PROMPT");
             stage.showAndWait();
 
@@ -1048,6 +1149,155 @@ public class SettingsController implements Initializable {
         });
 
         nextSubjects.setOnAction(e -> changeTab(6));
+
+
+
+
+
+
+    }
+
+
+    public void buildAdmins() {
+        String find = "select * from users order by fullname";
+
+        TableColumn<HashMap<String, Object>, String> fullnamecol = ProjectUtils.createTableColumn(Translator.getIntl("fullname").toUpperCase(), "fullname");
+        TableColumn<HashMap<String, Object>, String> usernamecol = ProjectUtils.createTableColumn(Translator.getIntl("username").toUpperCase(), "username");
+        TableColumn<HashMap<String, Object>, String> passwordcol = ProjectUtils.createTableColumn(Translator.getIntl("password"), "password");
+
+
+        adminsTable.getStyleClass().addAll("bordered", "striped", "dense");
+        adminsTable.getColumns().addAll(fullnamecol, usernamecol, passwordcol);
+
+        for (TableColumn<HashMap<String, Object>, String> col : new TableColumn[]{fullnamecol, usernamecol, passwordcol}) {
+            col.setMinWidth(200);
+        }
+        usernamecol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignA.ACCOUNT, 12, Paint.valueOf(Store.Colors.lightestGray)));
+        passwordcol.setGraphic(ProjectUtils.createFontIcon(MaterialDesignK.KEY, 12, Paint.valueOf(Store.Colors.lightestGray)));
+
+        fullnamecol.setCellFactory(new Callback<>() {
+            @Override
+            public TableCell<HashMap<String, Object>, String> call(TableColumn<HashMap<String, Object>, String> hashMapStringTableColumn) {
+                return new TableCell<>() {
+                    @Override
+                    protected void updateItem(String s, boolean b) {
+                        super.updateItem(s, b);
+                        if (b) {
+                            setText(null);
+                            setGraphic(null);
+                        } else {
+                            setText(ProjectUtils.capitalize(s));
+
+                        }
+                    }
+                };
+            }
+        });
+
+        adminsTable.getItems().addAll(PgConnector.fetch(find, PgConnector.getConnection()));
+
+        adminsTable.getSelectionModel().selectedItemProperty().addListener((observableValue, stringObjectHashMap, newselection) -> {
+
+            featureCbs.forEach(f -> f.setSelected(false));
+            accessItemsVb.getChildren().clear();
+            accessItemsVb.getChildren().addAll(featureCbs);
+
+            if (!Objects.equals(newselection, null)) {
+
+                List<String> accessTo = new ArrayList<>();
+                int adminId = PgConnector.getNumberOrNull(newselection, "id").intValue();
+                try {
+                    PreparedStatement ps = PgConnector.getConnection().prepareStatement("select access from users where id=?");
+                    ps.setInt(1, adminId);
+                    ResultSet rs = ps.executeQuery();
+
+                    if (rs.next()) {
+                        accessTo= PgConnector.parsePgArray(rs, "access");
+                        accessTo = accessTo.stream().map(s -> Translator.getIntl(s).toUpperCase()).toList();// translated for comparism
+
+                        for ( CheckBox cb : featureCbs) {
+                            if (accessTo.contains(cb.getText())) cb.setSelected(true);
+
+                        }
+
+
+                    }
+
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+
+                //fill access
+
+            }
+        });
+
+        toggleselectFeature.setOnAction(e-> featureCbs.forEach(f -> f.setSelected(!f.isSelected())));
+
+        updateFeatures.setOnAction(e->{
+
+                HashMap<String, Object> selectedUser = adminsTable.getSelectionModel().getSelectedItem();
+
+                if (!selectedUser.isEmpty()) {
+                    int id = PgConnector.getNumberOrNull(selectedUser, "id").intValue();
+
+                    List<String> selectedFeatures = featureCbs.stream().filter(CheckBox::isSelected).map(Node::getId).toList();
+
+                    String updateAccess = "update users set access=? where id=?";
+                    try {
+                        PreparedStatement updateStatment = PgConnector.getConnection().prepareStatement(updateAccess);
+
+                        updateStatment.setArray(1,PgConnector.getConnection().createArrayOf("text",selectedFeatures.toArray()));
+                        updateStatment.setInt(2, id);
+
+                        updateStatment.executeUpdate();
+
+                        Alert a = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.NONE, "INSERTION SUCCESS", "INFO", Translator.getIntl("data_updated"), ButtonType.OK);
+                        a.showAndWait();
+
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+
+                }
+                    });
+
+
+        nextusers.setOnAction(e->changeTab(8));
+
+        addUserbtn.setOnAction(e->addUser());
+
+        removeuserbtn.setOnAction(e->{
+            HashMap<String, Object> selectedUser = adminsTable.getSelectionModel().getSelectedItem();
+            if (!selectedUser.isEmpty()) {
+                int id = PgConnector.getNumberOrNull(selectedUser, "id").intValue();
+
+                Alert warning = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.WARNING,
+                        Translator.getIntl("attention").toUpperCase(),"PROMPT",
+                        Translator.getIntl("delete_item") + String.format(" %s%s %s ?", Store.UnicodeSumnbol.blank, Store.UnicodeSumnbol.rightArrow, PgConnector.getFielorBlank(selectedUser,
+                                "fullname").toUpperCase()), ButtonType.NO, ButtonType.YES);
+                Optional<ButtonType> res =  warning.showAndWait();
+
+                res.ifPresent(b->{
+                    if (Objects.equals(b, ButtonType.YES)) {
+                        String delete = String.format("delete from users where id=%d", id);
+                        PgConnector.update(delete);
+
+//                        Alert a = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.NONE, "DELETE SUCCESS", "INFO", Translator.getIntl("data_updated"), ButtonType.OK);
+//                        a.showAndWait();
+                        //update sections table items
+                        adminsTable.getItems().clear();
+                        adminsTable.setItems(FXCollections.observableList(PgConnector.fetch("select * from users order  by fullname",
+                                PgConnector.getConnection())));
+                    }else warning.close();
+                });
+            }
+        });
+
+
+
 
 
 
@@ -1141,6 +1391,40 @@ public class SettingsController implements Initializable {
     }
 
 
+    public void addUser() {
+        URL url = ResourceUtil.getAppResourceURL("views/others/add-users.fxml");
+
+        FXMLLoader fxmlLoader = new FXMLLoader(url);
+        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
+        Parent root = null;
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(thisStage.get());
+        stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
+        stage.setResizable(true);
+
+        AddAdminController addAdminController = fxmlLoader.getController();
+        addAdminController.thisStage.set(stage);
+
+        ProjectUtils.applyDialogCaption(stage,addAdminController.dragArea);
+
+        stage.showAndWait();
+
+        adminsTable.getItems().clear();
+        adminsTable.setItems(FXCollections.observableList(PgConnector.fetch("select * from users order  by fullname",
+                PgConnector.getConnection())));
+
+
+    }
+
+
     //////////////////////////////////////
 
     public void saveAcademicYear() {
@@ -1159,6 +1443,10 @@ public class SettingsController implements Initializable {
             popup.show(yearFrom);
             validFrom = false;
 
+
+
+
+
         }
 
         if (Objects.equals(toYEar, "") || toYEar == null) {
@@ -1170,6 +1458,7 @@ public class SettingsController implements Initializable {
             validto = false;
 
         }
+        
 
         if (!validFrom || !validto) return;
 
@@ -1265,7 +1554,11 @@ public class SettingsController implements Initializable {
         );
 
 
-        stage.setTitle(Translator.getIntl("class_settings").toUpperCase());
+//        stage.setTitle(Translator.getIntl("class_settings").toUpperCase());
+        addClassController.caption.setText(Translator.getIntl("class_settings").toUpperCase());
+
+        ProjectUtils.applyDialogCaption(stage,addClassController.dragArea);
+
         stage.showAndWait();
 
 

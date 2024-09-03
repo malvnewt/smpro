@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox  maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="305.0" prefWidth="455.0" spacing="10.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.AddTradeController">
+   <children>
+      <HBox alignment="CENTER_LEFT" maxHeight="40.0" minHeight="40.0" prefHeight="100.0" prefWidth="200.0" styleClass="caption-container">
+         <children>
+            <Label fx:id="title" prefHeight="20.0" prefWidth="161.0" styleClass="caption-text" text="%add_admin" />
+            <HBox fx:id="dragArea" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <Button fx:id="closedlg" mnemonicParsing="false" styleClass="closedlg" />
+         </children>
+         <VBox.margin>
+            <Insets left="5.0" />
+         </VBox.margin>
+      </HBox>
+      <GridPane hgap="5.0" vgap="5.0" VBox.vgrow="ALWAYS">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="223.0" minWidth="10.0" prefWidth="155.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="305.0" minWidth="10.0" prefWidth="300.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label styleClass="section-title" text="%credentials" />
+            <Label fx:id="label1" text="%fullname" GridPane.rowIndex="1" />
+            <Label text="%login_username" GridPane.rowIndex="2" />
+            <TextField fx:id="usernamefield" promptText="eg EPS" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="fullnamefiled" promptText="eg Electrical Power System .." GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <HBox alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
+               <children>
+                  <ImageView fx:id="iconview" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" />
+               </children>
+            </HBox>
+            <Label text="%login_password" GridPane.rowIndex="3" />
+            <TextField fx:id="passwordfield" promptText="12ghd49 ..." GridPane.columnIndex="1" GridPane.rowIndex="3" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </GridPane>
+      <Separator prefWidth="200.0" />
+      <ButtonBar prefHeight="40.0" prefWidth="455.0">
+        <buttons>
+          <Button fx:id="cancelBtn" mnemonicParsing="false" text="%cancel" />
+            <Button fx:id="confirmBtn" defaultButton="true" mnemonicParsing="false" styleClass="success-btn" text="%confirm" />
+        </buttons>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </ButtonBar>
+   </children>
+   <stylesheets>
+      <URL value="@../../css/global.css" />
+      <URL value="@../../css/recaf/all.css" />
+   </stylesheets>
+   <effect>
+      <DropShadow />
+   </effect>
+</VBox>

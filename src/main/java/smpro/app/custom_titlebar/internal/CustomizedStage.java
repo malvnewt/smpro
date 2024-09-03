@@ -58,7 +58,7 @@ public class CustomizedStage {
         this.config = config;
     }
 
-    public void inject() {
+    public void inject(boolean... isdlg) {
         this.isInjected = true;
 
         this.hWnd = NativeUtilities.getHwnd(stage);
@@ -73,9 +73,12 @@ public class CustomizedStage {
 
         stage.getScene().rootProperty().addListener(this::onParentChange);
         stage.sceneProperty().addListener(this::onSceneChange);
-        if(config.useControls) // use my own controls
-            addControlsToParent(stage.getScene().getRoot());
-    }
+        if (config.useControls)
+                addControlsToParent(stage.getScene().getRoot(),isdlg);
+
+
+        }
+
 
     public void release() {
         this.isInjected = false;
@@ -112,9 +115,10 @@ public class CustomizedStage {
         addControlsToParent(newVal.getRoot());
     }
 
-    private void addControlsToParent(Parent parent) {
+    private void addControlsToParent(Parent parent,boolean... isdlg) {
         this.isRootReplaced = true;
-        initControls();
+
+        initControls(isdlg);
 
         newRoot = new StackPane();
         newRoot.getChildren().add(parent);
@@ -124,7 +128,7 @@ public class CustomizedStage {
         stage.getScene().setRoot(newRoot);
     }
 
-    private void initControls() {
+    private void initControls(boolean... isdlg) {
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(ResourceUtil.getAppResourceURL("custom_tile/caption-controls.fxml"));
@@ -137,11 +141,20 @@ public class CustomizedStage {
             this.minimizeButton = controller.minimizeButton;
             this.restoreButton = controller.maximizeRestoreButton;
 
+            closeButton.setStyle("-fx-background-color: transparent");
+            minimizeButton.setStyle("-fx-background-color: transparent");
+            restoreButton.setStyle("-fx-background-color: transparent");
+
+            if (isdlg.length > 0) {
+                minimizeButton.setVisible(false);
+                restoreButton.setVisible(false);
+            }
+
             captionControls.getStylesheets().add(ResourceUtil.getAppResourceURL("custom_tile/caption-controls.css").toExternalForm());
+            captionControls.getStylesheets().remove("all.css");
+
             controller.applyConfig(config);
-//            minimizeButton = controller.getMinimizeButton();
-//            restoreButton = controller.getMaximizeRestoreButton();
-//            closeButton = controller.getCloseButton();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

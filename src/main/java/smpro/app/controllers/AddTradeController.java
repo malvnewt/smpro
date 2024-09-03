@@ -8,10 +8,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
 import smpro.app.ResourceUtil;
 import smpro.app.utils.PgConnector;
 import smpro.app.utils.ProjectUtils;
+import smpro.app.utils.Store;
 import smpro.app.utils.Translator;
 
 import java.net.URL;
@@ -24,13 +29,23 @@ public class AddTradeController implements Initializable {
     public TextField trade_namefield;
     public Button cancelBtn;
     public Button confirmBtn;
+    public Button closedlg;
 
 
     public ObjectProperty<Stage> thisStage = new SimpleObjectProperty<>();
     public ImageView iconview;
+    public HBox dragArea;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        closedlg.setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CLOSE, 30, Paint.valueOf("transparent")));
+        closedlg.setOnAction(e->thisStage.get().close());
+        closedlg.addEventHandler(MouseEvent.MOUSE_EXITED, e->{
+            closedlg.setStyle("-fx-background-color: transparent");
+        });
+        closedlg.addEventHandler(MouseEvent.MOUSE_ENTERED,e->{
+            closedlg.setStyle("-fx-background-color: "+ Store.Colors.deepRed);
+        });
 
         trade_namefield.requestFocus();
         iconview.setImage(ResourceUtil.getImageFromResource("images/plus.png",50,50,true));

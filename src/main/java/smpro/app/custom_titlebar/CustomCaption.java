@@ -17,6 +17,10 @@ public class CustomCaption {
         stageManager.registerStage(stage, config);
     }
 
+    public static void useForStage(@NotNull Stage stage,boolean isdialog, @NotNull CaptionConfiguration config) {
+        stageManager.registerStage(stage, config,isdialog);
+    }
+
 
     /**
      * same as {@link CustomCaption#useForStage(Stage, CaptionConfiguration)}

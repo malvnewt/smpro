@@ -49,7 +49,7 @@ public class ListDisplayController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        searchfield.setRight(ProjectUtils.createFontIcon(MaterialDesignS.SELECT_SEARCH,15,Paint.valueOf("gray")));
+        searchfield.setRight(ProjectUtils.createFontIcon(MaterialDesignF.FILTER,18,Paint.valueOf("gray")));
         searchfield.setPromptText(Translator.getIntl("type_"));
         searchcontainer.getChildren().add(searchfield);
         searchcontainer.setAlignment(Pos.CENTER_LEFT);
@@ -82,10 +82,10 @@ public class ListDisplayController implements Initializable {
 
 
 
+
+
         itemcvb.setPadding(new Insets(5));
-        itemcvb.setSpacing(5);
-
-
+//        itemcvb.setSpacing(5);
 
 
 
@@ -138,7 +138,9 @@ public class ListDisplayController implements Initializable {
         for (String item : data) {
             CheckBox cb = new CheckBox(item.toUpperCase());
             cb.setId(item);
-            cb.setStyle("-fx-font-size: 14px;-fx-font-weight: bold;");
+            cb.getStyleClass().add("bordered-item");
+            cb.setMinWidth(itemcvb.getWidth());
+
             if (selectedOptions.contains(item))cb.setSelected(true);
 
             dataItems.add(cb);

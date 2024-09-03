@@ -12,6 +12,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -22,7 +23,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="777.0" prefWidth="884.0" stylesheets="@../../css/recaf/all.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.AddClassController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="811.0" prefWidth="884.0" stylesheets="@../../css/recaf/all.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.AddClassController">
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
          <padding>
@@ -55,7 +56,7 @@
                         <Insets left="20.0" />
                      </GridPane.margin></Label>
                   <Label styleClass="section-title" text="%class_info" />
-                  <ImageView fx:id="iconView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" />
+                  <ImageView fx:id="iconView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" visible="false" GridPane.columnIndex="3" />
                   <TextField fx:id="classnamefiled" promptText="eg Form five science, Terminal D ..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <TextField fx:id="shortnamefield" promptText="eg  F5, USS,LSA ..." GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <ComboBox fx:id="cyclecombo" prefHeight="25.0" prefWidth="296.0" promptText="%select" styleClass="alt-icon" GridPane.columnIndex="3" GridPane.rowIndex="2" />
@@ -371,6 +372,7 @@
                   <Insets right="20.0" />
                </padding>
             </GridPane>
+            <Separator prefWidth="200.0" />
             <HBox alignment="CENTER_RIGHT" spacing="20.0">
                <children>
                   <Label prefHeight="20.0" prefWidth="183.0" text="%use_format_from" />
@@ -390,4 +392,23 @@
          </children>
       </VBox>
    </center>
+   <top>
+      <HBox alignment="CENTER_LEFT" maxHeight="40.0" minHeight="40.0" prefHeight="100.0" prefWidth="200.0" spacing="40.0" styleClass="caption-container" BorderPane.alignment="CENTER_LEFT">
+         <children>
+            <ImageView fx:id="appIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+            <HBox fx:id="dragArea" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="caption" prefHeight="20.0" prefWidth="293.0" styleClass="caption-text" text="title" />
+               </children>
+            </HBox>
+            <Button fx:id="closedlg" mnemonicParsing="false" styleClass="closedlg" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </padding>
+      </HBox>
+   </top>
+   <effect>
+      <DropShadow />
+   </effect>
 </BorderPane>

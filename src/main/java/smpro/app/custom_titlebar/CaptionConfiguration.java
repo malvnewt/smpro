@@ -24,7 +24,7 @@ public class CaptionConfiguration {
 
     public Color controlBackgroundColor;
 
-    public Color buttonHoverColor = Color.web("#808080");
+    public Color buttonHoverColor;
     public Color closeButtonHoverColor = Color.RED;
 
     public Color iconHoverColor = Color.WHITE;
@@ -32,6 +32,7 @@ public class CaptionConfiguration {
     public boolean useControls = true;
 
     public DragRegion captionDragRegion;
+
 
 
     public CaptionConfiguration() {

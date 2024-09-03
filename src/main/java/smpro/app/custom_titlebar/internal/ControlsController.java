@@ -14,10 +14,12 @@ import javafx.scene.text.Font;
 import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 import smpro.app.custom_titlebar.CaptionConfiguration;
+import smpro.app.utils.Store;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class ControlsController implements Initializable {
@@ -40,6 +42,7 @@ public class ControlsController implements Initializable {
         for(Button button : buttons) {
             button.setTextFill(config.iconColor);
             button.setBackground(new Background(new BackgroundFill(config.controlBackgroundColor, null, null)));
+
         }
 
         root.setPrefHeight(config.captionHeight);
@@ -59,9 +62,10 @@ public class ControlsController implements Initializable {
             btn.setBackground(new Background(new BackgroundFill(config.controlBackgroundColor, null, null)));
         }
 
+
         if(button == null) return;
 
-        Color bgColor = hoveredButton == CustomizedStage.CaptionButton.CLOSE ? config.buttonHoverColor: config.buttonHoverColor;
+        Color bgColor = hoveredButton == CustomizedStage.CaptionButton.CLOSE ? config.closeButtonHoverColor: config.buttonHoverColor;
 
         button.setBackground(new Background(new BackgroundFill(bgColor, CornerRadii.EMPTY, Insets.EMPTY)));
         button.setTextFill(config.iconHoverColor);
@@ -87,6 +91,8 @@ public class ControlsController implements Initializable {
 
         for(Button b : buttons) {
             b.setFont(font);
+            b.setBackground(new Background(new BackgroundFill(Color.web(Store.Colors.transparent), null, null)));
+
         }
     }
 }

@@ -2,6 +2,7 @@ package smpro.app.controllers;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -12,8 +13,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
 import javafx.stage.Modality;
@@ -76,6 +79,10 @@ public class AddClassController implements Initializable {
     public TitledPane groupAtpane;
     public VBox logoContainer;
     public GridPane infogrid;
+    public Label caption;
+    public HBox dragArea;
+    public ImageView appIcon;
+    public Button closedlg;
 
 
     List<Button> editBtns  = new ArrayList<>();
@@ -123,6 +130,19 @@ public class AddClassController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        appIcon.setImage(ResourceUtil.getImageFromResource("images/plus.png", (int) appIcon.getFitWidth(), (int) appIcon.getFitHeight(), true));
+        closedlg.setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CLOSE, 30, Paint.valueOf("transparent")));
+        closedlg.setOnAction(e->thisStage.get().close());
+        closedlg.addEventHandler(MouseEvent.MOUSE_EXITED, e->{
+            closedlg.setStyle("-fx-background-color: transparent");
+        });
+        closedlg.addEventHandler(MouseEvent.MOUSE_ENTERED,e->{
+            closedlg.setStyle("-fx-background-color: "+Store.Colors.deepRed);
+        });
+
+
+
         editBtns.addAll(List.of(groupAbtn, groupBbtn, groupCbtn, groupDbtn));
         editFields.addAll(List.of(gAlabel, gbLabel, gclable, gdLabel));
         editLview.addAll(List.of(galv, gblv, gclv, gdlv));
@@ -196,6 +216,10 @@ public class AddClassController implements Initializable {
 
 
     public void initUi() throws SQLException {
+        appIcon.setImage(ResourceUtil.getImageFromResource("images/plus.png", (int) appIcon.getFitWidth(), (int) appIcon.getFitHeight(), true));
+        caption.setText(ProjectUtils.capitalize(Translator.getIntl("add_new_class")));
+        caption.getStyleClass().add("caption-text");
+        dragArea.getStyleClass().add("caption-container");
 
         //add searchable combo for classmaster
 
@@ -494,7 +518,7 @@ public class AddClassController implements Initializable {
 
         subjectsPopup.setOnHiding(e->{
             textField.getStyleClass().remove("error-textfield");
-            List<Node> selectItems = listDisplayController.itemcvb.getChildren();
+            ObservableList<Node> selectItems = listDisplayController.itemcvb.getChildren();
             for (Node n : selectItems) {
                 if (((CheckBox) n).isSelected() && textField.getText().isEmpty()) {
                     textField.getStyleClass().add("error-textfield");
@@ -538,10 +562,6 @@ public class AddClassController implements Initializable {
             subjectsPopup.hide();
 
         });
-
-
-
-
 
 
 

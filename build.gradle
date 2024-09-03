@@ -51,21 +51,21 @@ javafx {
 
 // CONVERT NON-MODULAR JARS TO AUTOMATIC MODULES USING extrajavamoduleinfo.jar package 'CLOSURES'
 extraJavaModuleInfo {
-  // failOnMissingModuleInfo.set(false)
 
+  // failOnMissingModuleInfo.set(false)
 
   //  MODLARISATIONS
 
-    // pdf
-  module("com.itextpdf:barcodes", "com.itextpdf.barcodes"){ exports("com.itextpdf.barcodes") }
-  module("com.itextpdf:font-asian", "com.itextpdf.io.font"){ exports("com.itextpdf.io.font") }
-  module("com.itextpdf:sign", "com.itextpdf.signatures"){ exports("com.itextpdf.signatures") }
-  module("com.itextpdf:forms", "com.itextpdf.forms"){ exports("com.itextpdf.forms") }
-  module("com.itextpdf:hyph", "com.itextpdf.hyph"){ exports("com.itextpdf.hyph") }
-  module("com.itextpdf:layout", "com.itextpdf.layout"){ exports("com.itextpdf.layout") }
-  module("com.itextpdf:pdfa", "com.itextpdf.pdfa"){ exports("com.itextpdf.pdfa") }
-  module("com.itextpdf:kernel", "com.itextpdf.kernel"){ exports("com.itextpdf.kernel") }
-  module("com.itextpdf:io", "com.itextpdf.io"){ exports("com.itextpdf.io") }
+  // pdf
+  automaticModule("com.itextpdf:barcodes", "com.itextpdf.barcodes")
+  automaticModule("com.itextpdf:font-asian", "com.itextpdf.io.font")
+  automaticModule("com.itextpdf:sign", "com.itextpdf.signatures")
+  automaticModule("com.itextpdf:forms", "com.itextpdf.forms")
+  automaticModule("com.itextpdf:hyph", "com.itextpdf.hyph")
+  automaticModule("com.itextpdf:layout", "com.itextpdf.layout")
+  automaticModule("com.itextpdf:pdfa", "com.itextpdf.pdfa")
+  automaticModule("com.itextpdf:kernel", "com.itextpdf.kernel")
+  automaticModule("com.itextpdf:io", "com.itextpdf.io")
 
   // Excel read/write
 //  module("org.apache.poi:poi-ooxml", "org.apache.poi","5.1.0"){ exports("org.apache.poi") }
@@ -80,7 +80,6 @@ extraJavaModuleInfo {
   module("commons-codec:commons-codec", "org.apache.commons.codec","1.15") {exports("org.apache.commons.codec")}
 
 
-
   //charts
   automaticModule("eu.hansolo:charts", "eu.hansolo")
 //  module("com.github.hervegirod:fxsvgimage", "org.girod.javafx.svgimage","1.0b2") {exports("com.github.hervegirod") }
@@ -91,10 +90,11 @@ extraJavaModuleInfo {
   module("xml-apis:xml-apis", "xml.apis") {exports("xml.apis")}
   module("stax:stax-api", "stax.api") {exports("stax.api")}
 
+//  module("com.itextpdf:itext7-core", "com.itextpdf.core","7.0.4") {exports("com.itextpdf.core")}
+
   //dansoftowner progress
   automaticModule("com.nativelibs4java:bridj", "com.nativelibs4java.bridj"){overrideModuleName()}
   automaticModule("com.google.android.tools:dx","com.google.android.tools.dx"){overrideModuleName()}
-
 
   // others
   automaticModule("dom4j:dom4j", "dom4j")
@@ -102,15 +102,23 @@ extraJavaModuleInfo {
   // fxribbon
   automaticModule("com.pixelduke:fxribbon", "com.pixelduke.fxribbon")
 
-
+  //itext
+  module("barcodes-7.1.4.jar","com.itextpdf.barcodes")
+  module("forms-7.1.4.jar","com.itextpdf.forms")
+  module("hyph-7.1.4.jar","com.itextpdf.hyph")
+  module("io-7.1.4.jar","com.itextpdf.io")
+  module("kernel-7.1.4.jar","com.itextpdf.kernel")
+  module("layout-7.1.4.jar","com.itextpdf.layout")
+  module("pdfa-7.1.4.jar","com.itextpdf.pdfa")
+  module("font-asian-7.1.4.jar","com.itextpdf.font.asian")
+//  module("sign-7.1.4.jar","itextpdf.sign"){"itextpdf.sign"}
+//  module("styled-xml-parser-7.1.4.jar","itextpdf.styledxmlparser"){"itextpdf.styledxmlparser"}
 
 
 }
 
 
-
   //TODO : ADD SHADOWJAR CONFIGURATION
-
 
 
 dependencies {
@@ -145,7 +153,7 @@ dependencies {
 
 
   // itext for pdf files
-  implementation 'com.itextpdf:itext7-core:7.0.4'
+//  implementation 'com.itextpdf:itext7-core:7.0.4'
 
 
   // add jar files dependences from the LIBS dir

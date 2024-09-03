@@ -7,6 +7,8 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -35,12 +37,24 @@ public class AddSubjectController implements Initializable {
 
     public ObjectProperty<Stage> thisStage = new SimpleObjectProperty<>();
     public TextField subjectCodefield;
+    public HBox dragArea;
+    public ImageView appIcon;
+    public Button closedlg;
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        appIcon.setImage(ResourceUtil.getImageFromResource("images/plus.png", (int) appIcon.getFitWidth(), (int) appIcon.getFitHeight(), true));
+        closedlg.setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CLOSE, 30, Paint.valueOf("transparent")));
+        closedlg.setOnAction(e->thisStage.get().close());
+        closedlg.addEventHandler(MouseEvent.MOUSE_EXITED, e->{
+            closedlg.setStyle("-fx-background-color: transparent");
+        });
+        closedlg.addEventHandler(MouseEvent.MOUSE_ENTERED,e->{
+            closedlg.setStyle("-fx-background-color: "+Store.Colors.deepRed);
+        });
 
-        iconview.setImage(ResourceUtil.getImageFromResource("images/newdoc.png",50,50,true));
+//        iconview.setImage(ResourceUtil.getImageFromResource("images/newdoc.png",50,50,true));
         coefField.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("can_be_changed_perclass")));
 
         // restrict coeff input\

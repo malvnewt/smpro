@@ -1,6 +1,5 @@
 
 
-
 .transparent-btn {
     -fx-border-width: 0;
     /*-fx-background-color: transparent;*/
@@ -29,6 +28,7 @@
     -fx-font-size: 55px;
     -fx-font-weight: bold;
     -fx-font-family: "Bodoni MT Black";
+    /*-fx-font-family: Space;*/
 }
 .smpro-large-sub {
     -fx-font-size: 15px;
@@ -86,6 +86,43 @@
 .error-textfield{
     -fx-border-color: #ff6158 ;
 }
+
+.bordered-item {
+    -fx-border-width: 1px;
+    -fx-padding: 2px 5px 2px 10px;
+    -fx-border-color: #44444480;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+
+}
+
+.caption-text {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #eeeeeeaa;
+}
+.caption-container {
+    -fx-padding: 0 0 1px 10px;
+    -fx-border-color: #44444480;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.closedlg {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-animated: true;
+    -fx-min-height: 40;
+    -fx-min-width: 40;
+}
+
+.items-background{
+    -fx-background-radius: 2em 0 0 2em;
+    -fx-padding: 5px;
+}
+
+
+
+
 
 
 
