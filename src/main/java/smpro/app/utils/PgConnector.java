@@ -163,7 +163,8 @@ public class PgConnector {
     }
 
     public static InputStream readBinarydata( PreparedStatement ps) {
-        System.out.println("===============Inserting binary data ============== \n");
+        System.out.println("===============reading binary data ============== \n");
+        System.out.println(ps);
         InputStream is = null;
 
         try {
@@ -233,6 +234,15 @@ public class PgConnector {
 //            throw new RuntimeException(e);
         }
         return out;
+    }
+
+
+    public static HashMap<String, Object> getObjectFromId(int id, String tablename) {
+        String q = String.format("""
+                select * from "%s" where id=%d""", tablename, id);
+        List<HashMap<String, Object>> res = fetch(q, getConnection());
+        if (res.isEmpty()) return null;
+        return res.get(0);
     }
 
 

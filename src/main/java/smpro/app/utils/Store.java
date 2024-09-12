@@ -19,11 +19,14 @@ public class Store {
     public static ObjectProperty<HashMap<String, Object>> currentProjectProperty = new SimpleObjectProperty<>(null);
 
     public static String RESOURCE_BASE_URL = "smpro/app/";
+    public static String NON_BINARY = "non_binary";
 //    public static String desktopPath = Path.of(System.getProperty("os.home"),"Desktop").toAbsolutePath().toString();
+
 
     public static double MENU_COLLAPSE_WIDTH = 75d;
     public static double MENU_EXPAND_WIDTH = 250d;
-    public static int TOOBAR_ICONSIZE = 35;
+    public static long EPOCK_DAY_MILLISECS = 86400000L;
+    public static int TOOBAR_ICONSIZE = 25;
 
     public static String baseDateFormat = "EEEE, MMMM dd, uuuu";
 
@@ -52,7 +55,9 @@ public class Store {
         public static String rightSquarebracket = "\u005d";
         public static String tm = "\u2122";
         public static String atSymbole = "\u0040";
-        public static String andCopy = "\u0040";
+        public static String andCopy = "\u00A9";
+        public static String person = "\1F464";
+        public static String phone = "\1F4DE";
         public static String blank = "\u2800";
         public static String dash = "\u2796";
         public static String rightArrow = "\u27A1";
@@ -95,6 +100,11 @@ public class Store {
 
 
     }
+
+
+
+    public static String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    public static String digits = "0123456789";
 
 
    public static List<String> appFeatures = List.of(

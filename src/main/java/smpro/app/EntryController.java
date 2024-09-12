@@ -1,13 +1,11 @@
 package smpro.app;
 
-import com.pixelduke.control.ribbon.RibbonGroup;
-import com.pixelduke.control.ribbon.RibbonItem;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
-import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -35,6 +33,7 @@ import org.controlsfx.control.PopOver;
 import org.controlsfx.control.StatusBar;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
+import smpro.app.services.DashboardService;
 import smpro.app.services.StudentClassService;
 import smpro.app.utils.PgConnector;
 import smpro.app.utils.ProjectUtils;
@@ -132,19 +131,29 @@ public class EntryController implements Initializable {
     StudentClassService studentClassService;
 
 
-
-
-
-
     ////////////////////////    tab callbacks
+    HashMap<Integer, List<Node>> featureToolbarMap = new HashMap<> ();
+
     HashMap<Integer, Callback<Object,Void>> tabToViewCallbackMap = new HashMap<>(
             Map.of(
+                    0, o -> {
+                        try {
+                            initDashboarService();
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+
+
+                        return null;
+                    },
                     2, o -> {
                         try {
                             initStudentService();
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
+
+
                         return null;
                     }
 
@@ -164,7 +173,9 @@ public class EntryController implements Initializable {
         features.put("library", "library2.png");
         features.put("suiveillance", "camera3.png");
 
-        configureToolbar();
+        maintoolbar.setPadding(new Insets(0,10,5,10));
+//        maintoolbar.setStyle("-fx-background-color: #373737");
+//        maintoolbar.setStyle("-fx-background-color: rgb(35, 35, 35)");
 
 
         contentTabs.addAll(List.of(dashboardTab, teacherstab, studentTab, hrtab, marksheettab,
@@ -176,6 +187,17 @@ public class EntryController implements Initializable {
         configureUi();
         configureStatusBar();
         handleSidemenuSelection();
+
+
+        // init dashboard as auto selected tab
+        try {
+            initDashboarService();
+            maintoolbar.getItems().addAll(featureToolbarMap.get(0));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
 
@@ -434,27 +456,7 @@ public class EntryController implements Initializable {
 
     }
 
-    public void configureToolbar() {
-        RibbonGroup studentGroup = new RibbonGroup();
-        studentGroup.setTitle("students");
 
-        RibbonItem item1 = new RibbonItem();
-        item1.setGraphic(ProjectUtils.createFontIcon(MaterialDesignS.STAR_SETTINGS, 12, Paint.valueOf("gray")));
-        item1.setLabel("settings");
-        item1.setItem(new CheckBox());
-
-        RibbonItem item2 = new RibbonItem();
-        item2.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PLUS, 12, Paint.valueOf("gray")));
-        item2.setLabel("add");
-        item2.setItem(new Button("", ProjectUtils.createFontIcon(MaterialDesignP.PENCIL, 15, Paint.valueOf("gray"))));
-
-        studentGroup.getNodes().addAll(item1,item2,new Label("hello"),new Button("fuck off"));
-
-
-
-        maintoolbar.getItems().add(studentGroup);
-
-    }
 
     public void handleSidemenuSelection() {
         mainContentTabpane.getTabs().forEach(t -> t.setText(""));
@@ -485,9 +487,9 @@ public class EntryController implements Initializable {
                 tabToViewCallbackMap.get(newindex.intValue()).call(null);
                 builtViewsMap.put(newindex.intValue(), true);
 
-
-
             }
+            maintoolbar.getItems().clear();
+            maintoolbar.getItems().addAll(featureToolbarMap.get(mainContentTabpane.getSelectionModel().getSelectedIndex()));
         });
 
 
@@ -545,11 +547,6 @@ public class EntryController implements Initializable {
 
 
 
-
-
-
-
-
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////                            ///////////////////////////////////////
@@ -566,9 +563,41 @@ public class EntryController implements Initializable {
     /////////////////////////////////////////////////////////////////////////////////////////
 
     public void initStudentService() throws SQLException {
-        studentClassService = new StudentClassService(studentSectionsContainer, studentsTableContainer);
+        studentClassService = new StudentClassService(
+                studentSectionsContainer,
+                studentsTableContainer,
+                thisStage.get()
+                );
         System.out.println("current pane width "+studentTreePane.getWidth());
         studentTreePane.setMaxWidth(300);
+
+        //build and add toolbar to map
+        List<Node> studentToolbarItems = studentClassService.buildToolbarOptions();
+        studentClassService.bindFields();
+
+        // student
+        featureToolbarMap.put(mainContentTabpane.getSelectionModel().getSelectedIndex(), studentToolbarItems);
+
+
+
+
+    }
+
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////   DASHBOARD HANDLER    //////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    public void initDashboarService() throws SQLException {
+        DashboardService dashboardService = new DashboardService(thisStage.get());
+
+        //build and add toolbar to map
+        List<Node> dashboardToolbarActions = dashboardService.buildToolbarOptions();
+        dashboardService.bindFields();
+
+        // student
+        featureToolbarMap.put(0, dashboardToolbarActions);
 
 
 

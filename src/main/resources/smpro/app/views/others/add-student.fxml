@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.SepiaTone?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="553.0" prefWidth="896.0" spacing="10.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.AddStudentController">
+   <children>
+      <HBox alignment="CENTER_LEFT" maxHeight="40.0" minHeight="40.0" prefHeight="47.0" prefWidth="580.0" spacing="10.0" styleClass="caption-container">
+         <children>
+            <ImageView fx:id="appIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+            <HBox fx:id="dragArea" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label styleClass="caption-text" text="%new_student" />
+               </children>
+            </HBox>
+            <Button fx:id="closedlg" mnemonicParsing="false" styleClass="closedlg" />
+         </children>
+      </HBox>
+      <GridPane fx:id="grid" hgap="15.0" vgap="5.0" VBox.vgrow="ALWAYS">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="196.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="357.0" minWidth="250.0" prefWidth="281.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="357.0" minWidth="10.0" prefWidth="123.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="291.0" minWidth="250.0" prefWidth="281.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="110.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="%firstname" />
+            <Label text="%dateofbirth" GridPane.rowIndex="1" />
+            <Label text="%sex" GridPane.rowIndex="5" />
+            <Label text="%parent_guardian1" GridPane.rowIndex="6" />
+            <Label text="%parent_guardian2" GridPane.rowIndex="7" />
+            <TextField fx:id="fnamefield" promptText="eg Paul" GridPane.columnIndex="1" />
+            <TextField fx:id="fparentfiled" promptText="eg Madam Diana" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <TextField fx:id="lparentfield" promptText="eg Mr John Doe" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Label text="%section" GridPane.rowIndex="2" />
+            <Label text="%lastname" GridPane.columnIndex="2" />
+            <TextField fx:id="lnamefield" promptText="eg  Biya" GridPane.columnIndex="3" />
+            <VBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <DatePicker fx:id="dobpicker" prefHeight="32.0" prefWidth="285.0" />
+               </children>
+            </VBox>
+            <Label text="%class" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <ComboBox fx:id="sectioncombo" prefHeight="32.0" prefWidth="286.0" promptText="%select" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5">
+               <children>
+                  <RadioButton id="M" fx:id="maleradio" mnemonicParsing="false" selected="true" text="%male" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="5">
+               <children>
+                  <RadioButton id="F" fx:id="femaleradio" mnemonicParsing="false" text="%female" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="5">
+               <children>
+                  <RadioButton id="MF" fx:id="nonbinradio" mnemonicParsing="false" text="%nonbinary" />
+               </children>
+            </HBox>
+            <Label text="%contact" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <Label text="%contact" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+            <HBox fx:id="contact1container" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="6" />
+            <HBox fx:id="contact2container" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="7" />
+            <HBox fx:id="classContainer" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <Label text="%placeofbirth" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <TextField fx:id="placefield" promptText="eg Yaounde" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Label text="%address" GridPane.rowIndex="4" />
+            <Label text="%repeater" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <CheckBox fx:id="repeatercb" mnemonicParsing="false" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+            <TextField fx:id="addressfield" promptText="eg Bepanda ange raphael..." GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="%trade_speciality" GridPane.rowIndex="3" />
+            <HBox alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="3">
+               <children>
+                  <Button fx:id="importBtn" mnemonicParsing="false">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" style="-fx-border-color: #44444480;" GridPane.columnIndex="3" GridPane.rowIndex="3">
+               <children>
+                  <ImageView fx:id="imageview" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="imaggrauview" fitHeight="100.0" fitWidth="100.0" layoutX="97.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
+                     <effect>
+                        <SepiaTone />
+                     </effect>
+                  </ImageView>
+               </children>
+            </HBox>
+            <StackPane style="-fx-border-color: #44444480;" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <children>
+                  <VBox fx:id="tradecontainer" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" />
+               </children>
+            </StackPane>
+         </children>
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+         </VBox.margin>
+      </GridPane>
+      <Separator prefWidth="200.0" />
+      <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="644.0" spacing="10.0">
+         <VBox.margin>
+            <Insets right="10.0" />
+         </VBox.margin>
+         <children>
+            <Label prefHeight="20.0" prefWidth="205.0" style="-fx-opacity: 1; -fx-text-fill: gray;" text="%dateofbirth" />
+            <Label fx:id="dobDisplay" minHeight="25.0" prefHeight="25.0" prefWidth="344.0" style="-fx-border-radius: 4px; -fx-padding: 1px 15px; -fx-text-fill: #ffad2f; -fx-font-weight: bold;" text="---">
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </Label>
+            <HBox prefHeight="40.0" prefWidth="76.0" HBox.hgrow="ALWAYS" />
+            <ButtonBar prefHeight="40.0" prefWidth="375.0">
+              <buttons>
+                <Button fx:id="cancelBtn" mnemonicParsing="false" text="%close">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Button>
+                  <Button fx:id="resetbtn" mnemonicParsing="false" text="%reset">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button fx:id="confirmBtn" defaultButton="true" mnemonicParsing="false" text="%confirm">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+              </buttons>
+            </ButtonBar>
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="8.0" />
+   </padding>
+   <stylesheets>
+      <URL value="@../../css/recaf/all.css" />
+   </stylesheets>
+   <effect>
+      <DropShadow />
+   </effect>
+</VBox>

@@ -306,6 +306,26 @@ public class ProjectUtils {
         return p;
     }
 
+    public static Tooltip createToolTip(String message, ImageView graphic) {
+
+        VBox vb = new VBox();
+        vb.setSpacing(5);
+        vb.setPadding(new Insets(5));
+
+        Label messageL = new Label(message);
+        messageL.setStyle("-fx-font-weight: bold");
+        messageL.setWrapText(true);
+
+        vb.getChildren().add(messageL);
+        vb.getChildren().add(graphic);
+
+        Tooltip tp = new Tooltip();
+        tp.setShowDelay(Duration.millis(100));
+         tp.setGraphic(vb);
+        return tp;
+
+    }
+
 
 
     public static TableColumn<HashMap<String,Object>, String> createTableColumn(String label,String dataKey,boolean... params) {

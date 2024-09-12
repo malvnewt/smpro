@@ -9,6 +9,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.OverrunStyle;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -24,27 +26,29 @@ public class CustomToolbarActionGroup {
 
     List<HBox> actionItems = new ArrayList<>();
 
-    private final Label title;
 
 
 
-    public CustomToolbarActionGroup(String title) {
-        Label titleLable = new Label(ProjectUtils.capitalize(title));
-        titleLable.setStyle("-fx-font-weight: bold");
-        this.title=titleLable;
-
-    }
+    public CustomToolbarActionGroup() { }
 
 
     public void addActions(String label, Node icon, Control control) {
 
         Label l = new Label(label);
         l.setStyle("-fx-opacity: 0.85");
+        l.setMinWidth(100);
+        l.setMaxWidth(100);
+        l.setTextOverrun(OverrunStyle.ELLIPSIS);
+        l.setTooltip(ProjectUtils.createTooltip(label.toUpperCase()));
+        control.setTooltip(ProjectUtils.createTooltip(label.toUpperCase()));
 
-        HBox container = new HBox(icon, l, control);
-        container.setSpacing(8);
-        container.setPadding(new Insets(5));
+        HBox container =icon==null ? new HBox( l, control) :new HBox(icon, l, control);
+        container.setSpacing(2);
+        container.setPadding(new Insets(1));
         container.setAlignment(Pos.CENTER_LEFT);
+
+        //feedback
+        control.addEventHandler(MouseEvent.MOUSE_CLICKED,e->ProjectUtils.shakeX(control, -5).play());
 
         actionItems.add(container);
     }
@@ -71,24 +75,28 @@ public class CustomToolbarActionGroup {
 
     public Node build(int rowcount) {
         VBox groupContainer = new VBox();
-        groupContainer.setSpacing(20);
-        groupContainer.setPadding(new Insets(10));
+        groupContainer.setSpacing(3);
+        groupContainer.setPadding(new Insets(0,4,0,4));
         groupContainer.setStyle("-fx-border-width:0 2px 0 0;-fx-border-color: #44444480");
 
         GridPane pane = new GridPane();
         pane.setHgap(5);
-        pane.setVgap(5);
+//        pane.setVgap(5);
         pane.setAlignment(Pos.CENTER_LEFT);
+
+        int maxcolcount = Math.ceilDiv(actionItems.size(), rowcount);
+
 
         for (HBox item : actionItems) {
             int row = actionItems.indexOf(item)/rowcount;
-            int col = actionItems.size() % actionItems.indexOf(item);
+            int col = actionItems.indexOf(item) % maxcolcount;
 
             pane.add(item, col, row);
 
         }
 
-        groupContainer.getChildren().addAll(pane, title);
+        groupContainer.getChildren().addAll(pane);
+        groupContainer.setAlignment(Pos.CENTER);
 
 
 

@@ -1,5 +1,8 @@
 package smpro.app.custom_nodes;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.LightBase;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeCell;
@@ -27,7 +30,9 @@ import java.util.Map;
 
 public class ClassSectionsTreeview extends TreeView<HashMap<String, Object>> {
 
-    public ClassSectionsTreeview() {
+    public ObjectProperty<HashMap<String, Object>> selectedClassProperty = new SimpleObjectProperty<>();
+
+    public ClassSectionsTreeview(boolean... includeAll) {
         VBox.setVgrow(this, Priority.ALWAYS);
         getStyleClass().addAll("dense", "bordered");
 
@@ -38,6 +43,12 @@ public class ClassSectionsTreeview extends TreeView<HashMap<String, Object>> {
         rootitem.setExpanded(true);
 
         List<TreeItem<HashMap<String, Object>>> sectionItems = new ArrayList<>();
+
+        // add all itmm
+        TreeItem<HashMap<String, Object>> allItem = new TreeItem<>(new HashMap<>(Map.of("name",Translator.getIntl("all"),"id","allitem")));
+        if (includeAll.length>0)
+            rootitem.getChildren().add(allItem);
+
 
         List<HashMap<String, Object>> dbSections = PgConnector.fetch("select * from sections order by section_name", PgConnector.getConnection());
 
@@ -57,7 +68,7 @@ public class ClassSectionsTreeview extends TreeView<HashMap<String, Object>> {
 
             sectionItems.add(sectionItem);
 
-            sectionClasses.forEach(cls->{
+            sectionClasses.forEach(cls -> {
 
                 TreeItem<HashMap<String, Object>> classItem = new TreeItem<>(new HashMap<>(Map.of(
                         "name", PgConnector.getFielorBlank(cls, "classname"),
@@ -68,16 +79,10 @@ public class ClassSectionsTreeview extends TreeView<HashMap<String, Object>> {
                 sectionItem.setExpanded(true);
 
 
-
             });
 
 
-
-
-
-
         }
-
 
 
         /// set cell factory
@@ -104,12 +109,12 @@ public class ClassSectionsTreeview extends TreeView<HashMap<String, Object>> {
                             setTooltip(new Tooltip(PgConnector.getFielorBlank(stringObjectHashMap, "name").toUpperCase()));
 
                             if (getTreeItem().getParent() == rootitem) {
-                             HashMap<String,Object> data = getItem();
+                                HashMap<String, Object> data = getItem();
                                 boolean isEmpty = Boolean.parseBoolean(String.valueOf(data.get("isEmpty")));
                                 if (isEmpty) {
                                     setDisable(true);
                                     setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/bluedisk.png", 20, 20, true)));
-                                    setText(String.format("%s [ %s ]",PgConnector.getFielorBlank(stringObjectHashMap, "name").toUpperCase(),Translator.getIntl("empty")));
+                                    setText(String.format("%s [ %s ]", PgConnector.getFielorBlank(stringObjectHashMap, "name").toUpperCase(), Translator.getIntl("empty")));
 
 
                                 }
@@ -130,8 +135,16 @@ public class ClassSectionsTreeview extends TreeView<HashMap<String, Object>> {
         // add to root
         rootitem.getChildren().addAll(sectionItems);
 
+        getSelectionModel().selectedItemProperty().addListener((observableValue, hashMapTreeItem, item) -> {
+            HashMap<String, Object> data = item.getValue();
 
+            if (item.isLeaf()) {
+                //filter table
+                selectedClassProperty.set(data);
 
+            }
+
+        });
 
 
     }
