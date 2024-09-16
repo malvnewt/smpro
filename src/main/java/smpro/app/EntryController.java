@@ -88,6 +88,19 @@ public class EntryController implements Initializable {
     public VBox studentSectionsContainer;
     public VBox studentsTableContainer;
     public AnchorPane studentTreePane;
+    public HBox datelocalehb;
+    public VBox dateTile;
+    public HBox localehb;
+    public Label currentLocLabel;
+//    public ComboBox<Locale> localescombo;
+    public HBox countsDisplayHb;
+    public VBox studentClassoverview;
+    public VBox monthly_finance;
+    public VBox perclass_finance;
+    public VBox recently_added;
+    public VBox evaluationProgres;
+    public Label langlable;
+    public VBox tradeView;
 
 
     List<String> featureNames = Store.appFeatures;
@@ -590,7 +603,7 @@ public class EntryController implements Initializable {
     /////////////////////////////////////////////////////////////////////////////////////////
 
     public void initDashboarService() throws SQLException {
-        DashboardService dashboardService = new DashboardService(thisStage.get());
+        DashboardService dashboardService = new DashboardService(thisStage.get(),this);
 
         //build and add toolbar to map
         List<Node> dashboardToolbarActions = dashboardService.buildToolbarOptions();
@@ -598,6 +611,7 @@ public class EntryController implements Initializable {
 
         // student
         featureToolbarMap.put(0, dashboardToolbarActions);
+        builtViewsMap.put(0, true);
 
 
 

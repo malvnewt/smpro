@@ -14,9 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.*;
@@ -324,6 +322,13 @@ public class ProjectUtils {
          tp.setGraphic(vb);
         return tp;
 
+    }
+
+    public static HBox createHspacer() {
+        HBox hb = new HBox();
+        HBox.setHgrow(hb, Priority.ALWAYS);
+
+        return hb;
     }
 
 

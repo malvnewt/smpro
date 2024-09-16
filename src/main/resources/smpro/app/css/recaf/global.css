@@ -130,6 +130,17 @@
 
 }
 
+.lightgray-gradient{
+    -fx-background-color: linear-gradient(to right,#dddddd20,#dddddd50);
+}
+
+/*.mainstyle{*/
+/*    -fx-background-color: -color-cell-bg-selected;*/
+/*    -fx-background-color: #a3d1ff70;*/
+/*    -fx-background-insets: 0 0 2 0;*/
+/*}*/
+
+
 
 
 

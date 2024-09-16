@@ -30,14 +30,6 @@ module smpro.app {
     requires com.itextpdf.io;
     requires com.itextpdf.pdfa;
 
-
-
-
-
-
-    //ribbons
-    requires com.pixelduke.fxribbon;
-
     //postgres connection
     requires java.sql;
     requires org.postgresql.jdbc;

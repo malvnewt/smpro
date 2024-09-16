@@ -82,7 +82,7 @@
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </Button>
-                                    <Label fx:id="expane_menu" text="%expane_menu" />
+                                    <Label fx:id="expane_menu" styleClass="text-bold" text="%expane_menu" />
                                  </children>
                                  <padding>
                                     <Insets left="5.0" />
@@ -109,7 +109,7 @@
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </Button>
-                                    <Label fx:id="setings_label" text="%settings" />
+                                    <Label fx:id="setings_label" styleClass="text-bold" text="%settings" />
                                  </children>
                                  <padding>
                                     <Insets left="5.0" />
@@ -133,7 +133,71 @@
                                 <tabs>
                                     <Tab fx:id="dashboardTab" text="Untitled Tab">
                                       <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <ScrollPane fitToHeight="true" fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <content>
+                                                      <VBox prefHeight="722.0" prefWidth="828.0" spacing="10.0">
+                                                         <children>
+                                                            <HBox fx:id="datelocalehb" prefHeight="59.0" prefWidth="818.0" style="-fx-border-color: #44444480; -fx-border-width: 0 0 1 0;">
+                                                               <children>
+                                                                  <VBox fx:id="dateTile" prefHeight="58.0" prefWidth="242.0" />
+                                                                  <HBox prefHeight="58.0" prefWidth="283.0" HBox.hgrow="ALWAYS" />
+                                                                  <HBox fx:id="localehb" alignment="CENTER_LEFT" prefHeight="58.0" prefWidth="362.0" spacing="10.0">
+                                                                     <children>
+                                                                        <Label fx:id="currentLocLabel" minWidth="120.0" prefHeight="20.0" prefWidth="94.0" style="-fx-opacity: 0.8;" styleClass="text-bold" text="%currentLocale" />
+                                                                        <Label fx:id="langlable" prefHeight="20.0" prefWidth="197.0" style="-fx-font-size: 17;" styleClass="text-bolder" text="Label" />
+                                                                     </children>
+                                                                  </HBox>
+                                                               </children>
+                                                               <padding>
+                                                                  <Insets bottom="5.0" />
+                                                               </padding>
+                                                            </HBox>
+                                                            <HBox fx:id="countsDisplayHb" minHeight="100.0" prefHeight="100.0" prefWidth="200.0" />
+                                                            <HBox prefHeight="336.0" prefWidth="818.0" spacing="10.0">
+                                                               <children>
+                                                                  <VBox fx:id="studentClassoverview" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                                                                  <VBox layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                                                     <children>
+                                                                        <VBox fx:id="tradeView" prefHeight="200.0" prefWidth="100.0" />
+                                                                     </children>
+                                                                  </VBox>
+                                                               </children>
+                                                            </HBox>
+                                                            <VBox focusTraversable="true" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
+                                                               <children>
+                                                                  <Label style="-fx-opacity: 0.8;" styleClass="text-bold" text="%day_program" />
+                                                                  <ScrollPane fitToHeight="true" fitToWidth="true" />
+                                                               </children>
+                                                               <padding>
+                                                                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                               </padding>
+                                                            </VBox>
+                                                            <HBox prefHeight="189.0" prefWidth="818.0">
+                                                               <children>
+                                                                  <VBox fx:id="monthly_finance" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                                                                  <VBox fx:id="perclass_finance" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                                                               </children>
+                                                            </HBox>
+                                                            <HBox minHeight="200.0" prefHeight="100.0" prefWidth="200.0">
+                                                               <children>
+                                                                  <VBox fx:id="recently_added" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                                                                  <VBox fx:id="evaluationProgres" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                                                                  <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                                                               </children>
+                                                            </HBox>
+                                                         </children>
+                                                         <padding>
+                                                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                         </padding>
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets>
+                                                      </VBox>
+                                                   </content>
+                                                </ScrollPane>
+                                             </children></AnchorPane>
                                       </content>
                                     </Tab>
                                     <Tab fx:id="teacherstab" text="Untitled Tab">

@@ -1,20 +1,46 @@
 package smpro.app.services;
 
+import eu.hansolo.fx.charts.AxisType;
+import eu.hansolo.fx.charts.Position;
+import eu.hansolo.fx.charts.data.ChartItem;
+import eu.hansolo.fx.charts.data.XYChartItem;
+import eu.hansolo.tilesfx.Demo;
+import eu.hansolo.tilesfx.Tile;
+import eu.hansolo.tilesfx.TileBuilder;
+import eu.hansolo.tilesfx.chart.ChartData;
+import eu.hansolo.tilesfx.chart.SmoothedChart;
+import eu.hansolo.tilesfx.chart.TilesFXSeries;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
+import javafx.scene.effect.Lighting;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Paint;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.controlsfx.control.textfield.CustomTextField;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
+import org.girod.javafx.svgimage.SVGImage;
+import org.girod.javafx.svgimage.SVGLoader;
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign2.*;
+import smpro.app.EntryController;
 import smpro.app.ResourceUtil;
 import smpro.app.SettingsController;
 import smpro.app.controllers.AddSubjectController;
@@ -23,9 +49,9 @@ import smpro.app.utils.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.security.cert.TrustAnchor;
+import java.text.DateFormat;
+import java.util.*;
 
 public class DashboardService {
 
@@ -38,12 +64,20 @@ public class DashboardService {
     Button refreshBtn;
 
 
+    double MINHEIGHT = 300d;
+
+
+
+    private final EntryController entryController;
+
+
    public List<Node> toolbarItems = new ArrayList<>();
 
     public ObjectProperty<Stage> mainStage = new SimpleObjectProperty<>();
 
 
-    public DashboardService(Stage mainStage) {
+    public DashboardService(Stage mainStage,EntryController controller) {
+        this.entryController = controller;
         this.mainStage.set(mainStage);
 
         initUi();
@@ -51,7 +85,34 @@ public class DashboardService {
     }
 
     public void initUi() {
-        //plot all graphs/summary displays .tiles fx
+        // date and locale containers
+        Label datel = new Label(ProjectUtils.getFormatedDate(new Date().getTime(), DateFormat.getDateInstance(0, Translator.getLocale())));
+        datel.setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CALENDAR, 40, Paint.valueOf(Store.Colors.green)));
+        entryController.dateTile.getChildren().add(datel);
+
+
+
+        entryController.langlable.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TRANSLATE, 40, Paint.valueOf(Store.Colors.green)));
+        entryController.langlable.setText(Translator.getLocale().getDisplayLanguage(Translator.getLocale()));
+
+        buildCountsDisplay();
+
+//        ///////////////////////////  create charts
+        buildStudentchart();
+        buildTradesChart();
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 
@@ -133,6 +194,178 @@ public class DashboardService {
 
 
     }
+
+    public void buildCountsDisplay(){
+        List<HashMap<String, String>> items = new ArrayList<>();
+        items.add(new HashMap<>(Map.of("title","students","image", "images/menu_icons/students3.png")));
+        items.add(new HashMap<>(Map.of("title","classes","image", "images/menu_icons/class_board.png")));
+        items.add(new HashMap<>(Map.of("title","sections","image", "images/section_home.png")));
+        items.add(new HashMap<>(Map.of("title","teachers","image", "images/menu_icons/teachers.png")));
+        items.add(new HashMap<>(Map.of("title","subjects","image", "images/book.png")));
+
+
+        for (HashMap<String, String> item : items) {
+            String title = item.get("title");
+            int count = PgConnector.fetch(String.format("""
+                    select * from "%s"  """, title), PgConnector.getConnection()).size();
+
+            Node sideNode;
+
+            String filepath = item.get("image");
+
+            if (filepath.contains(".svg")) {
+                ImageView view = new ImageView();
+                view.setFitHeight(50);
+                view.setFitWidth(50);
+                view.setImage(SVGLoader.load(ResourceUtil.getAppResourceURL(filepath)).toImage());
+
+                sideNode =view;
+                System.out.println(sideNode);
+            } else {
+             sideNode = new ImageView(ResourceUtil.getImageFromResource(filepath, 50, 50, true));
+            }
+
+
+
+
+            String titleString = title.equalsIgnoreCase("subjects") ? "departments_long" : title;
+            Label titlelable = new Label(Translator.getIntl(titleString).toUpperCase());
+            titlelable.setStyle("-fx-font-weight: bold;-fx-font-size: 14");
+
+            Label countlable = new Label(String.valueOf(count));
+            countlable.setStyle("-fx-font-weight: bold;-fx-font-size: 25;-fx-text-fill: "+ (count==0 ? Store.Colors.red:"white"));
+
+            GridPane pane = new GridPane();
+            pane.add(titlelable, 0, 0, 2, 1);
+            pane.add(countlable,0,1);
+//            pane.add(sideNode,2,0,1,2);
+
+//            pane.setAlignment(Pos.CENTER_LEFT);
+            GridPane.setHalignment(sideNode, HPos.RIGHT);
+            GridPane.setHalignment(countlable, HPos.LEFT);
+            GridPane.setHalignment(titlelable, HPos.LEFT);
+
+            pane.setHgap(50);
+            pane.setVgap(5);
+            pane.setPadding(new Insets(10));
+
+
+
+            HBox container = new HBox(pane,ProjectUtils.createHspacer(),sideNode);
+            container.setSpacing(20);
+            container.setPadding(new Insets(10));
+
+            container.setAlignment(Pos.CENTER_LEFT);
+            HBox.setHgrow(container, Priority.ALWAYS);
+            HBox.setHgrow(pane, Priority.ALWAYS);
+
+
+
+            container.setStyle("-fx-background-color: linear-gradient(to right,#dddddd20 60%,#dddddd65);-fx-background-radius: 10px ");
+//            container.setEffect(new Lighting());
+
+            entryController.countsDisplayHb.getChildren().add(container);
+
+
+        }
+
+        entryController.countsDisplayHb.setSpacing(20);
+        entryController.countsDisplayHb.setAlignment(Pos.CENTER_LEFT);
+        entryController.countsDisplayHb.setPadding(new Insets(10));
+
+
+
+    }
+
+    public void buildTradesChart() {
+        Tile donutChartTile;
+
+        List<ChartData> data = new ArrayList<>();
+        List<Color> colors = List.of(
+                Tile.BLUE, Tile.GRAY, Tile.GREEN, Tile.DARK_BLUE,
+                Tile.MAGENTA, Tile.YELLOW_ORANGE, Tile.ORANGE, Tile.PINK,
+                Tile.YELLOW, Tile.LIGHT_GREEN, Tile.RED, Color.web("#a3d1ff70"),
+                Color.web("#eeffaa25"),Color.web("#eeffaa50"),Color.web("#eeffaa75"),
+                Color.web("#aaaaff25"),Color.web("#aaaaff50"),Color.web("#aaaaff75"),
+                Color.web("#fafaaa25"),Color.web("#fafaaa60"),Color.web("#fafaaa90"),
+                Color.web("#dfadce25"),Color.web("#dfadce60"),Color.web("#dfadce90"),
+                Color.web("#caefba25"),Color.web("#caefba60"),Color.web("#caefba60")
+        );
+
+
+        List<HashMap<String,Object>> allTrades = PgConnector.fetch("select * from trades order by trade_name", PgConnector.getConnection());
+        for (HashMap<String,Object> t : allTrades) {
+            List<?> studentsfount = PgConnector.fetch(String.format("select * from students where trade='%s'", PgConnector.getFielorBlank(t,"trade_name")), PgConnector.getConnection());
+
+            int index = allTrades.indexOf(t);
+
+
+
+            Color color = index==0 ?  colors.get(index) : colors.get(index % colors.size());
+            System.out.println(color);
+
+            data.add(new ChartData(PgConnector.getFielorBlank(t,"trade_abbreviation").toUpperCase(), studentsfount.size(),color));
+        }
+
+        donutChartTile = TileBuilder.create().skinType(Tile.SkinType.DONUT_CHART).prefSize(150.0, 150.0).
+                title(Translator.getIntl("trades")).text(Translator.getIntl("trade_chart_bottom")).textVisible(true).chartData(data).build();
+
+        entryController.tradeView.getChildren().add(donutChartTile);
+        donutChartTile.setMinHeight(MINHEIGHT);
+
+
+
+
+    }
+
+    public void buildStudentchart() {
+
+        //        student distribution chart
+
+        List<HashMap<String,Object>> classdata = PgConnector.fetch("select * from classes order by level,classname",PgConnector.getConnection());
+        List<String> classAbbrs = PgConnector.listHashAttrs(classdata,"class_abbreviation");
+
+        List<Number> studentCounts = new ArrayList<>();
+        for (HashMap<String, Object> item : classdata) {
+            String cid = PgConnector.getFielorBlank(item, "id");
+            List<?> students = PgConnector.fetch(String.format("select * from students where classid=%d", Integer.parseInt(cid)), PgConnector.getConnection());
+            studentCounts.add(students.size());
+        }
+
+
+        Tile studentChartTile;
+        XYChart.Series<String, Number> studentSeries = new XYChart.Series();
+        studentSeries.setName(Translator.getIntl("class_count"));
+
+        for (HashMap<String, Object> citem : classdata) {
+            int cindex = classdata.indexOf(citem);
+            int scount = studentCounts.get(cindex).intValue();
+            String cname = classAbbrs.get(cindex);
+            cname = cname.length() > 5 ? cname.substring(0, 5) :cname;
+
+            studentSeries.getData().add(new XYChart.Data(cname.toUpperCase(), scount,Tile.BLUE));
+
+        }
+
+
+        studentChartTile = TileBuilder.create().skinType(Tile.SkinType.SMOOTHED_CHART).prefSize(150.0, 150.0)
+                .title(Translator.getIntl("student_dist")).chartType(Tile.ChartType.AREA).smoothing(true).tooltipTimeout(1000.0).tilesFxSeries(
+                        new TilesFXSeries<>(studentSeries, Tile.BLUE)).averageVisible(true)
+                .build();
+
+        studentChartTile.setMinHeight(MINHEIGHT);
+        studentChartTile.setAnimated(true);
+
+
+
+        entryController.studentClassoverview.getChildren().add(studentChartTile);
+
+
+
+
+    }
+
+
 
     public void bindFields() {
 

@@ -361,6 +361,10 @@ public class AddStudentController implements Initializable {
         addressfield.clear();
         placefield.clear();
 
+        imageP.set(null);
+        imagePathP.set("");
+
+
     }
 
     public void prepareUpdate(HashMap<String, Object> studentData) throws SQLException {
@@ -573,6 +577,7 @@ public class AddStudentController implements Initializable {
         Alert a = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.NONE, "INSERTION SUCCESS", "INFO",
                 Translator.getIntl("data_updated"), ButtonType.OK);
         a.showAndWait();
+        resetFields();
         return false;
     }
     public boolean updateStudent(int studentid,Callback<Void,Void> cback) throws SQLException {
