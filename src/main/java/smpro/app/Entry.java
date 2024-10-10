@@ -61,7 +61,7 @@ public class Entry extends Application {
 
         URL mainurl = ResourceUtil.getAppResourceURL("views/entry-view.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader(mainurl);
-        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
+        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
         Parent root =fxmlLoader.load();
         Scene scene = new Scene(root, 320, 240);
         scene.getStylesheets().addAll(
@@ -130,7 +130,7 @@ class SessionHandler {
 
             URL url = ResourceUtil.getAppResourceURL("views/others/connect.fxml");
             FXMLLoader fxmlLoader = new FXMLLoader(url);
-            fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
+            fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
             Parent root =fxmlLoader.load();
 
 

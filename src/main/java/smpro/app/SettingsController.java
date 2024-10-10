@@ -1074,7 +1074,7 @@ public class SettingsController implements Initializable {
             URL url = ResourceUtil.getAppResourceURL("views/others/add-subject.fxml");
 
             FXMLLoader fxmlLoader = new FXMLLoader(url);
-            fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
+            fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
             Parent root = null;
             try {
                 root = fxmlLoader.load();
@@ -1233,7 +1233,14 @@ public class SettingsController implements Initializable {
             }
         });
 
-        toggleselectFeature.setOnAction(e-> featureCbs.forEach(f -> f.setSelected(!f.isSelected())));
+        toggleselectFeature.setOnAction(e -> {
+            List<CheckBox> checkec = featureCbs.stream().filter(f -> f.isSelected()).toList();
+            if (!checkec.isEmpty()) {
+                featureCbs.forEach(cb -> cb.setSelected(false));
+            } else {
+                featureCbs.forEach(cb -> cb.setSelected(true));
+            }
+        } );
 
         updateFeatures.setOnAction(e->{
 
@@ -1395,7 +1402,7 @@ public class SettingsController implements Initializable {
         URL url = ResourceUtil.getAppResourceURL("views/others/add-users.fxml");
 
         FXMLLoader fxmlLoader = new FXMLLoader(url);
-        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
+        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
         Parent root = null;
         try {
             root = fxmlLoader.load();
@@ -1484,11 +1491,11 @@ public class SettingsController implements Initializable {
 
     }
 
-    public void openClassWindow(boolean isupdate) {
+    public void openClassWindow(boolean isupdate,Stage... parent) {
         URL url = ResourceUtil.getAppResourceURL("views/others/add-class.fxml");
 
         FXMLLoader fxmlLoader = new FXMLLoader(url);
-        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
+        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
         Parent root = null;
         try {
             root = fxmlLoader.load();
@@ -1499,13 +1506,15 @@ public class SettingsController implements Initializable {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(thisStage.get());
+        stage.initOwner(parent.length>0 ? parent[0]:thisStage.get());
         stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
         stage.setResizable(true);
 
         AddClassController addClassController = fxmlLoader.getController();
         addClassController.thisStage.set(stage);
         addClassController.isUpdate.set(isupdate);
+
+        addClassController.mainStage.set(parent.length>0 ? parent[0]:thisStage.get());
 
         if (isupdate) {
             HashMap<String, Object> selectedClass = classesTable.getSelectionModel().getSelectedItem();
@@ -1540,6 +1549,75 @@ public class SettingsController implements Initializable {
                         classesTable.getItems().addAll(dbClasses);
 
                     }
+
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+
+
+        scene.getStylesheets().addAll(
+                ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
+        );
+
+
+//        stage.setTitle(Translator.getIntl("class_settings").toUpperCase());
+        addClassController.caption.setText(Translator.getIntl("class_settings").toUpperCase());
+
+        ProjectUtils.applyDialogCaption(stage,addClassController.dragArea);
+
+        stage.showAndWait();
+
+
+    }
+    public static void openUpdateClassview(boolean isupdate,Stage parent,HashMap<String,Object>... cls) {
+        URL url = ResourceUtil.getAppResourceURL("views/others/add-class.fxml");
+
+        FXMLLoader fxmlLoader = new FXMLLoader(url);
+        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
+        Parent root = null;
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(parent);
+        stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
+        stage.setResizable(true);
+
+        AddClassController addClassController = fxmlLoader.getController();
+        addClassController.thisStage.set(stage);
+        addClassController.isUpdate.set(isupdate);
+        addClassController.mainStage.set(parent);
+
+        int classid = Integer.parseInt(String.valueOf(cls[0].get("id")));
+
+
+        if (isupdate) {
+            try {
+                addClassController.prepareUpdate(classid);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        addClassController.saveClassBtn.setOnAction(e->{
+            if (isupdate) {
+                try {
+//                    HashMap<String, Object> selectedClass = classesTable.getSelectionModel().getSelectedItem();
+                   boolean updated =  addClassController.update(classid);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }else {
+                try {
+                    boolean saved = addClassController.save();
 
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);

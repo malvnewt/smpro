@@ -45,7 +45,6 @@ import java.util.*;
 public class AddClassController implements Initializable {
     public Button saveClassBtn;
     public Button cancelBtn;
-    public ComboBox<HashMap<String,Object>> formatsCombo;
     public FlowPane gdPreview;
     public FlowPane gcPreview;
     public FlowPane gbPreview;
@@ -73,6 +72,7 @@ public class AddClassController implements Initializable {
 
 
     public ObjectProperty<Stage> thisStage = new SimpleObjectProperty<>();
+    public ObjectProperty<Stage> mainStage = new SimpleObjectProperty<>();
     public ComboBox<Integer> levelcombo;
     public BooleanProperty isUpdate = new SimpleBooleanProperty(false);
     public ImageView iconView;
@@ -83,6 +83,7 @@ public class AddClassController implements Initializable {
     public HBox dragArea;
     public ImageView appIcon;
     public Button closedlg;
+    public HBox formatContainer;
 
 
     List<Button> editBtns  = new ArrayList<>();
@@ -125,6 +126,8 @@ public class AddClassController implements Initializable {
 
     //CUSTOM UI ELEMENTS
     SearchableComboBox<String> classmastercombo = new SearchableComboBox<>(); // grid position (3,3)
+    SearchableComboBox<HashMap<String,Object>> formatsCombo = new SearchableComboBox<>(); // container = formatContainer
+
 
 
 
@@ -208,7 +211,68 @@ public class AddClassController implements Initializable {
         levelP.bind(levelcombo.valueProperty());
         sectionP.bind(sectioncombo.valueProperty());
 
-        //bind preview
+        //bind presets combo
+        formatsCombo.valueProperty().addListener((o,old,newClassObj)->{
+
+            if (!Objects.equals(null, newClassObj)) {
+            try {
+                System.out.println("selected preset >>> "+newClassObj);
+                PreparedStatement classStatement = PgConnector.getConnection().prepareStatement("select * from classes where id=?");
+                classStatement.setInt(1, PgConnector.getNumberOrNull(newClassObj, "id").intValue());
+                ResultSet res = classStatement.executeQuery();
+
+                if (res.next()) {
+                    List<String> ga = PgConnector.parsePgArray(res, "subjects_ga");
+                    List<String> gb = PgConnector.parsePgArray(res, "subjects_gb");
+                    List<String> gc = PgConnector.parsePgArray(res, "subjects_gc");
+                    List<String> gd = PgConnector.parsePgArray(res, "subjects_gd");
+                    List<String> compulsory = PgConnector.parsePgArray(res, "compulsory_subjects");
+
+                    List<List<String>> stringItems = List.of(ga, gb, gc, gd);
+
+                    for (FlowPane pane : previewTiles) {
+                        int index = previewTiles.indexOf(pane);
+                        List<String> groupItems = ProjectUtils.getUniqueValues(stringItems.get(index)).stream().filter(s->!s.isEmpty()).toList();
+
+                        TextField gname = editFields.get(index);
+                        ListView<String> lv = editLview.get(index);
+
+                        List<String> remainingItems = new ArrayList<>();
+
+                        if (groupItems.size() > 1) {
+                            gname.setText(groupItems.get(0));
+                            remainingItems.addAll(groupItems.subList(1, groupItems.size()));
+                        }
+
+                        lv.getItems().clear();
+                        lv.getItems().addAll(remainingItems);
+
+                        pane.getChildren().clear();
+                        pane.getChildren().addAll(remainingItems.stream().map(s -> {
+                            Label l = new Label(ProjectUtils.capitalize(s));
+                            l.setStyle("-fx-font-weight: " +
+                                    "bold;-fx-text-fill: #242424;-fx-font-size: 12px;" +
+                                    "-fx-background-color: transparent;-fx-border-color: #24242490;-fx-border-width: 1px;-fx-padding: 1px;");
+                            l.setTooltip(ProjectUtils.createTooltip(s.toUpperCase()));
+                            return l;
+                        }).toList());
+
+                    }
+
+
+                    compulsorylv.getItems().clear();
+                    compulsorylv.getItems().addAll(compulsory);
+                }
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            }
+
+
+        });
+
 
 
 
@@ -397,6 +461,53 @@ public class AddClassController implements Initializable {
         infogrid.add(classmastercombo, 3, 3);
 
 
+        formatContainer.getChildren().add(formatsCombo);
+        formatsCombo.setMinWidth(200);
+        formatsCombo.setPromptText(Translator.getIntl("select"));
+
+        formatsCombo.setItems(FXCollections.observableList(PgConnector.fetch("select * from classes order by level , classname",PgConnector.getConnection())));
+
+        formatsCombo.setCellFactory(new Callback<>() {
+            @Override
+            public ListCell<HashMap<String, Object>> call(ListView<HashMap<String, Object>> hashMapListView) {
+                return new ListCell<>() {
+                    @Override
+                    protected void updateItem(HashMap<String, Object> item, boolean b) {
+                        super.updateItem(item, b);
+                        if (!b) {
+                            setText(String.format("%s (%s)", PgConnector.getFielorBlank(item, "classname").toUpperCase(),
+                                    PgConnector.getFielorBlank(item, "class_abbreviation").toUpperCase()));
+                            setGraphic(ProjectUtils.createFontIconColored(MaterialDesignC.CIRCLE_MULTIPLE_OUTLINE, 18, Paint.valueOf(Store.Colors.LightGray)));
+
+                        } else {
+                            setText(null);
+                            setGraphic(null);
+
+                        }
+
+                    }
+                };
+            }
+        });
+        formatsCombo.setButtonCell( new ListCell<>() {
+            @Override
+            protected void updateItem(HashMap<String, Object> item, boolean b) {
+                super.updateItem(item, b);
+                if (!b) {
+                    setText(String.format("%s (%s)", PgConnector.getFielorBlank(item, "classname").toUpperCase(),
+                            PgConnector.getFielorBlank(item, "class_abbreviation").toUpperCase()));
+                    setGraphic(ProjectUtils.createFontIconColored(MaterialDesignC.CIRCLE_MULTIPLE_OUTLINE, 18, Paint.valueOf(Store.Colors.LightGray)));
+
+                } else {
+                    setText(null);
+                    setGraphic(null);
+
+                }
+
+            }
+        });
+
+
 
 
     }
@@ -426,27 +537,30 @@ public class AddClassController implements Initializable {
             List<String> groupd = PgConnector.parsePgArray(rs, "subjects_gd");
             List<String> gcompulsory = PgConnector.parsePgArray(rs, "compulsory_subjects");
 
-//            galv.getItems().addAll(groupa);
-//            gblv.getItems().addAll(groupb);
-//            gclv.getItems().addAll(groupc);
-//            gdlv.getItems().addAll(groupd);
             compulsorylv.getItems().addAll(gcompulsory);
 
             List<List<String>> stringItems = List.of(groupa, groupb, groupc, groupd);
+            System.out.println("prepare updateitems"+ stringItems);
+
 
             for (FlowPane pane : previewTiles) {
                 int index = previewTiles.indexOf(pane);
-                List<String> groupItems = stringItems.get(index);
+                List<String> groupItems = ProjectUtils.getUniqueValues(stringItems.get(index)).stream().filter(s->!s.isEmpty()).toList();
+
                 TextField gname = editFields.get(index);
                 ListView<String> lv = editLview.get(index);
 
-                if (groupItems.size() > 0) {
+                List<String> remainingItems = new ArrayList<>();
+
+                if (groupItems.size() > 1) {
                     gname.setText(groupItems.get(0));
-                    groupItems = groupItems.subList(1,groupItems.size());
+                    remainingItems.addAll(groupItems.subList(1, groupItems.size()));
+//                    groupItems = groupItems.subList(1,groupItems.size());
                 }
 
-                lv.getItems().addAll(groupItems);
-                pane.getChildren().addAll(groupItems.stream().map(s -> {
+                lv.getItems().addAll(remainingItems);
+
+                pane.getChildren().addAll(remainingItems.stream().map(s -> {
                     Label l = new Label(ProjectUtils.capitalize(s));
                     l.setStyle("-fx-font-weight: " +
                             "bold;-fx-text-fill: #242424;-fx-font-size: 12px;" +
@@ -488,7 +602,7 @@ public class AddClassController implements Initializable {
 
         URL url = ResourceUtil.getAppResourceURL("views/others/list-popup.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader(url);
-        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
+        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
         Parent root =fxmlLoader.load();
         Scene scene = new Scene(root);
 //        root.getStylesheets().add(ResourceUtil.getAppResourceURL("css/recaf/all.css").toExternalForm());
@@ -580,6 +694,7 @@ public class AddClassController implements Initializable {
         String checkExist = String.format("""
                 select * from classes where classname='%s' or class_abbreviation='%s' """, classnameP.get(), shortNameP.get());
         List<?> res = PgConnector.fetch(checkExist, PgConnector.getConnection());
+
 
         if (!res.isEmpty()) {
             String errMessage = String.format("%s \n%s %s", Translator.getIntl("class_exists"), Store.UnicodeSumnbol.rightArrow, classnameP.get().toUpperCase());
@@ -708,17 +823,21 @@ public class AddClassController implements Initializable {
         insertStatement.setInt(5, cycleP.get());
         insertStatement.setInt(6, levelP.get());
 
-        insertStatement.setArray(7, con.createArrayOf("text", catAsubs.get().toArray()));
-        insertStatement.setArray(8,  con.createArrayOf("text", catBsubs.get().toArray()));
-        insertStatement.setArray(9, con.createArrayOf("text", catCsubs.get().toArray()));
-        insertStatement.setArray(10, con.createArrayOf("text", catDsubs.get().toArray()));
-        insertStatement.setArray(11, con.createArrayOf("text", compulsorySubsP.get().toArray()));
+
+
+        insertStatement.setArray(7, con.createArrayOf("text", ProjectUtils.getUniqueValues(catAsubs.get()).toArray()));
+        insertStatement.setArray(8,  con.createArrayOf("text", ProjectUtils.getUniqueValues(catBsubs.get()).toArray()));
+        insertStatement.setArray(9, con.createArrayOf("text", ProjectUtils.getUniqueValues(catCsubs.get()).toArray()));
+        insertStatement.setArray(10, con.createArrayOf("text", ProjectUtils.getUniqueValues(catDsubs.get()).toArray()));
+        insertStatement.setArray(11, con.createArrayOf("text", ProjectUtils.getUniqueValues(compulsorySubsP.get()).toArray()));
 
         System.out.println(insertStatement);
 
         insertStatement.executeUpdate();
 
-        Alert successAlert = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.INFORMATION,
+        thisStage.get().close();
+
+        Alert successAlert = ProjectUtils.showAlert(mainStage.get(), Alert.AlertType.INFORMATION,
                "INFO", Translator.getIntl("info").toUpperCase(),
                 Translator.getIntl("insertion_complete") + String.format(" %s%s %s",Store.UnicodeSumnbol.blank,Store.UnicodeSumnbol.rightArrow,classnameP.get().toUpperCase()), ButtonType.OK);
         successAlert.showAndWait();
@@ -855,23 +974,26 @@ public class AddClassController implements Initializable {
         insertStatement.setInt(5, cycleP.get());
         insertStatement.setInt(6, levelP.get());
 
-        insertStatement.setArray(7, con.createArrayOf("text", catAsubs.get().toArray()));
-        insertStatement.setArray(8,  con.createArrayOf("text", catBsubs.get().toArray()));
-        insertStatement.setArray(9, con.createArrayOf("text", catCsubs.get().toArray()));
-        insertStatement.setArray(10, con.createArrayOf("text", catDsubs.get().toArray()));
-        insertStatement.setArray(11, con.createArrayOf("text", compulsorySubsP.get().toArray()));
+
+        insertStatement.setArray(7, con.createArrayOf("text", ProjectUtils.getUniqueValues(catAsubs.get()).toArray()));
+        insertStatement.setArray(8,  con.createArrayOf("text", ProjectUtils.getUniqueValues(catBsubs.get()).toArray()));
+        insertStatement.setArray(9, con.createArrayOf("text", ProjectUtils.getUniqueValues(catCsubs.get()).toArray()));
+        insertStatement.setArray(10, con.createArrayOf("text", ProjectUtils.getUniqueValues(catDsubs.get()).toArray()));
+        insertStatement.setArray(11, con.createArrayOf("text", ProjectUtils.getUniqueValues(compulsorySubsP.get()).toArray()));
+
         insertStatement.setInt(12, cid);
 
         System.out.println(insertStatement);
 
         insertStatement.executeUpdate();
+        thisStage.get().close();
 
-        Alert successAlert = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.INFORMATION,
+
+        Alert successAlert = ProjectUtils.showAlert(mainStage.get(), Alert.AlertType.INFORMATION,
                 "INFO", Translator.getIntl("info").toUpperCase(),
                 Translator.getIntl("update_complete") + String.format(" %s%s %s",
                         Store.UnicodeSumnbol.blank,Store.UnicodeSumnbol.rightArrow,classnameP.get().toUpperCase()), ButtonType.OK);
         successAlert.showAndWait();
-
 
         return true;
 

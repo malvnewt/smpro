@@ -5,9 +5,13 @@
     /*-fx-background-color: transparent;*/
     -fx-font-weight: bold;
 }
+.nobg-border {
+    -fx-border-width: 0;
+    -fx-background-color: transparent;
+}
 
 .image-border {
-    -fx-border-width: 1;
+    -fx-border-width: 0;
     -fx-border-color: #eeeeee80;
     -fx-border-style: dashed;
 }
@@ -134,17 +138,19 @@
     -fx-background-color: linear-gradient(to right,#dddddd20,#dddddd50);
 }
 
-/*.mainstyle{*/
-/*    -fx-background-color: -color-cell-bg-selected;*/
-/*    -fx-background-color: #a3d1ff70;*/
-/*    -fx-background-insets: 0 0 2 0;*/
-/*}*/
 
 
+.toolbar-btn {
+    -fx-padding: 10px;
+    -fx-border-radius: 5px;
+    /*-fx-background-radius: 5px;*/
+    -fx-animated: true;
+}
 
-
-
-
-
-
-
+.toolbar-btn:hover {
+    -fx-background-color: #a3d1ff70;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-border-width: 1px;
+    -fx-border-color: lightgray;
+}

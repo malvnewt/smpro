@@ -139,7 +139,7 @@ public class ListDisplayController implements Initializable {
             CheckBox cb = new CheckBox(item.toUpperCase());
             cb.setId(item);
             cb.getStyleClass().add("bordered-item");
-            cb.setMinWidth(itemcvb.getWidth());
+            cb.setMinWidth(280);
 
             if (selectedOptions.contains(item))cb.setSelected(true);
 

@@ -236,10 +236,56 @@ public class PgConnector {
         return out;
     }
 
+    public static List<String> aggregatePgArray(ResultSet rs, String key) {
+        HashSet<String> set = new HashSet<>();
+        while (true) {
+            try {
+                if (!rs.next()) break;
+
+                List<String> array = parsePgArray(rs, key);
+                set.addAll(array);
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
+        return new ArrayList<>(set);
+
+    }
+
+    public static List<String> getAggregatedListIfValueInPgArray( ResultSet rs,String pgListColname, String keyToAggregate, String listValueTocheck) throws SQLException {
+        HashSet<String> list = new HashSet<>();
+
+        System.out.println("inside getAggregatedListIfValueInPgArray()");
+
+        while (rs.next()) {
+                List<String> pglist = parsePgArray(rs,pgListColname );
+                String keyval = String.valueOf(rs.getObject(keyToAggregate));
+                ;
+                if (pglist.contains(listValueTocheck)) list.add(keyval);
+
+        }
+
+        return new ArrayList<>(list);
+
+    }
+
+
+
 
     public static HashMap<String, Object> getObjectFromId(int id, String tablename) {
         String q = String.format("""
                 select * from "%s" where id=%d""", tablename, id);
+        List<HashMap<String, Object>> res = fetch(q, getConnection());
+        if (res.isEmpty()) return null;
+        return res.get(0);
+    }
+    public static HashMap<String, Object> getObjectFromKey(String key,String value, String tablename) {
+
+        String q = String.format("""
+                select * from "%s" where %s='%s' """, tablename, key,value);
         List<HashMap<String, Object>> res = fetch(q, getConnection());
         if (res.isEmpty()) return null;
         return res.get(0);

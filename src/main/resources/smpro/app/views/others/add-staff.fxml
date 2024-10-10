@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="619.0" prefWidth="743.0" spacing="10.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.AddEmpController">
+   <children>
+      <HBox alignment="CENTER_LEFT" maxHeight="40.0" minHeight="40.0" prefHeight="47.0" prefWidth="580.0" spacing="10.0" styleClass="caption-container">
+         <children>
+            <ImageView fx:id="appIcon" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
+            <HBox fx:id="dragArea" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="empTitle" styleClass="caption-text" text="%new_employee" />
+               </children>
+            </HBox>
+            <Button fx:id="closedlg" mnemonicParsing="false" styleClass="closedlg" />
+         </children>
+      </HBox>
+      <GridPane hgap="5.0" vgap="5.0" VBox.vgrow="ALWAYS">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="229.0" />
+          <ColumnConstraints hgrow="ALWAYS" maxWidth="500.0" minWidth="10.0" prefWidth="481.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="80.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="%username" GridPane.rowIndex="1" />
+            <Label text="%emp_category" GridPane.rowIndex="3" />
+            <Label fx:id="timel" text="%time_scope" GridPane.rowIndex="4" />
+            <Label text="%gender" GridPane.rowIndex="6" />
+            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1">
+               <children>
+                  <Label text="%names" />
+                  <ComboBox fx:id="pronounscombo" maxWidth="100.0" prefWidth="150.0" styleClass="alt-icon" />
+                  <TextField fx:id="namefield" promptText="eg lala fidelis" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <TextField fx:id="usernamef" promptText="eg C.S" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="address" promptText="234 Pongo fin gourdron" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <ComboBox fx:id="categorycombo" prefHeight="32.0" prefWidth="509.0" promptText="%select" styleClass="alt-icon" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="passl" text="%password" GridPane.rowIndex="2" />
+            <TextField fx:id="passf" promptText="eg 680, M21 ..." GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ComboBox fx:id="timefactorcombo" prefHeight="32.0" prefWidth="476.0" promptText="%select" styleClass="alt-icon" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="%home_address" GridPane.rowIndex="7" />
+            <Label fx:id="contactl" text="%contact" GridPane.rowIndex="8" />
+            <TextField fx:id="contact" promptText="0123456789 ..." GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+               <children>
+                  <RadioButton fx:id="male" mnemonicParsing="false" styleClass="text-bold" text="M" />
+                  <RadioButton fx:id="female" mnemonicParsing="false" styleClass="text-bold" text="F" />
+                  <RadioButton fx:id="nonbin" mnemonicParsing="false" styleClass="text-bold" text="MF" />
+                  <HBox maxWidth="50.0" prefHeight="100.0" prefWidth="200.0" />
+                  <Label fx:id="genderDispla" minHeight="30.0" prefHeight="30.0" prefWidth="119.0" style="-fx-font-size: 17;" styleClass="text-bolder">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </HBox>
+            <Label text="%departement" GridPane.rowIndex="5" />
+            <HBox fx:id="dptContainer" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+               <children>
+                  <ImageView fx:id="displayview" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" />
+                  <Button fx:id="importImagbtn" mnemonicParsing="false" text="%image_44" />
+               </children>
+            </HBox>
+         </children>
+         <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+         </VBox.margin>
+      </GridPane>
+      <Separator prefWidth="200.0" />
+      <ButtonBar prefHeight="40.0" prefWidth="200.0">
+        <buttons>
+          <Button fx:id="cancelBtn" mnemonicParsing="false" styleClass="text-bold" text="%cancel" />
+            <Button fx:id="confirmBtn" defaultButton="true" mnemonicParsing="false" styleClass="text-bold" text="%confirm" />
+        </buttons>
+         <VBox.margin>
+            <Insets right="10.0" />
+         </VBox.margin>
+      </ButtonBar>
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="8.0" />
+   </padding>
+   <stylesheets>
+      <URL value="@../../css/recaf/all.css" />
+   </stylesheets>
+   <effect>
+      <DropShadow />
+   </effect>
+</VBox>

@@ -26,6 +26,7 @@ import smpro.app.custom_titlebar.internal.libraries.User32Ex;
 import smpro.app.custom_titlebar.internal.structs.NCCALCSIZE_PARAMS;
 import smpro.app.custom_titlebar.internal.structs.TRACKMOUSEEVENT;
 import smpro.app.utils.Store;
+import smpro.app.utils.Translator;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -132,7 +133,7 @@ public class CustomizedStage {
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(ResourceUtil.getAppResourceURL("custom_tile/caption-controls.fxml"));
-        loader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
+        loader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang", Translator.getLocale()));
         try {
             captionControls = loader.load();
             controller = loader.getController();

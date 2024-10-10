@@ -28,12 +28,17 @@ public class Store {
     public static long EPOCK_DAY_MILLISECS = 86400000L;
     public static int TOOBAR_ICONSIZE = 25;
 
+    public static List<Integer> supportedPeriods = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
+
+
     public static String baseDateFormat = "EEEE, MMMM dd, uuuu";
 
+    public static List<String> Pronouns = List.of("Mr", "Mrs", "Miss", "Mme", "Msr", "Doc.", "Honourable");
 
     public static class Colors{
 
         public static String Gray = "gray";
+        public static String drakula = "#444444";
         public static String black = "#242424";
         public static String White = "#ffffff";
         public static String transparent = "#ff000000";
@@ -48,6 +53,8 @@ public class Store {
 
 
 
+
+
     }
 
     public static class UnicodeSumnbol{
@@ -56,13 +63,14 @@ public class Store {
         public static String tm = "\u2122";
         public static String atSymbole = "\u0040";
         public static String andCopy = "\u00A9";
-        public static String person = "\1F464";
-        public static String phone = "\1F4DE";
+        public static String person = "\uF9D2";
+        public static String phone = "\u260E";
         public static String blank = "\u2800";
         public static String dash = "\u2796";
         public static String rightArrow = "\u27A1";
         public static String bullet = "\u2022";
         public static String bolddash = "\u2501";
+        public static String location = "\u2316";
     }
 
 
@@ -121,6 +129,19 @@ public class Store {
             "dicipline_conduct",
             "library",
             "suiveillance"
+    );
+
+    public static List<String> employeeCats = List.of(
+            "administrator",
+            "teacher",
+            "assistant",
+            "other"
+    );
+
+    public static List<String> empTime = List.of(
+            "permanent",
+            "part_time",
+            "semi_permanent"
     );
 
 

@@ -376,7 +376,7 @@
             <HBox alignment="CENTER_RIGHT" spacing="20.0">
                <children>
                   <Label prefHeight="20.0" prefWidth="183.0" text="%use_format_from" />
-                  <ComboBox fx:id="formatsCombo" prefHeight="32.0" prefWidth="227.0" promptText="%select_class" styleClass="alt-icon" />
+                  <HBox fx:id="formatContainer" alignment="CENTER_LEFT" />
                   <HBox prefHeight="10.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                   <ButtonBar prefHeight="40.0" prefWidth="337.0">
                     <buttons>

@@ -6,6 +6,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,10 +20,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
@@ -34,6 +33,7 @@ import org.controlsfx.control.StatusBar;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
 import smpro.app.services.DashboardService;
+import smpro.app.services.EmployeeService;
 import smpro.app.services.StudentClassService;
 import smpro.app.utils.PgConnector;
 import smpro.app.utils.ProjectUtils;
@@ -101,6 +101,31 @@ public class EntryController implements Initializable {
     public VBox evaluationProgres;
     public Label langlable;
     public VBox tradeView;
+    public Button prevTimes;
+    public HBox dashboradtimeItemshb;
+    public Button nextTimes;
+    public HBox timetableview;
+    public Label dashboardPeriodTime;
+    public ComboBox<Integer> dashboadPeriodCombo;
+    public ScrollPane timeItemsScrollpane;
+    public VBox termdisplayview;
+    public Button editTermibtn;
+    public ListView<HashMap<String,Object>> dashboardRecentLv;
+    public AnchorPane dashboardPane;
+    public ImageView empview;
+    public Label employeeNames;
+    public Label empUsername;
+    public Label empPass;
+    public Label empdepartment;
+    public VBox allocationsVb;
+    public Button opentimtableBtn;
+    public Button print_marksheets;
+    public GridPane detailsGrid;
+    public VBox empTablecontainer;
+    public Button collapseStaffDetails;
+    public AnchorPane empdetailspane;
+    public AnchorPane emptablepane;
+    public SplitPane empSplitpane;
 
 
     List<String> featureNames = Store.appFeatures;
@@ -159,6 +184,14 @@ public class EntryController implements Initializable {
 
                         return null;
                     },
+                    1, o -> {
+                        try {
+                            initEmployeeService();
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+                        return null;
+                    },
                     2, o -> {
                         try {
                             initStudentService();
@@ -187,15 +220,10 @@ public class EntryController implements Initializable {
         features.put("suiveillance", "camera3.png");
 
         maintoolbar.setPadding(new Insets(0,10,5,10));
-//        maintoolbar.setStyle("-fx-background-color: #373737");
-//        maintoolbar.setStyle("-fx-background-color: rgb(35, 35, 35)");
-
 
         contentTabs.addAll(List.of(dashboardTab, teacherstab, studentTab, hrtab, marksheettab,
                 timetabletab, reportstab, messagestab, diciplinetab, libtab, suveillancetab)
         );
-
-
 
         configureUi();
         configureStatusBar();
@@ -224,13 +252,13 @@ public class EntryController implements Initializable {
         //menutitle
         HashMap<String, Object> base = PgConnector.fetch("select * from base", PgConnector.getConnection()).get(0);
 
-        String mainTitle = String.format("%s %s %s %s%s %s",
+        String mainTitle = String.format("%s %s %s %s%s",
                 PgConnector.getFielorBlank(base, "school_name").toUpperCase(),
                 Store.UnicodeSumnbol.blank,
                 PgConnector.getFielorBlank(base, "academic_year").toUpperCase(),
                 Store.UnicodeSumnbol.blank,
-                Store.UnicodeSumnbol.blank,
-                ProjectUtils.getFormatedDate(new Date().getTime(), DateFormat.getDateInstance(0, Translator.getLocale()))
+                Store.UnicodeSumnbol.blank
+//                ProjectUtils.getFormatedDate(new Date().getTime(), DateFormat.getDateInstance(0, Translator.getLocale()))
 
         );
         titleMenuelement.setText(mainTitle);
@@ -581,7 +609,6 @@ public class EntryController implements Initializable {
                 studentsTableContainer,
                 thisStage.get()
                 );
-        System.out.println("current pane width "+studentTreePane.getWidth());
         studentTreePane.setMaxWidth(300);
 
         //build and add toolbar to map
@@ -609,6 +636,10 @@ public class EntryController implements Initializable {
         List<Node> dashboardToolbarActions = dashboardService.buildToolbarOptions();
         dashboardService.bindFields();
 
+        thisStage.addListener((observableValue, stage, s) -> {
+            if (!Objects.equals(s,null)) dashboardService.mainStage.set(s);
+        });
+
         // student
         featureToolbarMap.put(0, dashboardToolbarActions);
         builtViewsMap.put(0, true);
@@ -618,8 +649,24 @@ public class EntryController implements Initializable {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////   EMPLOYEE HANDLER     ////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////
+
+    public void initEmployeeService() throws SQLException {
+        EmployeeService employeeService = new EmployeeService(thisStage.get(),this);
+
+        //build and add toolbar to map
+        List<Node> empToolbarActions = employeeService.buildToolbarOptions();
+        employeeService.bindFields();
+
+        featureToolbarMap.put(mainContentTabpane.getSelectionModel().getSelectedIndex(), empToolbarActions);
+
+
+
+
+
+    }
+
 
 
 }

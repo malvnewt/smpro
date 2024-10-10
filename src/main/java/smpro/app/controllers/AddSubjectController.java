@@ -122,7 +122,7 @@ public class AddSubjectController implements Initializable {
 
             if (!(name.isEmpty() || shortName.isEmpty() || coefficient.isEmpty() || category.isEmpty())) {
                 String insertsubject = String.format("insert into subjects (subject_name,subject_code,subject_category,subject_coefficient,subject_abbreviation,department_head)" +
-                        "values ('%s','%s','%s',%d,'%s','%s')", name,subjectCode, category, Integer.parseInt(coefficient), shortName, departmentHead);
+                        "values ('%s','%s','%s',%d,'%s','%s')", name.toLowerCase(),subjectCode, category, Integer.parseInt(coefficient), shortName, departmentHead);
                 PgConnector.insert(insertsubject);
 
 

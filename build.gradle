@@ -66,6 +66,8 @@ extraJavaModuleInfo {
   automaticModule("com.itextpdf:pdfa", "com.itextpdf.pdfa")
   automaticModule("com.itextpdf:kernel", "com.itextpdf.kernel")
   automaticModule("com.itextpdf:io", "com.itextpdf.io")
+  automaticModule("com.itextpdf:svg", "com.itextpdf.svg")
+  automaticModule("com.itextpdf:styled-xml-parser", "com.itextpdf.styledxmlparser")
 
   // Excel read/write
 //  module("org.apache.poi:poi-ooxml", "org.apache.poi","5.1.0"){ exports("org.apache.poi") }
@@ -103,16 +105,17 @@ extraJavaModuleInfo {
   automaticModule("com.pixelduke:fxribbon", "com.pixelduke.fxribbon")
 
   //itext
-  module("barcodes-7.1.4.jar","com.itextpdf.barcodes")
-  module("forms-7.1.4.jar","com.itextpdf.forms")
-  module("hyph-7.1.4.jar","com.itextpdf.hyph")
-  module("io-7.1.4.jar","com.itextpdf.io")
-  module("kernel-7.1.4.jar","com.itextpdf.kernel")
-  module("layout-7.1.4.jar","com.itextpdf.layout")
-  module("pdfa-7.1.4.jar","com.itextpdf.pdfa")
-  module("font-asian-7.1.4.jar","com.itextpdf.font.asian")
-//  module("sign-7.1.4.jar","itextpdf.sign"){"itextpdf.sign"}
-//  module("styled-xml-parser-7.1.4.jar","itextpdf.styledxmlparser"){"itextpdf.styledxmlparser"}
+//  module("barcodes-7.1.18.jar","com.itextpdf.barcodes")
+//  module("forms-7.1.18.jar","com.itextpdf.forms")
+//  module("hyph-7.1.18.jar","com.itextpdf.hyph")
+//  module("io-7.1.18.jar","com.itextpdf.io")
+//  module("kernel-7.1.18.jar","com.itextpdf.kernel")
+//  module("com.itextpdf:svg:7.1.18","com.itextpdf.svg"){"com.itextpdf.svg"}
+//  module("layout-7.1.18.jar","com.itextpdf.layout")
+//  module("pdfa-7.1.18.jar","com.itextpdf.pdfa")
+//  module("font-asian-7.1.18.jar","com.itextpdf.font.asian")
+//  module("sign-7.1.18.jar","itextpdf.sign"){"itextpdf.sign"}
+//  module("styled-xml-parser-7.1.18.jar","itextpdf.styledxmlparser"){"itextpdf.styledxmlparser"}
 
 
 }
@@ -153,7 +156,7 @@ dependencies {
 
 
   // itext for pdf files
-//  implementation 'com.itextpdf:itext7-core:7.0.4'
+  implementation 'com.itextpdf:itext7-core:7.1.18'
 
 
   // add jar files dependences from the LIBS dir

@@ -1,7 +1,9 @@
 package smpro.app.utils;
 
 import javafx.animation.*;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.WritableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -50,7 +52,36 @@ public class ProjectUtils {
         icon.setIconSize(size);
         return icon;
     }
+    public static FontIcon createFontIconColored(Ikon code, int size, Paint color) {
+        FontIcon icon = new FontIcon(code);
+        icon.getStyleClass().removeAll("ikonli","ikonli-font-icon");
+        icon.setFill(color);
+        icon.setIconSize(size);
+        return icon;
+    }
 
+    public static void animateScale(Node n, WritableValue<Double> p, double end) {
+        Timeline timeline;
+        timeline = new Timeline(new KeyFrame(Duration.millis(500), new KeyValue(p, end, Interpolator.EASE_BOTH)));
+        timeline.play();
+
+    }
+
+
+    public static void animateScroll(ScrollPane pane, char sideInitial,  double end) {
+        Timeline timeline;
+
+        if (sideInitial == 'w') { //ANIMATE PANE WIDTH
+            timeline = new Timeline(new KeyFrame(Duration.millis(500), new KeyValue(pane.hvalueProperty(), end, Interpolator.EASE_BOTH)));
+        } else {// ANIMATE PANE HEIGHT
+            timeline = new Timeline(new KeyFrame(Duration.millis(500), new KeyValue(pane.hvalueProperty(), end, Interpolator.EASE_BOTH)));
+
+
+
+        }
+        timeline.play();
+
+    }
     public static void animatePaneSide(AnchorPane pane, char sideInitial,  double end) {
         Timeline timeline;
 
@@ -143,6 +174,21 @@ public class ProjectUtils {
         if (cyclecount.length>0) t.setCycleCount(cyclecount[0]);
         return t;
     }
+//    public static Timeline scale(Node node,int... cyclecount) {
+//        Objects.requireNonNull(node, "Node cannot be null!");
+//
+//        Timeline t = new Timeline(new KeyFrame(Duration.ZERO,
+//                new KeyValue(node.scaleXProperty(), 0, Interpolator.EASE_BOTH)), new KeyFrame(Duration.millis(100.0),
+//                new KeyValue(node.translateXProperty(), offset, Interpolator.EASE_BOTH)));
+//        t.statusProperty().addListener((obs, old, val) -> {
+//            if (val == Animation.Status.STOPPED) {
+//                node.setTranslateX(0.0);
+//            }
+//
+//        });
+//        if (cyclecount.length>0) t.setCycleCount(cyclecount[0]);
+//        return t;
+//    }
 
     public static Tooltip createTooltip(String content) {
         Tooltip tp = new Tooltip(content);
@@ -156,7 +202,7 @@ public class ProjectUtils {
         URL url = ResourceUtil.getAppResourceURL("views/settings.fxml");
 
         FXMLLoader fxmlLoader = new FXMLLoader(url);
-        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang"));
+        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
         Parent root =fxmlLoader.load();
         Scene scene = new Scene(root);
 
@@ -190,9 +236,30 @@ public class ProjectUtils {
         return formatter.format(date);
 
     }
+    public static String getFormatedDateTime(long epochdateTime, DateFormat formatter, Locale... locale) {
+        Date date = new Date(epochdateTime);
+        return formatter.format(date);
+
+    }
     public static String getFormatedDate(LocalDate ld,DateTimeFormatter dtf){
         return ld.format(dtf);
 
+    }
+
+    public static HashMap<String, Object> getObject(String objId, String table) {
+        return PgConnector.fetch(String.format("""
+                select * from "%s" where id=%d  """, table, Integer.parseInt(objId)),PgConnector.getConnection()).get(0);
+
+    }
+
+    public static List<String> getUniqueValues(List<String> items) {
+        List<String> out = new ArrayList<>();
+        for (String string : items) {
+
+            if (!out.contains(string)) out.add(string);
+        }
+
+        return out;
     }
 
 
@@ -324,9 +391,26 @@ public class ProjectUtils {
 
     }
 
-    public static HBox createHspacer() {
+    public static HBox createHspacer(double... space) {
         HBox hb = new HBox();
-        HBox.setHgrow(hb, Priority.ALWAYS);
+        if (space.length == 0) {
+
+            HBox.setHgrow(hb, Priority.ALWAYS);
+        } else {
+            hb.setMinWidth(space[0]);
+            hb.setMaxWidth(space[0]);
+        }
+
+        return hb;
+    }
+    public static VBox createVspacer(double... space) {
+        VBox hb = new VBox();
+        if (space.length == 0) {
+            HBox.setHgrow(hb, Priority.ALWAYS);
+        } else {
+            hb.setMinHeight(space[0]);
+            hb.setMaxHeight(space[0]);
+        }
 
         return hb;
     }
@@ -501,6 +585,24 @@ public class ProjectUtils {
         }
     }
 
+    public static String getShortPersonName(String string,int partcount) {
+        List<String> parts = Arrays.stream(string.strip().split(" ")).map(String::strip).toList();
+        StringBuilder builder = new StringBuilder();
+
+        if (partcount > parts.size()) return string;
+
+        for (String p : parts) {
+            int pos = parts.indexOf(p);
+
+            if (!p.isEmpty() && pos < partcount) builder.append(p).append(" ");
+            if (!p.isEmpty() && pos == partcount) builder.append(p.charAt(0)).append(".");
+
+
+        }
+        return builder.toString();
+
+    }
+
     public static void applyDialogCaption(Stage s,Node dragArea) {
 
 
@@ -511,6 +613,7 @@ public class ProjectUtils {
                 .setControlBackgroundColor(Color.web(Store.Colors.transparent))
                 .setButtonHoverColor(Color.web("#aaaaaa30"))
                 .setCaptionDragRegion(dragArea).
+
                 useControls(false).
                 setCloseButtonHoverColor(Color.web(Store.Colors.deepRed))
         );

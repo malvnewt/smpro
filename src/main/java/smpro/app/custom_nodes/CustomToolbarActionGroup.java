@@ -6,15 +6,13 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.OverrunStyle;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import smpro.app.utils.ProjectUtils;
+import smpro.app.utils.Store;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,34 +39,19 @@ public class CustomToolbarActionGroup {
         l.setTextOverrun(OverrunStyle.ELLIPSIS);
         l.setTooltip(ProjectUtils.createTooltip(label.toUpperCase()));
         control.setTooltip(ProjectUtils.createTooltip(label.toUpperCase()));
+        control.setPadding(new Insets(4));
 
         HBox container =icon==null ? new HBox( l, control) :new HBox(icon, l, control);
         container.setSpacing(2);
         container.setPadding(new Insets(1));
         container.setAlignment(Pos.CENTER_LEFT);
 
+
         //feedback
         control.addEventHandler(MouseEvent.MOUSE_CLICKED,e->ProjectUtils.shakeX(control, -5).play());
 
+
         actionItems.add(container);
-    }
-
-
-    public int getActionIndex(HBox hBox) {
-        try {
-            return actionItems.indexOf(hBox);
-        } catch (Exception err) {
-            return -1;
-        }
-    }
-
-    public HBox getAction(int index) {
-        try {
-            return actionItems.get(index);
-        } catch (Exception err) {
-            return null;
-        }
-
     }
 
 
@@ -88,8 +71,11 @@ public class CustomToolbarActionGroup {
 
 
         for (HBox item : actionItems) {
-            int row = actionItems.indexOf(item)/rowcount;
+            int row = actionItems.indexOf(item)/maxcolcount;
+
             int col = actionItems.indexOf(item) % maxcolcount;
+
+            System.out.println(String.format("row = %d and col=%d",row,col));
 
             pane.add(item, col, row);
 

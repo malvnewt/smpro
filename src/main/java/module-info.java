@@ -23,12 +23,6 @@ module smpro.app {
     requires eu.hansolo;
 
 
-   // ITEXT 7 FOR PDF
-    requires com.itextpdf.layout;
-    requires com.itextpdf.barcodes;
-    requires com.itextpdf.kernel;
-    requires com.itextpdf.io;
-    requires com.itextpdf.pdfa;
 
     //postgres connection
     requires java.sql;
@@ -40,6 +34,13 @@ module smpro.app {
     requires com.sun.jna.platform;
     requires com.sun.jna;
     requires lombok;
+
+
+   // ITEXT 7 FOR PDF
+    requires com.itextpdf.barcodes;
+    requires com.itextpdf.io;
+    requires com.itextpdf.kernel;
+    requires com.itextpdf.layout;
 
 
     opens smpro.app to javafx.fxml;

@@ -1,33 +1,41 @@
 package smpro.app.services;
 
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
 import smpro.app.ResourceUtil;
+import smpro.app.SettingsController;
 import smpro.app.controllers.AddStudentController;
+import smpro.app.controllers.GenericDialogController;
 import smpro.app.custom_nodes.ClassSectionsTreeview;
 import smpro.app.custom_nodes.CustomTableView;
 import smpro.app.custom_nodes.CustomToolbarActionGroup;
 import smpro.app.utils.*;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.*;
@@ -52,11 +60,111 @@ public class StudentClassService {
     Button refreshBtn;
     CustomTextField searchFilter;
     Button deleteSelections;
+    Button editClassBtn;
     Button editSelection;
+    Button printClasslist;
+    Button exportexcel;
+    Button generateMarksheet;
+    Button importExcel;
+
+
+    //preperties
+
+    public List<Node> buildToolbarOptions(){
+        //register group
+        CustomToolbarActionGroup registerGrou = new CustomToolbarActionGroup();
+        registerBtn = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/plus_green.png", Store.TOOBAR_ICONSIZE+15, Store.TOOBAR_ICONSIZE, true)));
+        registerGrou.addActions(ProjectUtils.capitalize(Translator.getIntl("register_student")), null, registerBtn);
 
 
 
 
+        //selection_edit group
+        CustomToolbarActionGroup selectionEditGroup = new CustomToolbarActionGroup();
+
+        toggleAllcb = new CheckBox();
+        selectionEditGroup.addActions(Translator.getIntl("select_all"),
+                new ImageView(ResourceUtil.getImageFromResource("images/success.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)),toggleAllcb);
+
+        //////////////////////////////////
+        deleteSelections = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/remove_user.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
+        selectionEditGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("delete_selections")),
+                null,deleteSelections);
+        ////////////////////////////////
+
+        editClassBtn = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/edit_large.png",
+                Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
+        selectionEditGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("class_settings")),
+                null,editClassBtn);
+        ////////////////////////////////
+
+        searchFilter = new CustomTextField();
+        searchFilter.setMaxWidth(150);
+        searchFilter.setPromptText(Translator.getIntl("type_"));
+        searchFilter.setRight(new ImageView(ResourceUtil.getImageFromResource("images/search.png", 18, 18, true)));
+        selectionEditGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("search")),
+                null,searchFilter);
+
+
+
+        //////////////////////////////
+        editSelection= new Button("",new ImageView(ResourceUtil.getImageFromResource("images/edit.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
+        selectionEditGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("view_edit")),
+                null,editSelection);
+        editSelection.setId("images/edit.png");
+
+
+        //print/export group
+        CustomToolbarActionGroup printGroup = new CustomToolbarActionGroup();
+
+        printClasslist = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/printer.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
+        printGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("print_list")),
+                null,printClasslist);
+
+        importExcel = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/excel_import.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
+        printGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("import_students_excel")),
+                null,importExcel);
+
+        exportexcel = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/excel2.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
+        printGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("export_excel")),
+                null,exportexcel);
+
+        generateMarksheet = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/dblist.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
+        printGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("generate_marksheet")),
+                null,generateMarksheet);
+
+        //refresh gorup
+        CustomToolbarActionGroup refreshgroup = new CustomToolbarActionGroup();
+
+
+        refreshBtn = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/refresh.png", Store.TOOBAR_ICONSIZE+15, Store.TOOBAR_ICONSIZE+15, true)));
+        refreshgroup.addActions(ProjectUtils.capitalize(Translator.getIntl("refresh_display")),
+                null,refreshBtn);
+        refreshBtn.setStyle("-fx-background-color: transparent");
+
+
+        for (Button b : new Button[]{editClassBtn,registerBtn, generateMarksheet, exportexcel,deleteSelections, importExcel, printClasslist, editSelection,refreshBtn}) {
+            b.setCursor(Cursor.HAND);
+            b.setStyle("-fx-background-color: transparent;-fx-border-width: 0");
+            b.getStyleClass().add("toolbar-btn");
+
+        }
+
+
+
+        toolbarItems.add(registerGrou.build(1));
+        for (CustomToolbarActionGroup group : new CustomToolbarActionGroup[]{ selectionEditGroup, printGroup,refreshgroup}) {
+            toolbarItems.add(group.build(2));
+        }
+
+
+
+
+        return toolbarItems;
+
+
+
+    }
 
     public StudentClassService(VBox treeContainer, VBox tableContainer, Stage s) {
         this.tableContainer =tableContainer;
@@ -96,12 +204,9 @@ public class StudentClassService {
             }
         });
 
+        printClasslist.setOnAction(e -> exportStudentListToPdf());
 
-
-
-
-
-
+        editClassBtn.setOnAction(e->openUpdateClassview());
 
 
 
@@ -252,94 +357,6 @@ public class StudentClassService {
 
     }
 
-    public List<Node> buildToolbarOptions(){
-        //register group
-        CustomToolbarActionGroup registerGrou = new CustomToolbarActionGroup();
-         registerBtn = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/plus_green.png", Store.TOOBAR_ICONSIZE+15, Store.TOOBAR_ICONSIZE, true)));
-        registerGrou.addActions(ProjectUtils.capitalize(Translator.getIntl("register_student")), null, registerBtn);
-
-
-
-
-        //selection_edit group
-        CustomToolbarActionGroup selectionEditGroup = new CustomToolbarActionGroup();
-
-         toggleAllcb = new CheckBox();
-        selectionEditGroup.addActions(Translator.getIntl("select_all"),
-                new ImageView(ResourceUtil.getImageFromResource("images/success.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)),toggleAllcb);
-
-        //////////////////////////////////
-         deleteSelections = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/remove_user.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
-        selectionEditGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("delete_selections")),
-                null,deleteSelections);
-        ////////////////////////////////
-
-         searchFilter = new CustomTextField();
-        searchFilter.setMaxWidth(150);
-        searchFilter.setPromptText(Translator.getIntl("type_"));
-        searchFilter.setRight(new ImageView(ResourceUtil.getImageFromResource("images/search.png", 18, 18, true)));
-        selectionEditGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("search")),
-                null,searchFilter);
-
-
-
-    //////////////////////////////
-         editSelection= new Button("",new ImageView(ResourceUtil.getImageFromResource("images/edit.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
-        selectionEditGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("view_edit")),
-                null,editSelection);
-        editSelection.setId("images/edit.png");
-
-
-        //print/export group
-        CustomToolbarActionGroup printGroup = new CustomToolbarActionGroup();
-
-        Button printcurrent = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/printer.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
-        printGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("print_list")),
-                null,printcurrent);
-
-        Button importExcel = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/excel_import.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
-        printGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("import_students_excel")),
-                null,importExcel);
-
-        Button exportexcel = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/excel2.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
-        printGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("export_excel")),
-                null,exportexcel);
-
-        Button generateMarksheet = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/dblist.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
-        printGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("generate_marksheet")),
-                null,generateMarksheet);
-
-        //refresh gorup
-        CustomToolbarActionGroup refreshgroup = new CustomToolbarActionGroup();
-
-
-         refreshBtn = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/refresh.png", Store.TOOBAR_ICONSIZE+15, Store.TOOBAR_ICONSIZE+15, true)));
-        refreshgroup.addActions(ProjectUtils.capitalize(Translator.getIntl("refresh_display")),
-                null,refreshBtn);
-        refreshBtn.setStyle("-fx-background-color: transparent");
-
-
-        for (Button b : new Button[]{registerBtn, generateMarksheet, exportexcel,deleteSelections, importExcel, printcurrent, editSelection,refreshBtn}) {
-            b.setCursor(Cursor.HAND);
-            b.setStyle("-fx-background-color: transparent;-fx-border-width: 0");
-
-        }
-
-
-
-        toolbarItems.add(registerGrou.build(1));
-        for (CustomToolbarActionGroup group : new CustomToolbarActionGroup[]{ selectionEditGroup, printGroup,refreshgroup}) {
-            toolbarItems.add(group.build(2));
-        }
-
-
-
-
-        return toolbarItems;
-
-
-
-    }
 
     public void handleSearchFilter() {
         String string = searchFilter.getText().toLowerCase();
@@ -383,10 +400,182 @@ public class StudentClassService {
     }
 
     public void exportStudentListToPdf() {
+        List<String> selectedClasses = new ArrayList<>();
+        List<String> selectedFields = new ArrayList<>();
+        List<CheckBox> cbs = new ArrayList<>();
+
+        HBox dlgContent = new HBox();
+        dlgContent.setAlignment(Pos.CENTER_LEFT);
+        dlgContent.setSpacing(10);
+        VBox.setVgrow(dlgContent,Priority.ALWAYS);
+
+        List<HashMap<String, Object>> sortedclasses = PgConnector.fetch("select * from classes order by level,classname", PgConnector.getConnection());
+
+        List<CheckBox> classCbs = new ArrayList<>();
+
+        GridPane pane = new GridPane();
+        pane.setVgap(10);
+        pane.setHgap(12);
+        pane.setAlignment(Pos.CENTER_LEFT);
+        ScrollPane scrollPane = new ScrollPane(pane);
+
+        int classcount = sortedclasses.size();
+        int colcount= 4;
+
+        
+
+
+        for (HashMap<String, Object> cls : sortedclasses) {
+
+            String shortname = PgConnector.getFielorBlank(cls, "class_abbreviation");
+            String fullname = PgConnector.getFielorBlank(cls, "classname");
+            Number classid = PgConnector.getNumberOrNull(cls, "id");
+            int studentCount = PgConnector.fetch(String.format("select * from students where classid=%d", classid.intValue()),PgConnector.getConnection()).size();
+
+            HBox container = new HBox();
+            container.setSpacing(5);
+            container.setAlignment(Pos.CENTER_LEFT);
+            container.setPadding(new Insets(4));
+
+            CheckBox cb = new CheckBox(shortname.toUpperCase());
+            cb.setId(String.valueOf(classid));
+            cb.setTooltip(ProjectUtils.createTooltip(ProjectUtils.capitalize(fullname)));
+            cb.setStyle("-fx-font-weight: bold");
+            cb.setMinWidth(80);
+            cb.setMaxWidth(80);
+            cb.selectedProperty().addListener((o,old,selected)->{
+                if (selected) {
+                    selectedClasses.add(cb.getId());
+                } else {
+                    selectedClasses.remove(cb.getId());
+                }
+            });
+
+            cbs.add(cb);
+
+            int index = sortedclasses.indexOf(cls);
+            
+            int row = index/colcount;
+            int col = index % colcount;
+
+//            Button plusBtn = new Button("",ProjectUtils.createFontIconColored(MaterialDesignP.PLUS,15,Paint.valueOf(Store.Colors.green)));
+//            Button minusBtn = new Button("",ProjectUtils.createFontIconColored(MaterialDesignM.MINUS,15,Paint.valueOf(Store.Colors.White)));
+//            plusBtn.setMaxSize(15,15);
+//            minusBtn.setMaxSize(15,15);
+
+            Label countLabel = new Label(String.valueOf(studentCount));
+            countLabel.getStyleClass().add("text-bold");
+            countLabel.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignA.ACCOUNT, 15, Paint.valueOf("lightgray")));
+
+//            plusBtn.setOnAction(e -> countLabel.setText(String.valueOf(Integer.parseInt(countLabel.getText()) + 1)));
+//            minusBtn.setOnAction(e->{
+//                int currentcount = Integer.parseInt(countLabel.getText());
+//                if (currentcount > 0) {
+//                    int newocount = currentcount -1;
+//                    countLabel.setText(String.valueOf(newocount));
+//                }
+//
+//            });
+
+
+            container.setStyle("-fx-border-width: 1;-fx-border-color: " + Store.Colors.Gray);
+//            container.getChildren().addAll(cb,ProjectUtils.createHspacer(10),minusBtn,countLabel,plusBtn);
+            container.getChildren().addAll(cb,ProjectUtils.createHspacer(10),countLabel);
+
+            pane.add(container, col, row);
+
+        }
+
+        VBox fieldsVb = new VBox();
+        fieldsVb.setSpacing(5);
+        fieldsVb.setPadding(new Insets(10));
+        fieldsVb.setMinWidth(150);
+
+
+        fieldsVb.setStyle("-fx-background-color: "+Store.Colors.drakula);
+
+        List<String> fieldNames = List.of("firstname","lastname","gender","matricule","date_of_birth","admission_date","trade","parent_one","contact_one","repeater");
+
+        for (String f : fieldNames) {
+            int index = fieldNames.indexOf(f);
+            CheckBox cb = new CheckBox(Translator.getIntl(f));
+            cb.getStyleClass().add("text-bold");
+            cb.setId(f);
+
+            cb.selectedProperty().addListener((o,old,selected)->{
+                if (selected) {
+                    selectedFields.add(cb.getId());
+                } else {
+                    selectedFields.remove(cb.getId());
+                }
+            });
+
+            if (index <= 5) {
+                cb.setSelected(true);
+                cb.setDisable(true);
+            }
+
+            fieldsVb.getChildren().add(cb);
+        }
+
+
+        dlgContent.getChildren().addAll(scrollPane, fieldsVb);
+        HBox.setHgrow(scrollPane,Priority.ALWAYS);
+
+        //
+        
+        //load the view
+        FXMLLoader dlgLoader = new FXMLLoader(ResourceUtil.getAppResourceURL("views/dialog-view.fxml"),
+                ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
+
+        try {
+            Parent root = dlgLoader.load();
+
+            Stage stage = new Stage();
+            stage.initOwner(mainStage.getOwner());
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+//            double contentwidth = pane.getWidth() + fieldsVb.getWidth();
+//            double contentHeight = pane.getHeight();
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+
+            GenericDialogController controller = dlgLoader.getController();
+            controller.dlgTitle.setText(Translator.getIntl("select_classes_fields"));
+            controller.content.getChildren().add(dlgContent);
+            controller.thisStage.set(stage);
+            controller.confirmBtn.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignP.PRINTER, 20, Paint.valueOf("white")));
+            controller.confirmBtn.setText(Translator.getIntl("print"));
+
+            controller.confirmBtn.setOnAction(e->controller.printClassLists(selectedClasses,selectedFields));
+
+            //add other controls
+            CheckBox toggleselect = new CheckBox(Translator.getIntl("toggle_select_all"));
+            toggleselect.selectedProperty().addListener((o, old, selected) -> {
+                if (selected) {
+                    cbs.forEach(item -> item.setSelected(true));
+                } else cbs.forEach(item -> item.setSelected(false));
+            });
+            controller.optionalTools.getChildren().add(toggleselect);
+
+
+            ProjectUtils.applyDialogCaption(stage, controller.dragbox);
+
+            stage.showAndWait();
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
 
-    public void exportClasslistToPdf() {
+    public void exportMarksheetPdf() {
+
+    }
+    public void exportMarksheetExcel() {
 
     }
 
@@ -413,6 +602,16 @@ public class StudentClassService {
         });
 
 
+
+
+    }
+
+    public void openUpdateClassview() {
+
+        HashMap<String, Object> selectedClass = studentSections.selectedClassProperty.get();
+        if (!Objects.equals(null, selectedClass)) {
+            SettingsController.openUpdateClassview(true, mainStage, selectedClass);
+        }
 
 
     }
@@ -461,6 +660,7 @@ public class StudentClassService {
         toggleAllcb.setSelected(false);
         String q ;
         HashMap<String,Object> item = studentSections.selectedClassProperty.get();
+
         if (item==null|| item.get("id").equals("allitem")) {
             q = "select * from students order by firstname";
         } else {
@@ -470,6 +670,8 @@ public class StudentClassService {
 
         //filter table
         studentTableView.filter(q);
+        studentSections.reloadTree();
+        studentSections.getSelectionModel().select(studentSections.selectedItemP.get());
 
 
 
