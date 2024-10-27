@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
@@ -302,8 +303,8 @@
                                                                      <children>
                                                                         <GridPane fx:id="detailsGrid" hgap="5.0" vgap="5.0">
                                                                           <columnConstraints>
-                                                                            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-                                                                              <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                                                                            <ColumnConstraints hgrow="ALWAYS" maxWidth="148.0" minWidth="10.0" prefWidth="77.0" />
+                                                                              <ColumnConstraints hgrow="ALWAYS" maxWidth="219.0" minWidth="10.0" prefWidth="219.0" />
                                                                             <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                                           </columnConstraints>
                                                                           <rowConstraints>
@@ -314,10 +315,14 @@
                                                                            <children>
                                                                               <ImageView fx:id="empview" fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowSpan="3" />
                                                                               <Label fx:id="employeeNames" prefHeight="20.0" prefWidth="226.0" style="-fx-font-size: 17;" styleClass="text-bold" text="name label" GridPane.columnSpan="2" />
-                                                                              <Label fx:id="empUsername" prefHeight="20.0" prefWidth="104.0" text="username" GridPane.rowIndex="1" />
+                                                                              <Label fx:id="empUsername" prefHeight="20.0" prefWidth="95.0" text="Login" GridPane.rowIndex="1" />
                                                                               <Label fx:id="empPass" text="password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                              <Label style="-fx-opacity: 0.8;" text="%department" GridPane.rowIndex="2" />
-                                                                              <Label fx:id="empdepartment" prefHeight="20.0" prefWidth="242.0" style="-fx-font-size: 15;" styleClass="text-bold" text="mathematics" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                                              <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                                 <children>
+                                                                                    <Label fx:id="employeeDepartmentLabel" style="-fx-opacity: 0.8;" />
+                                                                                    <Label fx:id="empdepartment" prefHeight="20.0" prefWidth="242.0" style="-fx-font-size: 15;" styleClass="text-bold" text="mathematics" wrapText="true" HBox.hgrow="ALWAYS" />
+                                                                                 </children>
+                                                                              </HBox>
                                                                            </children>
                                                                         </GridPane>
                                                                         <Separator prefWidth="200.0" />
@@ -333,15 +338,15 @@
                                                                         <Separator prefWidth="200.0" />
                                                                         <HBox alignment="CENTER_RIGHT" prefHeight="82.0" prefWidth="406.0">
                                                                            <children>
-                                                                              <Button fx:id="collapseStaffDetails" minWidth="40.0" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-border-width: 0;" styleClass="transparent-btn">
+                                                                              <Button fx:id="collapseStaffDetails" minHeight="50.0" minWidth="60.0" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-border-width: 0;" styleClass="transparent-btn">
                                                                                  <cursor>
                                                                                     <Cursor fx:constant="HAND" />
                                                                                  </cursor>
                                                                               </Button>
                                                                               <HBox prefHeight="0.0" prefWidth="149.0" />
-                                                                              <ButtonBar prefHeight="40.0" prefWidth="420.0">
+                                                                              <ButtonBar prefHeight="82.0" prefWidth="427.0">
                                                                                 <buttons>
-                                                                                    <Button fx:id="assign_class" mnemonicParsing="false" text="%view_timetable" />
+                                                                                    <Button fx:id="assign_subject" mnemonicParsing="false" text="%assign_subject" />
                                                                                     <Button fx:id="print_marksheets" defaultButton="true" mnemonicParsing="false" text="%print_forms" />
                                                                                 </buttons>
                                                                               </ButtonBar>
@@ -383,14 +388,269 @@
                                           </AnchorPane>
                                       </content>
                                     </Tab>
-                                    <Tab fx:id="marksheettab" text="Untitled Tab">
+                                    <Tab fx:id="marksheettab" text="exams">
                                       <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <SplitPane dividerPositions="0.3719806763285024" layoutX="238.0" layoutY="220.0" prefHeight="722.0" prefWidth="828.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                  <items>
+                                                    <AnchorPane fx:id="examleftpane" maxWidth="300.0" minHeight="0.0" minWidth="280.0" prefHeight="160.0" prefWidth="100.0">
+                                                         <children>
+                                                            <VBox fx:id="examsLeftvb" layoutX="54.0" layoutY="102.0" prefHeight="722.0" prefWidth="293.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                               <children>
+                                                                  <VBox fx:id="examsclasstreeContainer" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
+                                                                  <VBox fx:id="examsFilterContainer" prefHeight="200.0" prefWidth="100.0" spacing="5.0" VBox.vgrow="ALWAYS">
+                                                                     <padding>
+                                                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                                     </padding>
+                                                                     <children>
+                                                                        <GridPane hgap="5.0" vgap="5.0">
+                                                                          <columnConstraints>
+                                                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                          </columnConstraints>
+                                                                          <rowConstraints>
+                                                                            <RowConstraints />
+                                                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                          </rowConstraints>
+                                                                           <children>
+                                                                              <Label text="%term" GridPane.rowIndex="2" />
+                                                                              <Label text="%evaluation" GridPane.rowIndex="3" />
+                                                                              <ComboBox fx:id="examsTermconbo" prefHeight="32.0" prefWidth="210.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="alt-icon" />
+                                                                                    <String fx:value="text-bold" />
+                                                                                 </styleClass>
+                                                                              </ComboBox>
+                                                                              <ComboBox fx:id="examsevalcombo" prefHeight="32.0" prefWidth="209.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                                                                 <styleClass>
+                                                                                    <String fx:value="alt-icon" />
+                                                                                    <String fx:value="text-bold" />
+                                                                                 </styleClass>
+                                                                              </ComboBox>
+                                                                              <Label styleClass="text-b" text="%subject" GridPane.rowIndex="1" />
+                                                                              <VBox fx:id="examsubContainer" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                                                           </children>
+                                                                        </GridPane>
+                                                                        <Separator prefWidth="200.0" />
+                                                                        <GridPane hgap="5.0" vgap="5.0">
+                                                                          <columnConstraints>
+                                                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                          </columnConstraints>
+                                                                          <rowConstraints>
+                                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                          </rowConstraints>
+                                                                           <children>
+                                                                              <Label prefHeight="20.0" prefWidth="163.0" text="%copy_scores" GridPane.columnSpan="2" />
+                                                                              <Label text="%add_subtract_scores" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                                                              <Label text="%assign_same_scores" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                                                                              <Label text="%import_from_file" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                                                                              <Button fx:id="examCopyscoresbtn" maxWidth="60.0" minHeight="20.0" minWidth="60.0" mnemonicParsing="false" style="-fx-border-width: 0; -fx-background-color: transparent;" styleClass="transparent-btn" GridPane.columnIndex="2">
+                                                                                 <cursor>
+                                                                                    <Cursor fx:constant="HAND" />
+                                                                                 </cursor>
+                                                                              </Button>
+                                                                              <Button fx:id="examAddBtn" maxWidth="60.0" minHeight="20.0" minWidth="60.0" mnemonicParsing="false" style="-fx-border-width: 0; -fx-background-color: transparent;" styleClass="transparent-btn" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                                                 <cursor>
+                                                                                    <Cursor fx:constant="HAND" />
+                                                                                 </cursor>
+                                                                              </Button>
+                                                                              <Button fx:id="examAssignBtn" maxWidth="60.0" minHeight="20.0" minWidth="60.0" mnemonicParsing="false" style="-fx-border-width: 0; -fx-background-color: transparent;" styleClass="transparent-btn" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                                                                 <cursor>
+                                                                                    <Cursor fx:constant="HAND" />
+                                                                                 </cursor>
+                                                                              </Button>
+                                                                              <Button fx:id="examimportBtn" maxWidth="60.0" minHeight="20.0" minWidth="60.0" mnemonicParsing="false" style="-fx-border-width: 0; -fx-background-color: transparent;" styleClass="transparent-btn" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                                                                 <cursor>
+                                                                                    <Cursor fx:constant="HAND" />
+                                                                                 </cursor>
+                                                                              </Button>
+                                                                              <Button fx:id="examdeleteBtn" maxWidth="60.0" minHeight="20.0" minWidth="60.0" mnemonicParsing="false" style="-fx-border-width: 0; -fx-background-color: transparent;" styleClass="transparent-btn" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                                                                 <cursor>
+                                                                                    <Cursor fx:constant="HAND" />
+                                                                                 </cursor>
+                                                                              </Button>
+                                                                              <Label prefHeight="20.0" prefWidth="164.0" text="%delete_record" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                                                                           </children>
+                                                                        </GridPane>
+                                                                     </children>
+                                                                  </VBox>
+                                                               </children>
+                                                            </VBox>
+                                                         </children>
+                                                      </AnchorPane>
+                                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                                         <children>
+                                                            <VBox layoutX="158.0" layoutY="216.0" prefHeight="722.0" prefWidth="580.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                               <children>
+                                                                  <VBox fx:id="examsTableContainer" prefHeight="200.0" prefWidth="100.0" spacing="5.0" VBox.vgrow="ALWAYS">
+                                                                     <padding>
+                                                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                                     </padding>
+                                                                  </VBox>
+                                                                  <HBox fx:id="examsConfirmContainer" alignment="CENTER_RIGHT" maxHeight="60.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                                                     <children>
+                                                                        <VBox alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                                                                           <children>
+                                                                              <Label fx:id="examsStatsLabel" minWidth="600.0" prefHeight="24.0" prefWidth="233.0" style="-fx-padding: 2 5; -fx-text-fill: #B1B1B1; -fx-font-size: 12;" styleClass="text-bold" text="Stats ..." />
+                                                                           </children>
+                                                                        </VBox>
+                                                                        <ButtonBar prefHeight="50.0" prefWidth="440.0">
+                                                                          <buttons>
+                                                                              <Button fx:id="examsSaveMarksBtn" defaultButton="true" minWidth="200.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="191.0" text="%save_changes">
+                                                                                 <cursor>
+                                                                                    <Cursor fx:constant="HAND" />
+                                                                                 </cursor>
+                                                                                 <styleClass>
+                                                                                    <String fx:value="rounded" />
+                                                                                    <String fx:value="text-bolder" />
+                                                                                 </styleClass>
+                                                                              </Button>
+                                                                          </buttons>
+                                                                        </ButtonBar>
+                                                                     </children>
+                                                                     <opaqueInsets>
+                                                                        <Insets />
+                                                                     </opaqueInsets>
+                                                                     <padding>
+                                                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                                     </padding>
+                                                                     <VBox.margin>
+                                                                        <Insets />
+                                                                     </VBox.margin>
+                                                                  </HBox>
+                                                               </children>
+                                                            </VBox>
+                                                         </children>
+                                                      </AnchorPane>
+                                                  </items>
+                                                </SplitPane>
+                                             </children></AnchorPane>
                                       </content>
                                     </Tab>
-                                  <Tab fx:id="timetabletab" text="Untitled Tab 1">
+                                  <Tab fx:id="timetabletab" text="hr">
                                     <content>
-                                      <AnchorPane fx:id="contentTabpane" minHeight="0.0" minWidth="0.0" prefHeight="192.0" prefWidth="868.0" />
+                                      <AnchorPane fx:id="contentTabpane" minHeight="0.0" minWidth="0.0" prefHeight="192.0" prefWidth="868.0">
+                                             <children>
+                                                <VBox layoutX="233.0" layoutY="181.0" prefHeight="722.0" prefWidth="828.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                   <children>
+                                                      <TabPane prefHeight="200.0" prefWidth="200.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+                                                        <tabs>
+                                                          <Tab text="%income_transactions">
+                                                            <content>
+                                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                                     <children>
+                                                                        <VBox layoutX="14.0" layoutY="14.0" prefHeight="682.0" prefWidth="828.0" spacing="5.0" AnchorPane.bottomAnchor="-14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="-14.0" AnchorPane.topAnchor="14.0">
+                                                                           <children>
+                                                                              <GridPane hgap="5.0" vgap="5.0">
+                                                                                <columnConstraints>
+                                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                                </columnConstraints>
+                                                                                <rowConstraints>
+                                                                                  <RowConstraints minHeight="50.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+                                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                </rowConstraints>
+                                                                                 <children>
+                                                                                    <Label text="%student_concerned" GridPane.rowIndex="1" />
+                                                                                    <Label style="-fx-font-size: 20;" styleClass="smpro-large-sub" text="%collect_fee_and_payments" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+                                                                                    <VBox fx:id="hrStudentsearchcontainer" alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #57aaff;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                                                                                    <VBox maxWidth="150.0" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #5e5e5e; -fx-border-style: dashed;" GridPane.columnIndex="3" GridPane.rowSpan="3">
+                                                                                       <children>
+                                                                                          <ImageView fx:id="hrImagpreview" fitHeight="120.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" />
+                                                                                       </children>
+                                                                                    </VBox>
+                                                                                    <Label text="%class_matricule" GridPane.rowIndex="2" />
+                                                                                    <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                                                       <children>
+                                                                                          <Label fx:id="hrclassLabel" styleClass="text-bold" text="---" />
+                                                                                       </children>
+                                                                                    </HBox>
+                                                                                    <Label fx:id="hrMatriculeLabel" styleClass="text-bold" text="---" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                                                 </children>
+                                                                              </GridPane>
+                                                                              <Separator prefWidth="200.0" />
+                                                                              <Label text="%tuition_payment" />
+                                                                              <GridPane hgap="5.0" vgap="2.0">
+                                                                                <columnConstraints>
+                                                                                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" prefWidth="100.0" />
+                                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" prefWidth="100.0" />
+                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                                                                </columnConstraints>
+                                                                                <rowConstraints>
+                                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                </rowConstraints>
+                                                                                 <children>
+                                                                                    <Label text="%fee_A" />
+                                                                                    <Label text="%ptaB" GridPane.columnIndex="1">
+                                                                                       <GridPane.margin>
+                                                                                          <Insets />
+                                                                                       </GridPane.margin>
+                                                                                    </Label>
+                                                                                    <Label style="-fx-text-fill: #57aaff; -fx-font-size: 18;" styleClass="text-bold" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                                    <Label style="-fx-text-fill: #57aaff; -fx-font-size: 18;" styleClass="text-bold" text="Label" GridPane.rowIndex="1" />
+                                                                                    <Label style="-fx-font-size: 18; -fx-text-fill: #57aaff;" styleClass="text-bold" text="Label" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                                                       <GridPane.margin>
+                                                                                          <Insets />
+                                                                                       </GridPane.margin>
+                                                                                    </Label>
+                                                                                    <Label text="%fee_plus_pta" GridPane.columnIndex="2" />
+                                                                                    <Label style="-fx-text-fill: #57aaff; -fx-font-size: 18;" styleClass="text-bold" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                                                                    <Label text="Label" GridPane.columnIndex="4" />
+                                                                                    <HBox style="-fx-border-color: #57aaff; -fx-border-width: 0 0 1 0;" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                                                                                       <children>
+                                                                                          <HBox alignment="CENTER_LEFT" style="-fx-border-color: #57aaff; -fx-border-width: 0 0 1 0;" HBox.hgrow="ALWAYS">
+                                                                                             <children>
+                                                                                                <Label style="-fx-text-fill: #57aaff; -fx-font-size: 18;" styleClass="text-bold" text="Label" />
+                                                                                             </children>
+                                                                                          </HBox>
+                                                                                       </children>
+                                                                                       <padding>
+                                                                                          <Insets bottom="2.0" />
+                                                                                       </padding>
+                                                                                    </HBox>
+                                                                                    <Label text="Label" GridPane.columnIndex="3" />
+                                                                                 </children>
+                                                                              </GridPane>
+                                                                           </children>
+                                                                           <padding>
+                                                                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                                           </padding>
+                                                                        </VBox>
+                                                                     </children>
+                                                                  </AnchorPane>
+                                                            </content>
+                                                          </Tab>
+                                                          <Tab text="%expense_transactions">
+                                                            <content>
+                                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                                            </content>
+                                                          </Tab>
+                                                            <Tab text="%transaction_records">
+                                                              <content>
+                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                                              </content>
+                                                            </Tab>
+                                                        </tabs>
+                                                      </TabPane>
+                                                   </children>
+                                                </VBox>
+                                             </children></AnchorPane>
                                     </content>
                                   </Tab>
                                   <Tab fx:id="hrtab" text="Untitled Tab 2">

@@ -1,13 +1,14 @@
 package smpro.app;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
+import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,6 +16,7 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -34,6 +36,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
 import smpro.app.services.DashboardService;
 import smpro.app.services.EmployeeService;
+import smpro.app.services.MarksheetService;
 import smpro.app.services.StudentClassService;
 import smpro.app.utils.PgConnector;
 import smpro.app.utils.ProjectUtils;
@@ -126,6 +129,24 @@ public class EntryController implements Initializable {
     public AnchorPane empdetailspane;
     public AnchorPane emptablepane;
     public SplitPane empSplitpane;
+    public Button assign_subject;
+    public VBox examsLeftvb;
+    public VBox examsclasstreeContainer;
+    public VBox examsFilterContainer;
+    public ComboBox<Integer> examsTermconbo;
+    public ComboBox<Integer> examsevalcombo;
+    public Button examCopyscoresbtn;
+    public Button examAddBtn;
+    public Button examAssignBtn;
+    public Button examimportBtn;
+    public Button examdeleteBtn;
+    public VBox examsTableContainer;
+    public HBox examsConfirmContainer;
+    public Label examsStatsLabel;
+    public Button examsSaveMarksBtn;
+    public AnchorPane examleftpane;
+    public VBox examsubContainer;
+    public Label employeeDepartmentLabel;
 
 
     List<String> featureNames = Store.appFeatures;
@@ -172,7 +193,7 @@ public class EntryController implements Initializable {
     ////////////////////////    tab callbacks
     HashMap<Integer, List<Node>> featureToolbarMap = new HashMap<> ();
 
-    HashMap<Integer, Callback<Object,Void>> tabToViewCallbackMap = new HashMap<>(
+    HashMap<Integer, Callback<Object, Void>> tabToViewCallbackMap = new HashMap<>(
             Map.of(
                     0, o -> {
                         try {
@@ -195,6 +216,16 @@ public class EntryController implements Initializable {
                     2, o -> {
                         try {
                             initStudentService();
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
+
+
+                        return null;
+                    },
+                    3, o -> {
+                        try {
+                            initMarksheetService();
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
@@ -245,6 +276,7 @@ public class EntryController implements Initializable {
     public void configureUi() {
 //        ProjectUtils.animatePaneSide(menupane,'w', Store.MENU_COLLAPSE_WIDTH);
         menupane.setMaxWidth(Store.MENU_COLLAPSE_WIDTH);
+        employeeDepartmentLabel.setText("Dept\u0020\u0020 \u27A1 \u0020");
 
         graphicMenu.setText("");
         graphicMenu.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/logo-server.png",30,30,true)));
@@ -421,10 +453,10 @@ public class EntryController implements Initializable {
         statusBar.getStyleClass().add("progress-bar");
 
 
-        String curUsername = PgConnector.getFielorBlank(Store.AuthUser.get(), "username");
+        String curUsername = PgConnector.getFielorBlank(Store.AuthUser.get(), "displayName");
         TextFlow tf = new TextFlow();
         Text t1 = new Text(Translator.getIntl("logged_inas")+Store.UnicodeSumnbol.blank);
-        Text tuser = new Text(Store.UnicodeSumnbol.atSymbole+curUsername);
+        Text tuser = new Text(Store.UnicodeSumnbol.atSymbole+ProjectUtils.capitalize(curUsername));
         tuser.setStyle("-fx-font-weight: bold;-fx-text-fill: #eeeeee90");
         t1.setStyle("-fx-text-fill: #eeeeee70");
         tf.getChildren().addAll(t1, tuser);
@@ -436,23 +468,27 @@ public class EntryController implements Initializable {
         loginInfoBox.setAlignment(Pos.CENTER_LEFT);
         loginInfoBox.setPadding(new Insets(0,5,0,30));
 
-
         ProgressBar pbar = new ProgressBar();
         pbar.setProgress(100);
 
-        Label connectionlabel = new Label();
-        connectionlabel.setStyle("-fx-padding: 0 10px 0 15px");
-       FontIcon connectionIcon = ProjectUtils.createFontIcon(MaterialDesignD.DATABASE, 18, Paint.valueOf(Store.Colors.green));
-        connectionIcon.getStyleClass().remove("ikonli-font-icon");
-        FadeTransition transition = new FadeTransition(Duration.millis(600), connectionlabel);
-        transition.setCycleCount(Integer.MAX_VALUE);
-        transition.setAutoReverse(true);
+        ///////////////////////////////////
+        ///////  CONNECTION ANIMAITON ////
+        ///////////////////////////////////
 
-        transition.setInterpolator(Interpolator.EASE_IN);
-        transition.setFromValue(1);
-        transition.setToValue(0);
-        transition.playFromStart();
-        connectionlabel.setGraphic(connectionIcon);
+        FontIcon dbIcon = ProjectUtils.createFontIcon(MaterialDesignD.DATABASE_CHECK, 18, Paint.valueOf(Store.Colors.green));
+
+        Label connectionlabel = new Label((PgConnector.getFielorBlank(Store.currentProjectProperty.get(), "name").toUpperCase()));
+        connectionlabel.setEffect(new SepiaTone());
+        connectionlabel.setStyle("-fx-padding: 0 10px 0 15px;-fx-font-weight: bold;-fx-font-size: 15;-fx-text-fill: "+Store.Colors.green);
+        connectionlabel.setGraphic(dbIcon);
+
+        FadeTransition t = new FadeTransition(Duration.millis(800),connectionlabel);
+        t.setFromValue(0.2);
+        t.setToValue(1);
+        t.setCycleCount(Animation.INDEFINITE);
+        t.setInterpolator(Interpolator.EASE_IN);
+        t.playFromStart();
+
 
         Label appLable = new Label(String.format("SMPRO %s %s2021",Store.UnicodeSumnbol.blank, Store.UnicodeSumnbol.andCopy));
         appLable.setStyle("-fx-font-weight: bold;-fx-text-fill:#eeeeee90;-fx-font-size:  12px;-fx-font-family: 'Bodoni MT Black';-fx-padding: 0 5px 0 15px");
@@ -621,6 +657,9 @@ public class EntryController implements Initializable {
 
 
 
+
+
+
     }
 
 
@@ -636,13 +675,18 @@ public class EntryController implements Initializable {
         List<Node> dashboardToolbarActions = dashboardService.buildToolbarOptions();
         dashboardService.bindFields();
 
+        featureToolbarMap.put(0, dashboardToolbarActions);
+        builtViewsMap.put(0, true);
+
         thisStage.addListener((observableValue, stage, s) -> {
             if (!Objects.equals(s,null)) dashboardService.mainStage.set(s);
         });
 
         // student
-        featureToolbarMap.put(0, dashboardToolbarActions);
-        builtViewsMap.put(0, true);
+
+
+
+
 
 
 
@@ -661,11 +705,54 @@ public class EntryController implements Initializable {
 
         featureToolbarMap.put(mainContentTabpane.getSelectionModel().getSelectedIndex(), empToolbarActions);
 
+//        Platform.runLater(()->{
+//            List<Node> empToolbarActions = employeeService.buildToolbarOptions();
+//            employeeService.bindFields();
+//
+//            featureToolbarMap.put(mainContentTabpane.getSelectionModel().getSelectedIndex(), empToolbarActions);
+//
+//            maintoolbar.getItems().clear();
+//            maintoolbar.getItems().addAll(featureToolbarMap.get(mainContentTabpane.getSelectionModel().getSelectedIndex()));
+//
+//        });
+
 
 
 
 
     }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////   MARKSHEET HANDLER     ////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    public void initMarksheetService() throws SQLException {
+        MarksheetService marksheetService = new MarksheetService(thisStage.get(),this);
+
+            List<Node> marksheettbActions = marksheetService.buildToolbarOptions();
+            marksheetService.bindFields();
+            featureToolbarMap.put(mainContentTabpane.getSelectionModel().getSelectedIndex(), marksheettbActions);
+
+            maintoolbar.getItems().clear();
+            maintoolbar.getItems().addAll(featureToolbarMap.get(mainContentTabpane.getSelectionModel().getSelectedIndex()));
+            marksheetService.loadTable();
+
+            List<HashMap<String,Object>> accessibleData =marksheetService.getAcceissibleData();
+
+        try {
+            marksheetService.studentRecordSearch.setItems(FXCollections.observableList(accessibleData));
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
+
+
+
+
+
+
+    }
+
 
 
 

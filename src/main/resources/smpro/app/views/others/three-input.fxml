@@ -7,15 +7,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
 
-<VBox  maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="305.0" prefWidth="455.0" spacing="10.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.AddTradeController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="305.0" prefWidth="455.0" spacing="10.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.AddTradeController">
    <children>
       <HBox alignment="CENTER_LEFT" maxHeight="40.0" minHeight="40.0" prefHeight="100.0" prefWidth="200.0" styleClass="caption-container">
          <children>
@@ -72,6 +73,10 @@
       <URL value="@../../css/recaf/all.css" />
    </stylesheets>
    <effect>
-      <DropShadow />
+      <InnerShadow>
+         <color>
+            <Color opacity="0.5" />
+         </color>
+      </InnerShadow>
    </effect>
 </VBox>

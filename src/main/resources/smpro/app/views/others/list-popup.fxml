@@ -6,8 +6,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="325.0" spacing="10.0" style="-fx-border-radius: 5em;" stylesheets="@../../css/recaf/all.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.ListDisplayController">
    <padding>
@@ -42,4 +44,11 @@
          </children>
       </HBox>
    </children>
+   <effect>
+      <InnerShadow>
+         <color>
+            <Color opacity="0.5" />
+         </color>
+      </InnerShadow>
+   </effect>
 </VBox>

@@ -23,13 +23,11 @@ import com.itextpdf.kernel.pdf.colorspace.PdfColorSpace;
 import com.itextpdf.kernel.pdf.colorspace.PdfDeviceCs;
 import com.itextpdf.kernel.pdf.colorspace.PdfPattern;
 import com.itextpdf.kernel.pdf.colorspace.PdfShading;
+import com.itextpdf.kernel.pdf.layer.PdfLayer;
 import com.itextpdf.kernel.pdf.xobject.PdfFormXObject;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.Document;
-import com.itextpdf.layout.borders.Border;
-import com.itextpdf.layout.borders.DashedBorder;
-import com.itextpdf.layout.borders.DoubleBorder;
-import com.itextpdf.layout.borders.SolidBorder;
+import com.itextpdf.layout.borders.*;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.*;
 import com.itextpdf.layout.renderer.CellRenderer;
@@ -61,9 +59,10 @@ public class DocumentBase extends Application {
     ///////////////////////////////////////////////
     ///////////////////////////////////////////////
 
-    public void buildMarkSheet(List<HashMap<String, Object>> classes) {
+    public void buildMarkSheets(List<HashMap<String, Object>> classes,List<String> subs,List<Integer> counts,String... instructor) {
         try(FileOutputStream os = new FileOutputStream(docPath)) {
             PdfHelper helper = new PdfHelper(os, PageSize.A4);
+            helper.buildMarksheetCollective(classes, subs, counts,instructor);
 
             helper.save();
             openDoc();
@@ -139,11 +138,11 @@ class PdfHelper{
 
 
     //borders
-    private final SolidBorder solidGrayBorder = new SolidBorder(ColorConstants.GRAY, 1, 0.8f);
-    private final SolidBorder solidBorder = new SolidBorder(Color.convertRgbToCmyk(new DeviceRgb(28,28,28)), 1, 0.8f);
-    private final SolidBorder darkBorder = new SolidBorder(ColorConstants.BLACK, 1, 0.8f);
+    private final SolidBorder solidBorder = new SolidBorder(ColorConstants.BLACK,1f,0.85f);
+    private final SolidBorder darkBorder = new SolidBorder(ColorConstants.BLACK, 1, 1f);
     private final DoubleBorder doubleBorder = new DoubleBorder(ColorConstants.BLACK, 1, 0.8f);
-    private final DashedBorder dashedBorder = new DashedBorder(ColorConstants.BLACK, 1, 0.8f);
+    private final DashedBorder dashedBorder = new DashedBorder(ColorConstants.BLACK, 1, 0.85f);
+    private final DottedBorder dottedBorder = new DottedBorder(ColorConstants.BLACK, 1, 0.85f);
 
     //fonts
 //    PdfFont nimbusFont = PdfFontFactory.createFont(ResourceUtil.getResourceAsStream("css/fonts/Nimbus Roman.ttf").readAllBytes(), PdfEncodings.WINANSI,true);
@@ -152,8 +151,12 @@ class PdfHelper{
 
     PdfFont courierBold = PdfFontFactory.createFont("Courier-Bold", PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED);
     PdfFont courier = PdfFontFactory.createFont("Courier", PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED);
+    PdfFont courierOblique = PdfFontFactory.createFont(FontConstants.COURIER_OBLIQUE, PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED);
     PdfFont arialUni = PdfFontFactory.createFont(FontProgramFactory.createFont("C:/Windows/Fonts/arialuni.ttf"), PdfEncodings.IDENTITY_H);
     PdfFont helvetica = PdfFontFactory.createFont("Helvetica", PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED);
+    PdfFont consolas = PdfFontFactory.createFont("C:\\Windows\\Fonts\\consola.ttf");
+
+    PdfFont helveticaBold = PdfFontFactory.createFont("Helvetica-Bold", PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED);
 
 
     Color docGray = Color.convertRgbToCmyk(new DeviceRgb(220, 220, 220));
@@ -243,6 +246,7 @@ class PdfHelper{
 
 
             //table data
+//            mainfontSize =mainfontSize-1f;
 
      students.forEach(s->{
                 long dob = PgConnector.getNumberOrNull(s, "date_of_birth").longValue();
@@ -299,10 +303,11 @@ class PdfHelper{
 
             //table colwidths
             float[] colwidths = new float[tablefields.size()];
-            colwidths[0]=2.5f;
-            colwidths[1]=2.5f;
+            colwidths[0]=1.5f;
+            colwidths[1]=1.6f;
+            colwidths[3]=2.1f;
             colwidths[2]=0.8f;
-            for (int i = 3; i <=5; i++) colwidths[i]=1.5f;
+            for (int i = 4; i <=5; i++) colwidths[i]=1.5f;
 
             for (int i = 6; i < tablefields.size(); i++) colwidths[i]=1;
 
@@ -311,7 +316,7 @@ class PdfHelper{
             HashMap<Integer, Float> fontSizes = new HashMap<>();
             for (int i = 0; i < headerdata.size(); i++) fontSizes.put(i, mainfontSize - 1.5f);
 
-            Table t = buildGenericTable(headerdata, colwidths, students,tablefields,List.of(2,3),fontSizes);
+            Table t = buildGenericTable(headerdata, colwidths, students,tablefields,List.of(2),fontSizes);
             this.doc.add(t);
 
             this.doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
@@ -508,10 +513,13 @@ class PdfHelper{
 
     }
 
-    public Table buildGenericTable(
-            List<HashMap<String, Object>> headerData,float[] colwidths,
+    public Table buildGenericForMarksheet(
+            List<HashMap<String, Object>> headerData,float[] colwidths,//{hname,hicon,rspan,cspan}
             List<HashMap<String, Object>> tableData,List<String> keys,
-            List<Integer> centerCols,HashMap<Integer,Float> colfontSizes ) {
+            List<Integer> centerCols,HashMap<Integer,Float> colfontSizes,
+            boolean... bodySpanIndependent
+
+    ) {
 
         Table table = new Table(UnitValue.createPercentArray(colwidths));
         table.setWidth((float) (this.docWidth - 2 * hpadding));
@@ -523,10 +531,12 @@ class PdfHelper{
             int rspan = PgConnector.getNumberOrNull(headerMap,"rspan").intValue();
             int cspan = PgConnector.getNumberOrNull(headerMap,"cspan").intValue();
 
-            Paragraph headerpara = new Paragraph().setFontSize(mainfontSize + 1).setFont(courierBold).setPadding(5f);
+            Paragraph headerpara = new Paragraph().setFontSize(mainfontSize + 1).setFont(courierBold).setPadding(5f).setHorizontalAlignment(HorizontalAlignment.CENTER).
+                    setTextAlignment(TextAlignment.CENTER);
 //            headerpara.add(new Text(headericon).setFont(arialUni).setFontSize(mainfontSize+2));
-            headerpara.add(new Text(" "+headername).setFont(courierBold).setFontSize(mainfontSize+1));
-            Cell headerCell = new Cell(rspan,cspan).add(headerpara.setVerticalAlignment(VerticalAlignment.MIDDLE)).setVerticalAlignment(VerticalAlignment.MIDDLE);
+            headerpara.add(new Text(" "+headername.toUpperCase()).setFont(courierBold).setFontSize(mainfontSize+1));
+            Cell headerCell = new Cell(rspan,cspan).add(headerpara.setVerticalAlignment(VerticalAlignment.MIDDLE))
+                    .setVerticalAlignment(VerticalAlignment.MIDDLE).setHorizontalAlignment(HorizontalAlignment.CENTER);
             //set endereer
             TableHeaderCellRenderer roundCornersRenderer = new TableHeaderCellRenderer(headerCell,
                     new Color[]{
@@ -542,17 +552,83 @@ class PdfHelper{
         for (HashMap<String, Object> dataitem : tableData) {
             for (String k : keys) {
                 int index =  keys.indexOf(k);
-                int rspan = PgConnector.getNumberOrNull(headerData.get(index), "rspan").intValue();
-                int cspan = PgConnector.getNumberOrNull(headerData.get(index), "cspan").intValue();
+                int rspan = bodySpanIndependent.length == 0 ? PgConnector.getNumberOrNull(headerData.get(index), "rspan").intValue() : 1;
+                int cspan = bodySpanIndependent.length == 0 ? PgConnector.getNumberOrNull(headerData.get(index), "cspan").intValue() : 1;
                 String dataval = PgConnector.getFielorBlank(dataitem, k);
 
                 float fontSize = colfontSizes.containsKey(index) ? colfontSizes.get(index) : mainfontSize;
 
                 Paragraph dataPara = new Paragraph(dataval).setFontSize(fontSize).setPadding(3f).setFixedLeading(8f);
                 if (centerCols.contains(index)) dataPara.setTextAlignment(TextAlignment.CENTER);
-                Cell dataCell = new Cell(rspan, cspan).add(dataPara);
+                Cell dataCell = new Cell(rspan, cspan).add(dataPara.setFont(courierBold).setOpacity(0.9f));
 
-                table.addCell(dataCell);
+                if (index >= 3) {
+                    dataCell.setBackgroundColor(ColorConstants.LIGHT_GRAY, 0.2f);
+                }
+
+                table.addCell(dataCell.setBorder(solidBorder));
+
+            }
+
+
+        }
+
+
+
+
+        return table;
+    }
+
+    public Table buildGenericTable(
+            List<HashMap<String, Object>> headerData,float[] colwidths,//{hname,hicon,rspan,cspan}
+            List<HashMap<String, Object>> tableData,List<String> keys,
+            List<Integer> centerCols,HashMap<Integer,Float> colfontSizes,
+            boolean... bodySpanIndependent
+
+    ) {
+
+        Table table = new Table(UnitValue.createPercentArray(colwidths));
+        table.setWidth((float) (this.docWidth - 2 * hpadding));
+
+        // teble header
+        for (HashMap<String, Object> headerMap : headerData) {
+            String headername = PgConnector.getFielorBlank(headerMap, "hname");
+            String headericon = PgConnector.getFielorBlank(headerMap, "hicon");
+            int rspan = PgConnector.getNumberOrNull(headerMap,"rspan").intValue();
+            int cspan = PgConnector.getNumberOrNull(headerMap,"cspan").intValue();
+
+            Paragraph headerpara = new Paragraph().setFontSize(mainfontSize + 1).setFont(courierBold).setPadding(5f).setHorizontalAlignment(HorizontalAlignment.CENTER).
+                    setTextAlignment(TextAlignment.CENTER);
+//            headerpara.add(new Text(headericon).setFont(arialUni).setFontSize(mainfontSize+2));
+            headerpara.add(new Text(" "+headername.toUpperCase()).setFont(courierBold).setFontSize(mainfontSize+1));
+            Cell headerCell = new Cell(rspan,cspan).add(headerpara.setVerticalAlignment(VerticalAlignment.MIDDLE))
+                    .setVerticalAlignment(VerticalAlignment.MIDDLE).setHorizontalAlignment(HorizontalAlignment.CENTER);
+            //set endereer
+            TableHeaderCellRenderer roundCornersRenderer = new TableHeaderCellRenderer(headerCell,
+                    new Color[]{
+                            docGray
+
+                    } );
+            headerCell.setNextRenderer(roundCornersRenderer);
+
+            table.addHeaderCell(headerCell);
+        }
+
+        //table body
+        for (HashMap<String, Object> dataitem : tableData) {
+            for (String k : keys) {
+                int index =  keys.indexOf(k);
+                int rspan = bodySpanIndependent.length == 0 ? PgConnector.getNumberOrNull(headerData.get(index), "rspan").intValue() : 1;
+                int cspan = bodySpanIndependent.length == 0 ? PgConnector.getNumberOrNull(headerData.get(index), "cspan").intValue() : 1;
+                String dataval = PgConnector.getFielorBlank(dataitem, k);
+
+                float fontSize = colfontSizes.containsKey(index) ? colfontSizes.get(index) : mainfontSize;
+
+                Paragraph dataPara = new Paragraph(dataval).setFontSize(fontSize).setPadding(3f).setFixedLeading(8f);
+                if (centerCols.contains(index)) dataPara.setTextAlignment(TextAlignment.CENTER);
+                Cell dataCell = new Cell(rspan, cspan).add(dataPara.setFont(courierBold).setOpacity(0.9f));
+
+                table.addCell(dataCell.setBorder(solidBorder));
 
             }
 
@@ -566,12 +642,175 @@ class PdfHelper{
     }
 
 
+
+    public void buildMarksheetTable(HashMap<String, Object> cobj, String subjectAbbr) {
+
+
+
+        Paragraph tableTitle = new Paragraph().setFontSize(mainfontSize + 2);
+        tableTitle.add(new Text(Translator.getIntl("sorted_classlists").toUpperCase()+" : ").setFont(courier));
+        tableTitle.add(new Text(Store.UnicodeSumnbol.blank).setFont(helvetica));
+        tableTitle.add(new Text(PgConnector.getFielorBlank(cobj, "classname").toUpperCase() ).setFont(courierBold));
+        tableTitle.add(new Text(Store.UnicodeSumnbol.blank).setFont(helvetica));
+        tableTitle.add(new Text(String.format("%s(%s%s)",Store.UnicodeSumnbol.blank,PgConnector.getFielorBlank(cobj, "class_abbreviation"),
+                Store.UnicodeSumnbol.bullet)).setFont(courierBold));
+        tableTitle.add(new Text(String.format("\t\t\t\t%s : ",Translator.getIntl("subject").toUpperCase())).setFont(courier));
+        tableTitle.add(new Text(Store.UnicodeSumnbol.blank).setFont(helvetica));
+
+        Paragraph subSpace = new Paragraph(String.valueOf(subjectAbbr)).setFont(courierBold);
+        if (subjectAbbr.isEmpty()) {
+            subSpace.setMinWidth(100f).setBorderBottom(dottedBorder);
+        }
+
+        tableTitle.add(subSpace);
+
+        this.doc.add(tableTitle);
+
+        //table body
+        int cid = PgConnector.getNumberOrNull(cobj, "id").intValue();
+
+        List<HashMap<String, Object>> students = PgConnector.fetch(String.format("select * from students where classid=%d order by firstname,lastname", cid),
+                PgConnector.getConnection());
+
+        List<HashMap<String, Object>> headers = List.of(
+                new HashMap<>(Map.of("hname", Translator.getIntl("firstname"), "cspan", 1, "rspan", 2, "hicon", "")),
+                new HashMap<>(Map.of("hname", Translator.getIntl("lastname"), "cspan", 1, "rspan", 2, "hicon", "")),
+                new HashMap<>(Map.of("hname", Translator.getIntl("matricule"), "cspan", 1, "rspan", 2, "hicon", "")),
+
+                new HashMap<>(Map.of("hname", "Term 1", "cspan", 2, "rspan", 1, "hicon", "")),
+                new HashMap<>(Map.of("hname", "Term 2", "cspan", 2, "rspan", 1, "hicon", "")),
+                new HashMap<>(Map.of("hname", "Term 3", "cspan", 2, "rspan", 1, "hicon", "")),
+
+                new HashMap<>(Map.of("hname", "E 1", "cspan", 1, "rspan", 1, "hicon", "")),
+                new HashMap<>(Map.of("hname", "E 2", "cspan", 1, "rspan", 1, "hicon", "")),
+                new HashMap<>(Map.of("hname", "E 3", "cspan", 1, "rspan", 1, "hicon", "")),
+                new HashMap<>(Map.of("hname", "E 4", "cspan", 1, "rspan", 1, "hicon", "")),
+                new HashMap<>(Map.of("hname", "E 5", "cspan", 1, "rspan", 1, "hicon", "")),
+                new HashMap<>(Map.of("hname", "E 6", "cspan", 1, "rspan", 1, "hicon", ""))
+
+        );
+
+        List<String> keys = List.of(
+                "firstname", "lastname", "matricule",
+                "note1",
+                "note2",
+                "note3",
+                "note4",
+                "note5",
+                "note6"
+        );
+
+
+        float[] colwidths = new float[]{1.8f,2.5f,1.6f, 1f, 1f, 1f, 1f, 1f, 1f};
+
+        //build the table
+
+        List<HashMap<String, Object>> data = students.stream().peek(s->{
+            s.put("note1", "");
+            s.put("note2", "");
+            s.put("note3", "");
+            s.put("note4", "");
+            s.put("note5", "");
+            s.put("note6", "");
+            s.replace("firstname", PgConnector.getFielorBlank(s,"firstname").toUpperCase());
+            s.replace("lastname", ProjectUtils.getShortPersonName(PgConnector.getFielorBlank(s,"lastname").toUpperCase(),2));
+        }).toList();
+
+
+
+        HashMap<Integer, Float> fontSizes = new HashMap<>();
+        for (int i = 0; i < headers.size(); i++) fontSizes.put(i, mainfontSize - 1.5f);
+
+        Table table = buildGenericForMarksheet(headers, colwidths, data, keys, List.of(2), fontSizes,true);
+        table.setWidth((float) (this.docWidth - 2 * hpadding));
+
+        this.doc.add(table.setMarginBottom(20));
+
+
+
+    }
+
+
+
     //////////////////////////////////////////////////////
     public String padd(String content, int count) {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i <count; i++) s.append(content);
 
         return s.toString();
+    }
+
+    public String multiplyText(String content, int count) {
+        StringBuilder out = new StringBuilder();
+
+
+        for (int i = 0; i < count; i++) {
+            out.append(content);
+
+        }
+        return out.toString();
+    }
+
+    //////////////////////////////////////////////////////
+    public void buildMarksheetCollective(List<HashMap<String, Object>> classes, List<String> subjectAbbrs, List<Integer> counts,String... instructor) throws IOException {
+
+        this.pdfdoc.addEventHandler(START_PAGE, new PageFooterEventHandler(this.doc, "page",
+                Translator.getIntl("printed_on")+ " "+ ProjectUtils.getFormatedDateTime(new Date().getTime(),DateFormat.getDateTimeInstance(0,2,
+                        Translator.getLocale()))));
+
+        HashMap<String,Object> baseObj =    ProjectUtils.getObject("1", "base");
+        //build header
+        Paragraph pageTitle = new Paragraph().setFontSize(mainfontSize + 2);
+        pageTitle.add(new Text(Translator.getIntl("annual_classlist").toUpperCase()+" : ").setFont(courierBold));
+        pageTitle.add(new Text(Store.UnicodeSumnbol.blank).setFont(helvetica));
+        pageTitle.add(new Text(PgConnector.getFielorBlank(baseObj, "academic_year").toUpperCase() ).setFont(courierBold));
+
+        if (instructor.length > 0) {
+
+        pageTitle.add(new Text("  "+Store.UnicodeSumnbol.rightArrow+ "  ").setFont(arialUni).setFontSize(mainfontSize+2));
+            pageTitle.add(new Text(ProjectUtils.getShortPersonName(instructor[0].toUpperCase(), 3)).setFont(courierBold).setBorderBottom(dottedBorder));
+
+        }
+
+
+        buildGenericHeader(pageTitle,true);
+
+
+        List<String> mutableSubjectList = new ArrayList<>();
+        mutableSubjectList.addAll(subjectAbbrs);
+        System.out.println("SUBJECT LIST FOR MARKSHEETS "+mutableSubjectList);
+
+        for (HashMap<String, Object> cobj : classes) {
+            int index = classes.indexOf(cobj);
+
+            int copies = counts.get(index);
+//            String subAbb = subjectAbbrs.get(index);
+
+            while (copies > 0) {
+                String subAbb = "";
+                try {
+                    subAbb = mutableSubjectList.remove(0);
+                } catch (IndexOutOfBoundsException indexErr) {
+                    System.err.println(indexErr.getCause());
+                    System.err.println(Arrays.toString(indexErr.getStackTrace()));
+                }
+
+
+                this.buildMarksheetTable(cobj, subAbb);
+                copies--;
+            }
+
+        }
+
+        // add message to inform teachers of changes
+        Paragraph p = new Paragraph().setFontSize(mainfontSize).setMarginLeft(40).setMarginRight(40);
+        p.setTextAlignment(TextAlignment.CENTER);
+
+        p.add(new Image(ImageDataFactory.create(ResourceUtil.getAppResourceURL("images/warning.png"))).setMarginRight(5).
+                scaleAbsolute(15,15)).setVerticalAlignment(VerticalAlignment.MIDDLE);
+        p.add(new Text(" "+Translator.getIntl("inform_sec_for_changes")).setFont(courierOblique));
+        doc.add(p.setMarginTop(15));
+
     }
 
     //////////////////////////////////////////////////////
@@ -741,6 +980,8 @@ class QrCellRender extends CellRenderer {
         int curPageIndex = docEvent.getDocument().getPageNumber(docEvent.getPage());
 
 
+
+
         canvas.beginText();
 
         float leftStart = 10;
@@ -759,5 +1000,36 @@ class QrCellRender extends CellRenderer {
                 .moveText(105,0).setFontAndSize(arialUni,12).showText(Store.UnicodeSumnbol.phone).setFontAndSize(helveticaBold,8).showText(" 671686616 ")
                 .moveText(midstart-40, 0).setFontAndSize(footerFont, 7).showText(middleString).moveText(endStart, 0).showText(endcontent).endText().release();
 
+
+
+        //add water mark
+
+        HashMap<String, Object> base = PgConnector.getObjectFromId(1, "base");
+        assert base != null;
+        String abbr = PgConnector.getFielorBlank(base, "school_abbr");
+        Paragraph watermark = new Paragraph(abbr).setFontSize(40).setTextAlignment(TextAlignment.CENTER).setRotationAngle(Math.toRadians(45));
+
+
+        float centerX = pageSize.getWidth() / 2;
+        float centerY = pageSize.getHeight() / 2;
+
+
+//        try (Canvas c = new Canvas(docEvent.getPage(), pageSize);) {
+//            c.showTextAligned(watermark, centerX, centerY,TextAlignment.CENTER);
+//        } catch (Exception err) {
+//            err.printStackTrace();
+//        }
+
+
+
+
+
+
     }
+
+
+
+
+
+
 }

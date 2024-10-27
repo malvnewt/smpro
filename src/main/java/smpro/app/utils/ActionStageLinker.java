@@ -9,6 +9,9 @@ import smpro.app.ResourceUtil;
 import smpro.app.SettingsController;
 import smpro.app.controllers.AddEmpController;
 import smpro.app.controllers.AddStudentController;
+import smpro.app.controllers.GenericDialogController;
+import smpro.app.controllers.SingleScoreViewController;
+import smpro.app.controllers.SingleScoreViewController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -123,4 +126,75 @@ public class ActionStageLinker {
 
         return controller;
     }
+    public static GenericDialogController  openGenericDialog(Stage parent) {
+        URL url = ResourceUtil.getAppResourceURL("views/dialog-view.fxml");
+
+
+        FXMLLoader fxmlLoader = new FXMLLoader(url);
+        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
+        Parent root = null;
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root);
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(parent);
+        stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
+        stage.setResizable(false);
+
+
+        GenericDialogController controller = fxmlLoader.getController();
+        controller.thisStage.set(stage);
+
+
+        applyDialogCaption(stage,controller.dragbox);
+
+        scene.getStylesheets().addAll(
+                ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
+        );
+
+        stage.show();
+        return controller;
+    }
+    public static SingleScoreViewController openSingleScoreDialog(Stage parent,HashMap<String,Object> sobj) throws SQLException {
+        URL url = ResourceUtil.getAppResourceURL("views/others/singleStudentScoreView.fxml");
+
+        FXMLLoader fxmlLoader = new FXMLLoader(url);
+        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
+        Parent root = null;
+        try {
+            root = fxmlLoader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root);
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(parent);
+        stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
+        stage.setResizable(false);
+
+        SingleScoreViewController controller = fxmlLoader.getController();
+        controller.thisStage.set(stage);
+        controller.preparedUpdate(sobj);
+        controller.studentObjP.set(sobj);
+
+        applyDialogCaption(stage,controller.dragArea);
+
+        scene.getStylesheets().addAll(
+                ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
+        );
+
+        stage.show();
+        return controller;
+    }
+
+
 }

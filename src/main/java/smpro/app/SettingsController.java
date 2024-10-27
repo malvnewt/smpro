@@ -148,6 +148,7 @@ public class SettingsController implements Initializable {
     public Button updateFeatures;
     public TableView<HashMap<String,Object>> adminsTable;
     public VBox accessItemsVb;
+    public Button editSubjectbtn;
 
 
     ObjectProperty<Image> logoProperty = new SimpleObjectProperty<>();
@@ -302,7 +303,6 @@ public class SettingsController implements Initializable {
 
         }
 
-
         closedlg.setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CLOSE, 30, Paint.valueOf("transparent")));
         closedlg.setOnAction(e->thisStage.get().close());
         closedlg.addEventHandler(MouseEvent.MOUSE_EXITED,e->{
@@ -311,8 +311,6 @@ public class SettingsController implements Initializable {
         closedlg.addEventHandler(MouseEvent.MOUSE_ENTERED,e->{
             closedlg.setStyle("-fx-background-color: "+Store.Colors.deepRed);
         });
-
-
 
         tabRootPanes.addAll(List.of(basePane, addressPane, academicPane,
                 sectionsPane, tradePane, subjectsPane, classesPane, addressPane, timetablePane));
@@ -330,7 +328,6 @@ public class SettingsController implements Initializable {
         timetabletab.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TABLE,20, Paint.valueOf(Store.Colors.Gray)));
         subjectstab.setGraphic(ProjectUtils.createFontIcon(MaterialDesignB.BOOK,20, Paint.valueOf(Store.Colors.Gray)));
         tradestab.setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CIRCLE_DOUBLE,20, Paint.valueOf(Store.Colors.Gray)));
-
 
         //set some button icons
         changeClassSettingsBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PENCIL, 20, Paint.valueOf(Store.Colors.lightestGray)));
@@ -1029,6 +1026,7 @@ public class SettingsController implements Initializable {
     public void buildSubjects() {
         addSubjectBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PLUS, 50, Paint.valueOf(Store.Colors.black)));
         removeSubjectBtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignT.TRASH_CAN, 50, Paint.valueOf(Store.Colors.red)));
+        editSubjectbtn.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PENCIL, 50, Paint.valueOf(Store.Colors.red)));
 
 
 
@@ -1113,6 +1111,49 @@ public class SettingsController implements Initializable {
 
         });
 
+        editSubjectbtn.setOnAction(e->{
+            HashMap<String, Object> selectedSubject = subjectsTable.getSelectionModel().getSelectedItem();
+            if (selectedSubject == null) return;
+
+            URL url = ResourceUtil.getAppResourceURL("views/others/add-subject.fxml");
+
+            FXMLLoader fxmlLoader = new FXMLLoader(url);
+            fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
+            Parent root = null;
+            try {
+                root = fxmlLoader.load();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            Scene scene = new Scene(root);
+
+            scene.getStylesheets().addAll(
+                    ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
+            );
+
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(thisStage.get());
+            stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
+            stage.setResizable(false);
+
+            AddSubjectController addSubjectController = fxmlLoader.getController();
+            addSubjectController.thisStage.set(stage);
+
+            addSubjectController.prepareUpdate(selectedSubject);
+            addSubjectController.confirmBtn.setOnAction(ev -> addSubjectController.update(selectedSubject));
+
+            ProjectUtils.applyDialogCaption(stage,addSubjectController.dragArea);
+
+            stage.setTitle("PROMPT");
+            stage.showAndWait();
+
+            subjectsTable.getItems().clear();
+            subjectsTable.setItems(FXCollections.observableList(PgConnector.fetch("select * from subjects order by subject_name", PgConnector.getConnection())));
+
+        });
+
 
 
         removeSubjectBtn.setOnAction(e->{
@@ -1149,6 +1190,8 @@ public class SettingsController implements Initializable {
         });
 
         nextSubjects.setOnAction(e -> changeTab(6));
+
+
 
 
 

@@ -582,6 +582,11 @@ public class DashboardService {
 
         registerClass.setOnAction(e -> addClassHandler());
 
+        registerTeacher.setOnAction(e->{
+            ActionStageLinker.openAddEmployee(mainStage.get());
+        });
+
+
         refreshBtn.setOnAction(e->refreshStatsHandler());
 
 

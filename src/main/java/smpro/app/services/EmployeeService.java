@@ -9,6 +9,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -28,7 +29,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
+import org.controlsfx.control.ListSelectionView;
 import org.controlsfx.control.PopOver;
+import org.controlsfx.control.SearchableComboBox;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
@@ -69,7 +72,7 @@ public class EmployeeService {
 
     //TOOLBAR CONTROLS
     Button registerBtn;
-    CheckBox toggleAllcb;
+    RadioButton toggleAllcb;
     Button refreshBtn;
     CustomTextField searchFilter;
     Button deleteSelections;
@@ -103,7 +106,7 @@ public class EmployeeService {
         //selection_edit group
         CustomToolbarActionGroup selectionEditGroup = new CustomToolbarActionGroup();
 
-        toggleAllcb = new CheckBox();
+        toggleAllcb = new RadioButton();
         selectionEditGroup.addActions(Translator.getIntl("select_all"),
                 new ImageView(ResourceUtil.getImageFromResource("images/success.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE,
                         true)),toggleAllcb);
@@ -174,22 +177,66 @@ public class EmployeeService {
 
         //
         entryController.print_marksheets.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignP.PRINTER, 18, Paint.valueOf(Store.Colors.LightGray)));
-        entryController.collapseStaffDetails.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignA.ARROW_RIGHT_BOLD, 18, Paint.valueOf(Store.Colors.LightGray)));
+        entryController.collapseStaffDetails.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignA.ARROW_RIGHT_BOLD, 25, Paint.valueOf(Store.Colors.LightGray)));
+
+        entryController.assign_subject.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignP.PLUS, 18, Paint.valueOf(Store.Colors.LightGray)));
+
+        entryController.assign_subject.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("assign_another_tp")));
+
+
+
     }
 
     public void bindFields() {
         registerBtn.setOnAction(e->{
+            List<HashMap<String, Object>> lastItem = PgConnector.fetch("select * from employees order by id desc limit 1", PgConnector.getConnection());
+
             ActionStageLinker.openAddEmployee(mainStage);
-            refreshTable();
+
+            // select last emp
+            List<HashMap<String, Object>> insertedEmp = PgConnector.fetch("select * from employees order by id desc limit 1", PgConnector.getConnection());
+            if (lastItem.isEmpty()) {
+                if (!insertedEmp.isEmpty()) {
+                    refreshTable();
+                    empTableview.getSelectionModel().select(insertedEmp.get(0));
+                }
+
+            }else{
+                if (!insertedEmp.isEmpty()) {
+                    if (!Objects.equals(insertedEmp.get(0), lastItem.get(0))) {
+                        refreshTable();
+                        empTableview.getSelectionModel().select(insertedEmp.get(0));
+                    }
+                }
+
+            }
+
+
+
         });
+
 
         editSelection.setOnAction(e->{
             HashMap<String, Object> selectedEmp = empTableview.getSelectionModel().getSelectedItem();
             if (Objects.equals(selectedEmp,null))return;
 
             ActionStageLinker.openAddEmployee(mainStage,selectedEmp);
-            refreshTable();
+            // select updated emp
+            List<HashMap<String, Object>> updatedEmp = PgConnector.fetch(String.format("select * from employees where id=%d",PgConnector.getNumberOrNull(selectedEmp,"id").intValue()),
+                    PgConnector.getConnection());
+
+            if (!updatedEmp.isEmpty()) {
+                if (!Objects.equals(updatedEmp.get(0), selectedEmp)) {
+                refreshTable();
+                empTableview.getSelectionModel().select(updatedEmp.get(0));
+                }
+
+            }
+
+
+
         });
+
 
 
         toggleAllcb.setOnAction(e -> toggleSelectAll(toggleAllcb));
@@ -204,8 +251,21 @@ public class EmployeeService {
 
         entryController.collapseStaffDetails.setOnAction(e->{
             //animate details width to0
+            empTableview.getSelectionModel().clearSelection();
+
             entryController.empdetailspane.setMinWidth(0);
             ProjectUtils.animatePaneSide(entryController.empdetailspane, 'w', 0);
+        });
+
+        entryController.assign_subject.setOnAction(e -> this.assignNewSub());
+
+        entryController.print_marksheets.setOnAction(e -> {
+            try {
+//                this.printEmployeeMarksheets();
+                printEmployeeMarksheets(empTableview);// static access
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         });
 
         empTableview.getSelectionModel().selectedItemProperty().addListener((observableValue, stringObjectHashMap, newval) -> {
@@ -339,7 +399,11 @@ public class EmployeeService {
 
     }
 
-    public void toggleSelectAll(CheckBox toggle) {
+    public void toggleSelectAll(RadioButton toggle,boolean... v) {
+        if (v.length > 0) {
+            empTableview.currentItemSelectorP.forEach(cb->cb.setSelected(v[0]));
+            return;
+        }
         if (toggle.isSelected()) {
             empTableview.currentItemSelectorP.forEach(cb -> cb.setSelected(true));
 
@@ -428,7 +492,7 @@ public class EmployeeService {
 
     }
 
-    public void fillStaffDetails(int... expandedTitledPaneIndex) throws SQLException {
+    public void fillStaffDetails(int... props) throws SQLException {
         entryController.allocationsVb.setOpacity(0);
         FadeTransition f = new FadeTransition(Duration.millis(200), entryController.allocationsVb);
         f.setToValue(1);
@@ -438,9 +502,13 @@ public class EmployeeService {
         entryController.empPass.setText("-----");
         entryController.employeeNames.setText("--------------------");
         entryController.empUsername.setText("-----");
+        entryController.empdepartment.setText("--------------------");
         entryController.empview.setImage(null);
 
-        HashMap<String, Object> selectedEmp = empTableview.getSelectionModel().getSelectedItem();
+        HashMap<String, Object> selectedEmp =  empTableview.getSelectionModel().getSelectedItem();
+
+
+
         String empName = PgConnector.getFielorBlank(selectedEmp, "first_lastname");
         if (Objects.equals(null, selectedEmp)) return;
 
@@ -539,13 +607,20 @@ public class EmployeeService {
                 }
                 //add edit button
                     contentContainer.getChildren().add(ProjectUtils.createVspacer(20));
-                    Button editButton = new Button(Translator.getIntl("add_remove"));
+                    Button editButton = new Button(Translator.getIntl("add_remove_classes"));
                     editButton.setGraphic(ProjectUtils.createFontIcon(MaterialDesignP.PENCIL, 25, Paint.valueOf(Store.Colors.LightGray)));
+
+
 
                     HBox buttonContainer = new HBox(editButton);
                     buttonContainer.setAlignment(Pos.CENTER_RIGHT);
                     contentContainer.getChildren().add(buttonContainer);
-                    tp.setContent(contentContainer);
+
+                ScrollPane contentWrapper = new ScrollPane(contentContainer);
+                contentWrapper.setFitToHeight(true);
+                contentWrapper.setFitToWidth(true);
+
+                    tp.setContent(contentWrapper);
 
 
                 editButton.setOnAction(e -> {
@@ -630,11 +705,12 @@ public class EmployeeService {
                             classesPop.setOnHiding(hev -> {
                                 // update the detail view
                                 try {
-                                    fillStaffDetails(accordion.getPanes().indexOf(tp));
-
+                                    fillStaffDetails();
                                 } catch (SQLException ex) {
                                     throw new RuntimeException(ex);
                                 }
+
+
                             });
 
                         } catch (Exception err) {
@@ -649,8 +725,8 @@ public class EmployeeService {
 
             }
 
-            if (expandedTitledPaneIndex.length > 0) {
-                accordion.setExpandedPane(accordion.getPanes().get(expandedTitledPaneIndex[0]));
+            if (props.length > 0) {
+                accordion.setExpandedPane(accordion.getPanes().get(props[0]));
             } else {
                 accordion.setExpandedPane(accordion.getPanes().get(0));
             }
@@ -677,9 +753,19 @@ public class EmployeeService {
     public void addPerm(List<String> sublist, int classid,String empName) throws SQLException {
 //        int classid = PgConnector.getNumberOrNull(PgConnector.getObjectFromKey("classname",classname,"classes"),"id").intValue();
 
-        boolean exists = !PgConnector.fetch(String.format("select * from permissions where classid=%d and teacher='%s'", classid, empName), PgConnector.getConnection()).isEmpty();
-        if (exists) {
-            updatePerms(sublist, classid, empName);
+        PreparedStatement findPermsStatemet = PgConnector.getConnection().prepareStatement(String.format("select * from permissions where classid=? and teacher=? "
+                ));
+        findPermsStatemet.setInt(1, classid);
+        findPermsStatemet.setString(2, empName);
+
+        ResultSet res = findPermsStatemet.executeQuery();
+
+        if (res.next()) {
+            //get current subs in list
+            ArrayList<String> currentSubs = new ArrayList<>(PgConnector.parsePgArray(res, "subjects"));
+            currentSubs.addAll(sublist);
+
+            updatePerms(new ArrayList<>(new HashSet<>(currentSubs)), classid, empName);
             return;
         }
 
@@ -697,11 +783,163 @@ public class EmployeeService {
 
     }
 
+    public void assignNewSub() {
+
+        HashMap<String, Object> selectedTeacher = empTableview.getSelectionModel().getSelectedItem();
+        if (selectedTeacher==null)return;
+
+        SearchableComboBox<String> subSearchCombo = new SearchableComboBox();
+        subSearchCombo.getItems().addAll(PgConnector.listHashAttrs(PgConnector.
+                fetch("select * from subjects order by subject_name", PgConnector.getConnection()), "subject_name"));
+        subSearchCombo.setPromptText(Translator.getIntl("type_"));
+
+
+        ListSelectionView<HashMap<String,Object>> classSelectionList = new ListSelectionView<>();
+        List<HashMap<String,Object>> classes = PgConnector.fetch("select * from classes order by level,classname",PgConnector.getConnection());
+
+        classSelectionList.getSourceItems().addAll(classes);
+        classSelectionList.setCellFactory(hashMapListView -> new ListCell<>(){
+            @Override
+            protected void updateItem(HashMap<String, Object> obj, boolean b) {
+                super.updateItem(obj, b);
+                if (!b) {
+                    String fullname = String.format("%s ( %s )",
+                            PgConnector.getFielorBlank(obj, "classname"), PgConnector.getFielorBlank(obj, "class_abbreviation")).toUpperCase();
+
+                    setText(fullname);
+                    setGraphic(ProjectUtils.createFontIcon(MaterialDesignA.ARROW_RIGHT_BOLD, 18, Paint.valueOf(Store.Colors.LightGray)));
+
+                    if (classSelectionList.getTargetItems().contains(obj))
+                        setGraphic(ProjectUtils.createFontIconColored(MaterialDesignC.CHECK_BOLD, 18, Paint.valueOf(Store.Colors.green)));
+
+
+                } else {
+                    setText(null);
+                    setGraphic(null);
+
+
+                }
+            }
+        });
+
+        GenericDialogController controller = ActionStageLinker.openGenericDialog(mainStage);
+
+        HBox topContainer = new HBox(new Label(Translator.getIntl("search_subject")), ProjectUtils.createHspacer(25), subSearchCombo);
+        topContainer.setAlignment(Pos.CENTER_LEFT);
+
+        controller.content.getChildren().addAll(topContainer, new Separator(Orientation.HORIZONTAL), classSelectionList);
+        controller.content.setSpacing(20);
+        controller.dlgTitle.setText(Translator.getIntl("assign_another_sub"));
+
+        controller.confirmBtn.setOnAction(e->{
+            List<HashMap<String, Object>> selectedItems = classSelectionList.getTargetItems();
+            String subjectName = subSearchCombo.getValue();
+
+
+
+            //validation
+            if (subjectName == null) {
+                ProjectUtils.showPopover("",ProjectUtils.createErrLabel(Translator.getIntl("subject")),
+                        PopOver.ArrowLocation.LEFT_CENTER,false,true).show(subSearchCombo);
+
+            }
+            if (selectedItems.isEmpty()) {
+                ProjectUtils.showPopover("",ProjectUtils.createErrLabel(Translator.getIntl("classes")),
+                        PopOver.ArrowLocation.LEFT_CENTER,false,true).show(classSelectionList);
+
+            }
+            if (subjectName==null || selectedItems.isEmpty())return;
+
+
+            for (HashMap<String, Object> cls : selectedItems) {
+                int cid = PgConnector.getNumberOrNull(cls, "id").intValue();
+                try {
+                    addPerm(List.of(subjectName.toLowerCase()), cid, PgConnector.getFielorBlank(selectedTeacher, "first_lastname"));
+                    fillStaffDetails(0, cid);
+//                    empTableview.getSelectionModel().clearSelection();
+//                    empTableview.getSelectionModel().select(selectedTeacher);
+
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+
+            }
+
+
+            controller.thisStage.get().close();
+        });
+
+        VBox.setVgrow(classSelectionList, Priority.ALWAYS);
+
+
+
+
+
+
+
+    }
+
+    public static void printEmployeeMarksheets(CustomTableView empTableview,HashMap<String,Object>... empData) throws SQLException {
+        HashMap<String, Object> selectedEmp = empData.length>0 ? empData[0] : empTableview.getSelectionModel().getSelectedItem();
+        if (Objects.equals(null,selectedEmp))return;
+
+        String empName = PgConnector.getFielorBlank(selectedEmp, "first_lastname");
+
+        List<HashMap<String, Object>> perms = PgConnector.fetch(String.format("select * from permissions where teacher='%s' order by classid",
+                empName.toLowerCase()), PgConnector.getConnection());
+
+        PreparedStatement empPermResultset = PgConnector.getConnection().
+                prepareStatement(String.format("select * from permissions where teacher='%s' order by classid", empName.toLowerCase()));
+        ResultSet res = empPermResultset.executeQuery();
+
+        List<HashMap<String, Object>> classObjects = new ArrayList<>();
+        List<String> subjectsForAssignedClasses = new ArrayList<>();
+        List<Integer> countsForAssignedClasses = new ArrayList<>();
+
+        while (res.next()) {
+            int classid = res.getInt("classid");
+            HashMap<String, Object> classobj = ProjectUtils.getObject(String.valueOf(classid), "classes");
+            List<String> subjects = PgConnector.parsePgArray(res, "subjects");
+
+            for (String sub : subjects) {
+                int index = subjects.indexOf(sub);
+                String subAbbr = PgConnector.getFielorBlank(PgConnector.getObjectFromKey("subject_name", sub, "subjects"), "subject_abbreviation");
+                String[] subParts = sub.strip().split(" ");
+
+                classObjects.add(classobj);
+                subjectsForAssignedClasses.add(subParts.length ==1 ? sub.toUpperCase():subAbbr);
+                countsForAssignedClasses.add(1);
+            }
+
+
+
+        }
+
+        GenericDialogController controller = new GenericDialogController();
+
+        controller.printPersonalMarksheet(
+                classObjects,
+                subjectsForAssignedClasses,
+                countsForAssignedClasses,
+                empName
+        );
+
+
+
+
+
+    }
+
     public void refreshTable() {
         toggleAllcb.setSelected(false);
+        toggleSelectAll(null,false);
         searchFilter.setText("");
 
         empTableview.getSelectionModel().clearSelection();
+        empTableview.currentItemSelectorP.clear();
+        empTableview.currentSelectedIds.clear();
+
         entryController.empdetailspane.setMinWidth(0);
         ProjectUtils.animatePaneSide(entryController.empdetailspane, 'w', 0);
 

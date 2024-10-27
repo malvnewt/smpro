@@ -72,10 +72,8 @@ public class CustomToolbarActionGroup {
 
         for (HBox item : actionItems) {
             int row = actionItems.indexOf(item)/maxcolcount;
-
             int col = actionItems.indexOf(item) % maxcolcount;
 
-            System.out.println(String.format("row = %d and col=%d",row,col));
 
             pane.add(item, col, row);
 

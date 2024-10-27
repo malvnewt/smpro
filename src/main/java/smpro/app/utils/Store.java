@@ -8,6 +8,7 @@ import javafx.scene.effect.Light;
 import javafx.stage.Stage;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class Store {
     public static ObjectProperty<HashMap<String, Object>> currentProjectProperty = new SimpleObjectProperty<>(null);
 
     public static String RESOURCE_BASE_URL = "smpro/app/";
-    public static String NON_BINARY = "non_binary";
+
 //    public static String desktopPath = Path.of(System.getProperty("os.home"),"Desktop").toAbsolutePath().toString();
 
 
@@ -71,6 +72,9 @@ public class Store {
         public static String bullet = "\u2022";
         public static String bolddash = "\u2501";
         public static String location = "\u2316";
+        public static String Tabkey = "\u21E5";
+        public static String dashedUnderline = "\u0332";
+        public static String warning = "\u26a0";
     }
 
 
@@ -94,20 +98,8 @@ public class Store {
     public static List<Integer> supportedCycles = List.of(1, 2);
     public static List<Integer> supportedLevels = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10,11,12,13,14,15);
 
-    public static class SubjectCategories {
-        public static String Science = "science";
-        public static String SocialScience = "social_science";
-        public  static String Arts = "arts";
-        public static String Professional = "professional";
-        public static String Language = "language";
-        public static String Practical = "practical";
-        public static String Other = "other";
 
-        public static List<String> SupportedCategories = List.of(Science,SocialScience,Arts,Professional,Practical,Language,Other);
-
-
-
-    }
+    public static List<String> DbsubjectCategories = new ArrayList<>();
 
 
 
@@ -134,17 +126,27 @@ public class Store {
     public static List<String> employeeCats = List.of(
             "administrator",
             "teacher",
-            "assistant",
+            "secretariat",
+            "security",
+            "accountant",
+            "discipline_master",
+            "principal",
+            "system_administrator",
             "other"
     );
 
     public static List<String> empTime = List.of(
             "permanent",
             "part_time",
-            "semi_permanent"
+            "semi_permanent",
+            "unclassified"
     );
 
-
+    public static HashMap<Integer, List<Integer>> termToSeqsMap = new HashMap<>(Map.of(
+            1, List.of(1, 2),
+            2, List.of(3, 4),
+            3, List.of(5, 6)
+    ));
 
 
 }

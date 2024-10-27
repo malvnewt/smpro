@@ -14,7 +14,7 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.effect.SepiaTone?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -24,6 +24,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
 
 <BorderPane maxHeight="635.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="633.0" prefWidth="912.0" stylesheets="@../css/recaf/all.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.SettingsController">
    <center>
@@ -305,7 +306,7 @@
                                                 <Label styleClass="section-title" text="%new_section" />
                                                 <Label styleClass="section-title" text="%remove" GridPane.rowIndex="1" />
                                                 <Button fx:id="addsectionBtn" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" GridPane.columnIndex="1" />
-                                                <Button fx:id="removeSectionBtn" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" styleClass="danger" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Button fx:id="removeSectionBtn" disable="true" minHeight="50.0" minWidth="50.0" mnemonicParsing="false" styleClass="danger" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                              </children>
                                              <padding>
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -414,9 +415,10 @@
                               <Separator prefWidth="200.0" />
                               <HBox alignment="CENTER_RIGHT" prefHeight="65.0" prefWidth="892.0" spacing="10.0">
                                  <children>
-                                    <Button fx:id="addSubjectBtn" mnemonicParsing="false" text="%new_sub" />
-                                    <Button fx:id="removeSubjectBtn" mnemonicParsing="false" styleClass="danger" text="%delete_sub" />
-                                    <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                    <Button fx:id="editSubjectbtn" minWidth="90.0" mnemonicParsing="false" text="%edit" />
+                                    <Button fx:id="addSubjectBtn" minWidth="90.0" mnemonicParsing="false" text="%new_sub" />
+                                    <Button fx:id="removeSubjectBtn" minWidth="90.0" mnemonicParsing="false" styleClass="danger" text="%delete_sub" />
+                                    <HBox prefHeight="65.0" prefWidth="290.0" HBox.hgrow="ALWAYS" />
                                     <ButtonBar prefHeight="52.0" prefWidth="259.0">
                                        <buttons>
                                           <Button fx:id="savesectionsBtn11" mnemonicParsing="false" styleClass="success-btn" text="%save_changes" visible="false" />
@@ -572,6 +574,10 @@
       </HBox>
    </top>
    <effect>
-      <DropShadow />
+      <InnerShadow>
+         <color>
+            <Color opacity="0.5" />
+         </color>
+      </InnerShadow>
    </effect>
 </BorderPane>

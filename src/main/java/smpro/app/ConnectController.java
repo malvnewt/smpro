@@ -2,26 +2,15 @@ package smpro.app;
 
 import javafx.animation.Timeline;
 import javafx.beans.property.*;
-import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Paint;
-import javafx.stage.Modality;
-import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import org.controlsfx.control.HiddenSidesPane;
-import org.controlsfx.control.ListSelectionView;
 import org.controlsfx.control.PopOver;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.control.textfield.TextFields;
-import org.controlsfx.dialog.Wizard;
-import org.controlsfx.dialog.WizardPane;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
 import smpro.app.custom_nodes.MyPasswordField;
@@ -30,7 +19,7 @@ import smpro.app.utils.*;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ConnectController implements Initializable {
     public ImageView sideImage;
@@ -65,14 +54,14 @@ public class ConnectController implements Initializable {
     StringProperty usernameProperty = new SimpleStringProperty("");
     StringProperty passProperty = new SimpleStringProperty("");
 
-    Label usernamErrl = new Label(Translator.getIntl("invalid_username"));
-    Label passerrl = new Label(Translator.getIntl("invalid_pass"));
-
-    int vAdjustment= -35;
+    BooleanProperty isvalidUsernameP = new SimpleBooleanProperty(false);
+    BooleanProperty isvalidpassP = new SimpleBooleanProperty(false);
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+
 
 
         passfi8eld = new MyPasswordField(passHint);
@@ -180,7 +169,7 @@ public class ConnectController implements Initializable {
                     protected void updateItem(HashMap<String, Object> item, boolean b) {
                         super.updateItem(item, b);
                         if (!b) {
-                            String label = String.format("%s %s/%s", item.get("name"), item.get("start"), item.get("end"));
+                            String label = String.format("%s \u0020\u0020 \u0020 (%s \u27A1 %s)", item.get("name"), item.get("start"), item.get("end"));
                             setText(label.toUpperCase());
 
                             setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CIRCLE_DOUBLE, 15, Paint.valueOf(Store.Colors.black)));
@@ -197,7 +186,7 @@ public class ConnectController implements Initializable {
             protected void updateItem(HashMap<String, Object> item, boolean b) {
                 super.updateItem(item, b);
                 if (!b) {
-                    String label = String.format("%s %s/%s", item.get("name"), item.get("start"), item.get("end"));
+                    String label = String.format("%s \u0020\u0020 \u0020 (%s \u27A1 %s)", item.get("name"), item.get("start"), item.get("end"));
                     setText(label.toUpperCase());
 
                     setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CIRCLE_DOUBLE, 15, Paint.valueOf(Store.Colors.black)));
@@ -243,17 +232,6 @@ public class ConnectController implements Initializable {
 
 
 
-
-
-        for (Label l : new Label[]{usernamErrl, passerrl}) {
-            FontIcon warning = ProjectUtils.createFontIcon(MaterialDesignA.ALERT_CIRCLE, 10, Paint.valueOf(Store.Colors.red));
-            l.setGraphic(warning);
-            warning.setStrokeWidth(1);
-//            l.getStyleClass().addAll("text", "warning","text-bold");
-            l.getStyleClass().addAll("text", "danger","text-bold");
-
-        }
-
         cancelbtn.setTooltip(new Tooltip(Translator.getIntl("close_app")));
 
 
@@ -270,63 +248,127 @@ public class ConnectController implements Initializable {
 
 
         confirmBtn.setOnAction(e->{
+            //reset
+            isvalidpassP.set(false);
+            isvalidUsernameP.set(false);
+
 
             HashMap<String, Object> baseData = PgConnector.fetch("select * from base", PgConnector.connection.get()).get(0);
 
-            String username = String.valueOf(baseData.get("root_username"));
-            String password = String.valueOf(baseData.get("root_password"));
-
-            //validation
-            boolean isvalidUsername = username.equals(usernameProperty.get());
-            boolean isvalidpass = password.equals(passProperty.get());
+            String rootUsername = String.valueOf(baseData.get("root_username"));
+            String rootPass = String.valueOf(baseData.get("root_password"));
 
 
-            if (!isvalidpass){
-//                ProjectUtils.showFloatingTooltip(passerrl, thisStage.get(), passfi8eld, 0, vAdjustment);
 
+            Store.SessionStage.set(thisStage.get());
+
+            //validation for root admin
+            boolean isValidAdminusername = rootUsername.equals(usernameProperty.get());
+            boolean isValidAdminpass = rootPass.equals(passProperty.get());
+
+            isvalidpassP.set(isValidAdminpass);
+            isvalidUsernameP.set(isValidAdminusername);
+
+            if (isValidAdminusername && isValidAdminpass) {
+                HashMap<String, Object> authuser = new HashMap<>(Map.of(
+                        "username", usernameProperty.get(),
+                        "password", passProperty.get(),
+                        "displayName", "Root Admin",
+                        "isAdmin",true
+                ));
+                Store.AuthUser.set(authuser);
+                usernamefield.clear();
+                passfi8eld.clear();
+                thisStage.get().hide();
+                System.out.println("VALID ROOTADMIN LOG IN");
+                return;
+
+            }
+            isvalidpassP.set(false);
+            isvalidUsernameP.set(false);
+
+            //validation for secondary admins
+
+            List<HashMap<String, Object>> validUser = PgConnector.fetch(String.format("select * from users where username='%s'",usernameProperty.get()), PgConnector.getConnection());
+
+
+            if (!validUser.isEmpty()) {
+                String userPass = PgConnector.getFielorBlank(validUser.get(0), "password");
+                isvalidUsernameP.set(true);
+
+                if (userPass.equals(passProperty.get())) {
+                    isvalidpassP.set(true);
+                    HashMap<String, Object> authuser = new HashMap<>(Map.of(
+                            "username", usernameProperty.get(),
+                            "password", passProperty.get(),
+                            "displayName", PgConnector.getFielorBlank(validUser.get(0), "fullname"),
+                            "isAdmin",true
+
+                    ));
+                    Store.AuthUser.set(authuser);
+                    usernamefield.clear();
+                    passfi8eld.clear();
+                    thisStage.get().hide();
+                    System.out.println("VALID ADMIN LOG IN");
+                    return;
+
+                }
+
+            }
+            isvalidpassP.set(false);
+            isvalidUsernameP.set(false);
+
+
+            // validate for staff login
+            List<HashMap<String, Object>> validTeacher = PgConnector.fetch(String.format("select * from employees where username='%s'",usernameProperty.get()), PgConnector.getConnection());
+            if (!validTeacher.isEmpty()) {
+                isvalidUsernameP.set(true);
+
+                String userPass = PgConnector.getFielorBlank(validTeacher.get(0), "password");
+                if (userPass.equals(passProperty.get())) {
+                    isvalidpassP.set(true);
+                    HashMap<String, Object> authuser = new HashMap<>(Map.of(
+                            "username", usernameProperty.get(),
+                            "password", passProperty.get(),
+                            "displayName", PgConnector.getFielorBlank(validTeacher.get(0), "first_lastname"),
+                            "isAdmin",false
+
+                    ));
+                    Store.AuthUser.set(authuser);
+                    usernamefield.clear();
+                    passfi8eld.clear();
+                    thisStage.get().hide();
+                    System.out.println("VALID STAFF LOG IN");
+                    return;
+
+                }
+
+            }
+
+
+
+
+            if (!isvalidpassP.get()){
                 passfi8eld.getStyleClass().add("error-textfield");
-                PopOver passwordErrpop = ProjectUtils.showPopover("", passerrl, PopOver.ArrowLocation.LEFT_CENTER, false,true);
+                PopOver passwordErrpop = ProjectUtils.showPopover("", ProjectUtils.
+                        createErrLabel(Translator.getIntl("invalid_password")), PopOver.ArrowLocation.LEFT_CENTER, false,true);
                 passwordErrpop.show(passfi8eld);
-
                 Timeline timeline =  ProjectUtils.shakeX(passfi8eld, -10, 6);
                 timeline.play();
             }
 
 
-            if (!isvalidUsername){
+            if (!isvalidUsernameP.get()){
                 usernamefield.getStyleClass().add("error-textfield");
-
-                PopOver usernameErrPop = ProjectUtils.showPopover("", usernamErrl, PopOver.ArrowLocation.BOTTOM_LEFT, false,true);
+                PopOver usernameErrPop = ProjectUtils.showPopover("", ProjectUtils.
+                        createErrLabel(Translator.getIntl("invalid_username")), PopOver.ArrowLocation.BOTTOM_LEFT, false,true);
                 usernameErrPop.show(usernamefield);
-
-//                ProjectUtils.showFloatingTooltip(usernamErrl, thisStage.get(), usernamefield, 0, vAdjustment);
                Timeline timeline =  ProjectUtils.shakeX(usernamefield, -10, 6);
                timeline.play();
 
             }
 
 
-            if (isvalidpass && isvalidUsername) {
-                usernamefield.getStyleClass().remove("error-textfield");
-                passfi8eld.getStyleClass().remove("error-textfield");
-
-                Store.SessionStage.set(thisStage.get());
-
-                HashMap<String, Object> authuser = new HashMap<>(Map.of(
-                        "username", username,
-                        "password", password
-                ));
-                Store.AuthUser.set(authuser);
-
-                usernamefield.clear();
-                passfi8eld.clear();
-
-
-                thisStage.get().hide();
-
-            } else {
-
-            }
 
         });
     }
@@ -335,6 +377,8 @@ public class ConnectController implements Initializable {
 
     public void createProject() {
     }
+
+
 
 
 

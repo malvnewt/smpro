@@ -36,7 +36,8 @@ public class CustomTableView extends TableView<HashMap<String,Object>> {
      */
 
     public List<HashMap<String, Object>> allData = new ArrayList<>();
-    public ListProperty<HashMap<String, Object>> filteredItemsProperty = new SimpleListProperty<>();
+    public ListProperty<HashMap<String, Object>> filteredItemsProperty = new SimpleListProperty<>(FXCollections.observableList(new ArrayList<>()));
+
     public ListProperty<String> currentSelectedIds = new SimpleListProperty<>(FXCollections.observableList(new ArrayList<>()));
     public ListProperty<CheckBox> currentItemSelectorP = new SimpleListProperty<>(FXCollections.observableList(new ArrayList<>()));
 
@@ -44,7 +45,10 @@ public class CustomTableView extends TableView<HashMap<String,Object>> {
 
 
     public CustomTableView(List<TableColumn<HashMap<String,Object>,String>> cols ,int idcol) {
+        setItems(FXCollections.observableList(new ArrayList<>()));
+
         itemsProperty().bind(filteredItemsProperty);
+        filteredItemsProperty.addAll(new ArrayList<>());
 
 
         TableColumn<HashMap<String, Object>, String> selectCol = cols.get(idcol);
@@ -114,19 +118,28 @@ public class CustomTableView extends TableView<HashMap<String,Object>> {
         filteredItemsProperty.set(FXCollections.observableList(data));
     }
 
-    public void filter(String query) {
+    public void filter(String query,List<HashMap<String,Object>>... data) {
         currentItemSelectorP.clear();
         currentSelectedIds.clear();
         selectAllProperty.set(false);
-        this.getItems().clear();
+        this.filteredItemsProperty.clear();
         this.setOpacity(0);
 
         FadeTransition f = new FadeTransition(Duration.millis(200), this);
         f.setToValue(1);
         f.setInterpolator(Interpolator.EASE_OUT);
 
-        List<HashMap<String, Object>> res = PgConnector.fetch(query, PgConnector.getConnection());
-        filteredItemsProperty.set(FXCollections.observableList(res));
+        if (data.length == 0) {
+            List<HashMap<String, Object>> res = PgConnector.fetch(query, PgConnector.getConnection());
+            filteredItemsProperty.set(FXCollections.observableList(res));
+
+
+        } else {
+            filteredItemsProperty.set(FXCollections.observableList(data[0]));
+
+
+        }
+
 
 
         f.playFromStart();

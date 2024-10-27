@@ -4,8 +4,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.Initializable;
 import javafx.scene.ImageCursor;
 import javafx.scene.control.*;
@@ -19,8 +17,8 @@ import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SearchableComboBox;
-import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
 import smpro.app.ResourceUtil;
 import smpro.app.utils.PgConnector;
@@ -28,7 +26,6 @@ import smpro.app.utils.ProjectUtils;
 import smpro.app.utils.Store;
 import smpro.app.utils.Translator;
 
-import javax.swing.tree.TreeNode;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -65,6 +62,7 @@ public class AddEmpController implements Initializable {
     public ObjectProperty<Stage> thisStage = new SimpleObjectProperty<>();
     public ObjectProperty<Stage> mainstage = new SimpleObjectProperty<>();
     public Label empTitle;
+    public Label usernamelabel;
     StringProperty imagePathP = new SimpleStringProperty("");
 
 
@@ -80,8 +78,6 @@ public class AddEmpController implements Initializable {
     StringProperty passP = new SimpleStringProperty();
 
     ObjectProperty<Image> imageP = new SimpleObjectProperty<>();
-
-
 
     SearchableComboBox<HashMap<String,Object>> departmentCombo = new SearchableComboBox<>();
     @Override
@@ -103,10 +99,31 @@ public class AddEmpController implements Initializable {
     }
 
     public void initUi() {
-        dptContainer.getChildren().add(departmentCombo);
+        dptContainer.getChildren().add(0,departmentCombo);
         HBox.setHgrow(departmentCombo, Priority.ALWAYS);
         departmentCombo.setPromptText("...");
+
+
+        List<HashMap<String,Object>> trades = PgConnector.fetch("select * from trades order by trade_name", PgConnector.getConnection())
+                .stream().map(item -> {
+                    Object name = PgConnector.getFielorBlank(item, "trade_name");
+                    Object abbr = PgConnector.getFielorBlank(item, "trade_abbreviation");
+
+                    return new HashMap<>(Map.of("subject_name", name,
+                            "subject_abbreviation",abbr));
+                }).toList();
+        departmentCombo.getItems().addAll(trades);
+        List<String> tradeNames = PgConnector.listHashAttrs(trades, "subject_names");
+
+
         departmentCombo.getItems().addAll(PgConnector.fetch("select * from subjects order by subject_name", PgConnector.getConnection()));
+        departmentCombo.getStyleClass().addAll("dense");
+
+
+
+
+
+
         departmentCombo.setCellFactory(new Callback<>() {
             @Override
             public ListCell<HashMap<String, Object>> call(ListView<HashMap<String, Object>> hashMapListView) {
@@ -133,9 +150,16 @@ public class AddEmpController implements Initializable {
             protected void updateItem(HashMap<String, Object> stringObjectHashMap, boolean b) {
                 super.updateItem(stringObjectHashMap, b);
                 if (!b) {
-                    setText(String.format("%s (%s)",PgConnector.getFielorBlank(stringObjectHashMap, "subject_name").toUpperCase(),
+                    String itemName = PgConnector.getFielorBlank(stringObjectHashMap, "subject_name");
+                    setText(String.format("%s (%s)",itemName.toUpperCase(),
                            PgConnector.getFielorBlank(stringObjectHashMap, "subject_abbreviation")));
                     setGraphic(ProjectUtils.createFontIconColored(MaterialDesignC.CIRCLE_MULTIPLE, 15, Paint.valueOf("lightgray")));
+
+                    String foundIntrades = tradeNames.stream().filter(s->s.equalsIgnoreCase(itemName)).findAny().orElse(null);
+                    if (!Objects.equals(null,foundIntrades))
+                        setGraphic(ProjectUtils.createFontIconColored(MaterialDesignC.CIRCLE_MULTIPLE, 15, Paint.valueOf(Store.Colors.green)));
+
+
                 } else {
                     setText(null);
                     setGraphic(null);
@@ -146,12 +170,16 @@ public class AddEmpController implements Initializable {
         });
 
         passl.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignK.KEY, 15, Paint.valueOf("lightgray")));
+        usernamelabel.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignA.ACCOUNT, 15, Paint.valueOf("lightgray")));
+
+
+
         contactl.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignP.PHONE, 15, Paint.valueOf("lightgray")));
         timel.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignC.CLOCK_ALERT, 15, Paint.valueOf("lightgray")));
 
         contact.textProperty().addListener((observableValue, s, t1) -> contact.setText(t1.replaceAll("\\D", "")));
-        usernamef.textProperty().addListener((observableValue, s, t1) -> contact.setText(t1.replaceAll(" ", "")));
-        passf.textProperty().addListener((observableValue, s, t1) -> contact.setText(t1.replaceAll(" ", "")));
+        usernamef.textProperty().addListener((observableValue, s, t1) -> usernamef.setText(t1.replaceAll(" ", "")));
+        passf.textProperty().addListener((observableValue, s, t1) -> passf.setText(t1.replaceAll(" ", "")));
 
         importImagbtn.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignI.IMPORT, 15, Paint.valueOf("lightgray")));
         displayview.imageProperty().bind(imageP);
@@ -268,9 +296,9 @@ public class AddEmpController implements Initializable {
 
     public void prepareUpdate(HashMap<String, Object> empData) throws SQLException {
 //        importImagbtn.setDisable(true);
-        displayview.setEffect(new SepiaTone());
-        importImagbtn.setCursor(new ImageCursor(new Image(ResourceUtil.getResourceAsStream("images/not_allowed.png"), 50, 50,true,true)));
-        importImagbtn.setOnAction(e -> System.out.println("no image change"));
+//        displayview.setEffect(new SepiaTone());
+//        importImagbtn.setCursor(new ImageCursor(new Image(ResourceUtil.getResourceAsStream("images/not_allowed.png"), 50, 50,true,true)));
+//        importImagbtn.setOnAction(e -> System.out.println("no image change"));
 
         empTitle.setText(Translator.getIntl("update_emp").toUpperCase());
         String fullname = PgConnector.getFielorBlank(empData, "first_lastname");
@@ -337,11 +365,29 @@ public class AddEmpController implements Initializable {
         String timef = timefP.get();
         String department = departmentP.get();
         String addr = addressP.get();
-        String contact = contactP.get();
+        String contact_ = contactP.get();
 
-        int empId=0;
-        if (updatedata.length > 0)empId = PgConnector.getNumberOrNull(updatedata[0], "id").intValue();
+        List<TextField> tfs = List.of(namefield, usernamef, passf, address, contact);
+        List<ComboBox> combos = List.of(categorycombo,departmentCombo,timefactorcombo);
 
+        for (TextField t : tfs) {
+            if (t.getText().isEmpty() || t.getText() == null) {
+                ProjectUtils.showPopover("", ProjectUtils.createErrLabel(Translator.getIntl("required")),
+                        PopOver.ArrowLocation.LEFT_CENTER, false, true).show(t);
+            }
+
+        }
+        for (ComboBox t : combos) {
+            if (t.getValue() == null) {
+                ProjectUtils.showPopover("", ProjectUtils.createErrLabel(Translator.getIntl("required")),
+                        PopOver.ArrowLocation.LEFT_CENTER, false, true).show(t);
+            }
+
+        }
+
+        //validate inputs
+        if (name.isEmpty() || gender.isEmpty() || userame.isEmpty() ||
+                passw.isEmpty() || cat.isEmpty() || timef.isEmpty() || department.isEmpty() || addr.isEmpty() || contact_.isEmpty()) return;
 
 
         String insertNew = "insert into employees (first_lastname,employee_category,department, time_factor,date_added,gender,username,password,address,contact)" +
@@ -355,19 +401,9 @@ public class AddEmpController implements Initializable {
 
         PreparedStatement ps = PgConnector.getConnection().prepareStatement(insert);
 
-        ps.setString(1, String.format("%s %s", pronounscombo.getValue(), name));
+        ps.setString(1, String.format("%s %s", pronounscombo.getValue(), name).toLowerCase());
         ps.setString(2, cat);
         ps.setString(3, department);
-
-//        InputStream is=null;
-//        try {
-//            is = new FileInputStream(imagePathP.get());
-//        } catch (NullPointerException nullPointerException) {
-//            System.err.println("File not foujd =="+imagePathP.get());
-//
-//
-//        }
-//        ps.setBinaryStream(4, is, is==null ? 0: is.readAllBytes().length);
 
         ps.setString(4, timef);
         ps.setLong(5, new Date().getTime());
@@ -375,26 +411,33 @@ public class AddEmpController implements Initializable {
         ps.setString(7, userame);
         ps.setString(8, passw);
         ps.setString(9, addr);
-        ps.setString(10, contact);
+        ps.setString(10, contact_);
 
         if (updatedata.length > 0) {
-            ps.setInt(11, empId);
+            ps.setInt(11,  PgConnector.getNumberOrNull(updatedata[0], "id").intValue());
         }
-
-        System.out.println(ps);
-
         ps.executeUpdate();
 
-
         //update with image
-        InputStream is = imagePathP.get().isEmpty() ? null : new FileInputStream(imagePathP.get());
-        PreparedStatement updateimg = PgConnector.getConnection().prepareStatement("update employees set display_image=? where first_lastname=? ");
-
-        updateimg.setBinaryStream(1, is, is==null ? 0: is.available());
-        updateimg.setString(2,String.format("%s %s",pronounscombo.getValue(),name));
-
         if (updatedata.length == 0) {
+            InputStream is = imagePathP.get().isEmpty() ? null : new FileInputStream(imagePathP.get());
+            PreparedStatement updateimg = PgConnector.getConnection().prepareStatement("update employees set display_image=? where first_lastname=? ");
+
+            updateimg.setBinaryStream(1, is, is==null ? 0: is.available());
+            updateimg.setString(2,String.format("%s %s",pronounscombo.getValue(),name));
             updateimg.executeUpdate();
+        } else {
+            if (!imagePathP.get().isEmpty()) {
+
+            InputStream is =  new FileInputStream(imagePathP.get());
+            PreparedStatement updateimg = PgConnector.getConnection().prepareStatement("update employees set display_image=? where id=? ");
+
+            updateimg.setBinaryStream(1, is, is==null ? 0: is.available());
+            updateimg.setInt(2, PgConnector.getNumberOrNull(updatedata[0], "id").intValue());
+            updateimg.executeUpdate();
+            }
+
+
         }
 
         System.out.println("image upated");
@@ -408,5 +451,9 @@ public class AddEmpController implements Initializable {
 
 
 
+
     }
+
+
+
 }

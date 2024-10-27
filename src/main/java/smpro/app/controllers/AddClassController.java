@@ -732,6 +732,8 @@ public class AddClassController implements Initializable {
                 field.getStyleClass().add("error-textfield");
                 errMessageBuilder.append(Store.UnicodeSumnbol.bullet).append(" ").append(ProjectUtils.capitalize(errt)).append("\n");
                 isvalidForm = false;
+                ProjectUtils.showPopover("", ProjectUtils.createErrLabel(errt), textFields.indexOf(field)%2==0 ?PopOver.ArrowLocation.LEFT_CENTER :PopOver.ArrowLocation.RIGHT_CENTER, false, true).show(field);
+
             }else {
                 field.getStyleClass().remove("error-textfield");
             }
@@ -747,6 +749,8 @@ public class AddClassController implements Initializable {
                 field.getStyleClass().add("error-textfield");
                 errMessageBuilder.append(Store.UnicodeSumnbol.bullet).append(" ").append(ProjectUtils.capitalize(errt)).append("\n");
                 isvalidForm = false;
+                ProjectUtils.showPopover("", ProjectUtils.createErrLabel(errt), numberFields.indexOf(field)%2==0 ?PopOver.ArrowLocation.LEFT_CENTER :PopOver.ArrowLocation.RIGHT_CENTER, false, true).show(field);
+
             }else {
                 field.getStyleClass().remove("error-textfield");
             }
@@ -771,36 +775,25 @@ public class AddClassController implements Initializable {
                 isvalidForm = false;
                 grounnameErrBuilder.append(String.format("%s %s\n", Store.UnicodeSumnbol.bullet, names.get(index)));
                 missingCount += 1;
+                ProjectUtils.showPopover("", ProjectUtils.createErrLabel(names.get(index)),
+                        index%2==0 ?PopOver.ArrowLocation.LEFT_CENTER :PopOver.ArrowLocation.RIGHT_CENTER, false, true).show(tf);
             } else {
                 // add groupname to the list
                 String gname = tf.getText();
+                if (!gname.isEmpty()) {
+
                 ListProperty<String> groupProperty = categorySubjectsProperties.get(index);
                 groupProperty.add(0, gname);
+                }
 
             }
 
-
-        }
-
-        if (missingCount>0){
-            errMessageBuilder.append("\n");
-            for (int i = 0; i < 18; i++) errMessageBuilder.append(Store.UnicodeSumnbol.dash).append(" ");
-            errMessageBuilder.append("\n").append(String.format("%d %s %s\n", missingCount,Store.UnicodeSumnbol.blank, Translator.getIntl("labels_missing")));
-            errMessageBuilder.append(grounnameErrBuilder.toString());
-
         }
 
 
 
+        if (!isvalidForm)  return false;
 
-
-
-        if (!isvalidForm) {
-            Alert errAlert = ProjectUtils.showAlert(thisStage.get(), Alert.AlertType.ERROR,
-                    Translator.getIntl("invalid_form"), "ERR INFO", errMessageBuilder.toString(), ButtonType.CLOSE);
-            errAlert.showAndWait();
-            return false;
-        }
 
 
         String query = """
@@ -830,8 +823,6 @@ public class AddClassController implements Initializable {
         insertStatement.setArray(9, con.createArrayOf("text", ProjectUtils.getUniqueValues(catCsubs.get()).toArray()));
         insertStatement.setArray(10, con.createArrayOf("text", ProjectUtils.getUniqueValues(catDsubs.get()).toArray()));
         insertStatement.setArray(11, con.createArrayOf("text", ProjectUtils.getUniqueValues(compulsorySubsP.get()).toArray()));
-
-        System.out.println(insertStatement);
 
         insertStatement.executeUpdate();
 

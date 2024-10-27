@@ -26,10 +26,8 @@ import smpro.app.utils.ProjectUtils;
 import smpro.app.utils.Translator;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class ClassSectionsTreeview extends TreeView<HashMap<String, Object>> {
 
@@ -153,14 +151,18 @@ public class ClassSectionsTreeview extends TreeView<HashMap<String, Object>> {
         rootitem.getChildren().addAll(sectionItems);
 
         getSelectionModel().selectedItemProperty().addListener((observableValue, hashMapTreeItem, item) -> {
-            HashMap<String, Object> data = item.getValue();
+            if (!Objects.equals(null, item)) {
 
             if (item.isLeaf()) {
+
+                HashMap<String, Object> data = item.getValue();
                 //filter table
                 selectedClassProperty.set(data);
                 selectedItemP.set(item);
 
             }
+            }
+
 
         });
 

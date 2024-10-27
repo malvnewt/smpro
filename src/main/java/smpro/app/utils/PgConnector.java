@@ -49,7 +49,8 @@ public class PgConnector {
 
 
     public static Connection getConnection() {
-        return connection.get();}
+        return connection.get();
+    }
     public static Connection getBaseConnection() {
         return baseConnection.get();}
 
@@ -101,7 +102,6 @@ public class PgConnector {
             statement.execute(query);
 
             statement.close();
-            System.out.printf("insert successfull");
 
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
@@ -118,10 +118,8 @@ public class PgConnector {
 
             statement.close();
 
-            System.out.println("update successfull");
 
         } catch (SQLException err) {
-            System.err.println(err.getLocalizedMessage());
             err.printStackTrace();
 
         }
@@ -163,7 +161,6 @@ public class PgConnector {
     }
 
     public static InputStream readBinarydata( PreparedStatement ps) {
-        System.out.println("===============reading binary data ============== \n");
         System.out.println(ps);
         InputStream is = null;
 
@@ -258,7 +255,6 @@ public class PgConnector {
     public static List<String> getAggregatedListIfValueInPgArray( ResultSet rs,String pgListColname, String keyToAggregate, String listValueTocheck) throws SQLException {
         HashSet<String> list = new HashSet<>();
 
-        System.out.println("inside getAggregatedListIfValueInPgArray()");
 
         while (rs.next()) {
                 List<String> pglist = parsePgArray(rs,pgListColname );

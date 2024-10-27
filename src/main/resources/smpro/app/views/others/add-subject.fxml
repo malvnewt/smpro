@@ -2,19 +2,21 @@
 
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="369.0" prefWidth="600.0" spacing="10.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="smpro.app.controllers.AddSubjectController">
    <children>
@@ -52,7 +54,15 @@
             <TextField fx:id="abbrfield" promptText="eg C.S" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <TextField fx:id="coefField" promptText="eg 5" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <TextField fx:id="headField" promptText="eg Mr John Doe" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <ComboBox fx:id="categoryField" prefHeight="30.0" prefWidth="345.0" promptText="%select" styleClass="alt-icon" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <children>
+                  <ComboBox fx:id="categoryField" prefHeight="32.0" prefWidth="303.0" promptText="%select" styleClass="alt-icon" HBox.hgrow="ALWAYS" />
+                  <Button fx:id="addSubjectcatBtn" maxWidth="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="52.0" style="-fx-background-color: transparent; -fx-border-color: #444444; -fx-border-width: 2;">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></Button>
+               </children>
+            </HBox>
             <Label text="%subject_code" GridPane.rowIndex="2" />
             <TextField fx:id="subjectCodefield" promptText="eg 680, M21 ..." GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
@@ -78,6 +88,10 @@
       <URL value="@../../css/recaf/all.css" />
    </stylesheets>
    <effect>
-      <DropShadow />
+      <InnerShadow>
+         <color>
+            <Color opacity="0.5" />
+         </color>
+      </InnerShadow>
    </effect>
 </VBox>

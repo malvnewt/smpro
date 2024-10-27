@@ -8,7 +8,11 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Handler;
+
 import javafx.application.Application;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -16,10 +20,12 @@ import javafx.beans.property.SimpleListProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -33,11 +39,14 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import smpro.app.utils.Store;
 
 /**
  *
@@ -61,23 +70,45 @@ public class EditableTableFx {
     final HBox hb = new HBox();
 
 
-    class EditingCell extends TableCell<Person, String> {
+    public static class EditingCell extends TableCell<HashMap<String, Object>, String> {
 
         private TextField textField;
+        private Callback<Object, Void> cb;
 
-        private EditingCell() {
+
+        public EditingCell(Callback<Object,Void> cb) {
+            this.cb=cb;
+
+
+
+            setPadding(new Insets(4));
+            setStyle("-fx-background-color: #000000;-fx-background-insets: 2");
+            setOnMouseClicked(event -> {
+                System.out.println("mouse clicked");
+                if (event.getClickCount() == 1) {
+                    startEdit();
+                    textField.requestFocus();
+                    textField.selectAll();
+
+                }
+            });
         }
+
+
 
         @Override
         public void startEdit() {
             if (!isEmpty()) {
                 super.startEdit();
+
                 createTextField();
-                setText(null);
                 setGraphic(textField);
-                textField.selectAll();
+                setText(null);
+//                textField.selectAll();
             }
         }
+
+
 
         @Override
         public void cancelEdit() {
@@ -86,6 +117,8 @@ public class EditableTableFx {
             setText((String) getItem());
             setGraphic(null);
         }
+
+
 
         @Override
         public void updateItem(String item, boolean empty) {
@@ -102,21 +135,48 @@ public class EditableTableFx {
                     }
                     setText(null);
                     setGraphic(textField);
+                    textField.requestFocus();
                 } else {
-                    setText(getString());
+                    if (textField != null) {
+                    setText(textField.getText());
+                    }else setText(getString());
+
+//                    setText(getString());
                     setGraphic(null);
                 }
             }
         }
 
+
+
+
+
         private void createTextField() {
+            System.out.println("current values is " + getString());
+
             textField = new TextField(getString());
+            textField.textProperty().addListener((observableValue, old, newval) -> {
+//                textField.setText(newval.replaceAll("\\D",""));
+                HashMap<String,Object> obj = getTableRow().getItem();
+
+//                cb.call(new HashMap<>(Map.of("score", textField.getText(), "item", obj)));
+
+
+            });
+//            textField.setStyle("-fx-background-color: #242424");
             textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
-            textField.setOnAction((e) -> commitEdit(textField.getText()));
+//            textField.setOnAction((e) -> commitEdit(textField.getText()));
             textField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                 if (!newValue) {
-                    System.out.println("Commiting " + textField.getText());
+                getTableRow().getItem().replace("score", textField.getText());
+                cb.call(new HashMap<>(Map.of("score", textField.getText(), "item", getTableRow().getItem())));
+
+
                     commitEdit(textField.getText());
+//                    updateItem(textField.getText(),false);
+
+
+
                 }
             });
         }
@@ -125,6 +185,7 @@ public class EditableTableFx {
             return getItem() == null ? "" : getItem();
         }
     }
+
 
     class DateEditingCell extends TableCell<Person, Date> {
 
@@ -303,42 +364,6 @@ public class EditableTableFx {
 
     }
     
-    public static class Project {
-        private final SimpleStringProperty name;
-        private final SimpleListProperty<Person> persons;
-
-        public Project(String name, List<Person> persons) {
-            this.name = new SimpleStringProperty(name);
-            
-            this.persons = new SimpleListProperty<>();
-            this.persons.setAll(persons);
-        }
-        
-        public String getName() {
-            return name.get();
-        }
-
-        public StringProperty nameProperty() {
-            return this.name;
-        }
-
-        public void setName(String name) {
-            this.name.set(name);
-        }
-        
-        public List<Person> getPersons() {
-            return this.persons.get();
-        }
-        
-        public SimpleListProperty<Person> personsProperty() {
-            return this.persons;
-        }
-        
-        public void setPersons(List<Person> persons) {
-            this.persons.setAll(persons);
-        }
-        
-    }
 
     public static class Person {
 

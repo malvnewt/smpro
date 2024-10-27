@@ -1,31 +1,30 @@
 package smpro.app.utils;
 
 import javafx.animation.*;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.WritableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.stage.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
 import org.controlsfx.control.PopOver;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 import smpro.app.ResourceUtil;
 import smpro.app.SettingsController;
 import smpro.app.custom_titlebar.CaptionConfiguration;
@@ -33,6 +32,9 @@ import smpro.app.custom_titlebar.CustomCaption;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -108,9 +110,7 @@ public class ProjectUtils {
 
         }
 
-
         timeline.play();
-
     }
     public static void animateVContainer(VBox box, char sideInitial,  double end) {
         Timeline timeline;
@@ -142,7 +142,6 @@ public class ProjectUtils {
         timeline.play();
 
     }
-
 
     public static Timeline shakeY(Node node, double offset,int... cyclecount) {
         Objects.requireNonNull(node, "Node cannot be null!");
@@ -193,6 +192,7 @@ public class ProjectUtils {
     public static Tooltip createTooltip(String content) {
         Tooltip tp = new Tooltip(content);
         tp.setShowDelay(Duration.millis(200));
+        tp.setShowDuration(Duration.seconds(30));
 
         return tp;
     }
@@ -262,64 +262,6 @@ public class ProjectUtils {
         return out;
     }
 
-
-    public static void positionFloatingStage(Stage parentStage,Stage contentStage, Node parent,double hoffset,double voffset,
-            Pos... position
-    ) {
-
-        double parentMinx = parent.getLayoutBounds().getMinX();
-        double parentMinY = parent.getLayoutBounds().getMinY();
-
-        Point2D parentInScene = parent.localToScene(parentMinx, parentMinY);
-
-
-
-        Pos pos = position.length > 0 ? position[0] : Pos.CENTER_RIGHT;
-    if (pos==Pos.CENTER_RIGHT) {
-                hoffset+=parent.getLayoutBounds().getWidth();
-//                voffset += parent.getLayoutBounds().getHeight();
-
-            } else{
-                hoffset-=contentStage.getWidth();
-//                voffset += parent.getLayoutBounds().getHeight();
-            }
-
-
-
-
-        contentStage.setX(parentInScene.getX() + parentStage.getX()+hoffset);
-        contentStage.setY(parentInScene.getY() + parentStage.getY() + voffset);
-
-
-
-    }
-
-    public static void showFloatingTooltip( Node content,Stage parentStage,Node parent,double hoffset,double voffset ) {
-
-        Tooltip tp = new Tooltip();
-        tp.setGraphic(content);
-        tp.setShowDelay(Duration.millis(100));
-
-        // create floating nodestage4
-
-        double parentMinx = parent.getLayoutBounds().getMinX();
-        double parentMinY = parent.getLayoutBounds().getMinY();
-
-        Point2D parentInScene = parent.localToScene(parentMinx, parentMinY);
-
-        double x = parentInScene.getX() +  parentStage.getX() + parent.getLayoutBounds().getWidth() +hoffset;
-        double y = parentInScene.getY() + parentStage.getY() + parent.getLayoutBounds().getHeight()  +voffset;
-
-        tp.show(parent,x,y);
-
-        tp.setAutoHide(true);
-        parent.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> tp.hide());
-
-
-
-    }
-
-
     public static Alert showAlert(Stage parent, Alert.AlertType type,String header, String title, String message, ButtonType... buttons) {
 
         Alert a = new Alert(type,message,buttons);
@@ -359,15 +301,36 @@ public class ProjectUtils {
         p.setAnimated(true);
         p.setTitle(title);
         p.setArrowLocation(arrowLocation);
-//        p.setAnchorLocation(anchorLocation);
         p.setDetachable(detachable);
         p.setAutoHide(autohide);
-//        p.setStyle("-fx-background-color:#373737");
 
         if (maxheight.length>0)p.setMaxHeight(maxheight[0]);
         p.getStyleClass().add("MyPopover");
 
         p.setCloseButtonEnabled(true);
+        return p;
+    }
+    public static PopOver showInfoPopover(String title,String message,Node g, PopOver.ArrowLocation arrowLocation,float... maxheight) {
+        VBox content = new VBox();
+        content.setAlignment(Pos.CENTER_LEFT);
+        content.setSpacing(10);
+
+        PopOver p = new PopOver(content);
+
+        p.setAnimated(true);
+        p.setTitle(title);
+        p.setArrowLocation(arrowLocation);
+        p.setDetachable(false);
+        p.setAutoHide(true);
+//        Label pl = new Label(message);
+        TextArea ta = new TextArea(message);
+        ta.setStyle("-fx-text-fill: gray;-fx-font-weight: bold");
+        p.getStyleClass().add("MyPopover");
+        p.setCloseButtonEnabled(true);
+
+        if (g == null) {
+            content.getChildren().add(ta);
+        } else content.getChildren().addAll(g, ta);
         return p;
     }
 
@@ -437,6 +400,8 @@ public class ProjectUtils {
                                 boolean setupper = params[0];
                                 if (setupper) itemText = itemText.toUpperCase();
                             }
+
+
                             setText(itemText);
 //                            setPadding(new Insets(5, 5, 5, 10));
                             setTooltip(new Tooltip(itemText));
@@ -586,8 +551,11 @@ public class ProjectUtils {
     }
 
     public static String getShortPersonName(String string,int partcount) {
-        List<String> parts = Arrays.stream(string.strip().split(" ")).map(String::strip).toList();
+        List<String> parts = new ArrayList<>(Arrays.stream(string.strip().split(" ")).map(String::strip).toList());
+        parts.removeIf(s -> s.isEmpty());
+
         StringBuilder builder = new StringBuilder();
+
 
         if (partcount > parts.size()) return string;
 
@@ -601,6 +569,32 @@ public class ProjectUtils {
         }
         return builder.toString();
 
+    }
+
+    public static String getTeacherForSubject(String subjectName,int classid) throws SQLException {
+        String person = Translator.getIntl("unavailable");
+
+        PreparedStatement ps = PgConnector.getConnection().prepareStatement("select * from permissions where classid=?");
+        ps.setInt(1, classid);
+
+        ResultSet res = ps.executeQuery();
+        while (res.next()) {
+            List<String> subjects = PgConnector.parsePgArray(res, "subjects");
+            if (subjects.contains(subjectName)) {
+                person = res.getString("teacher");
+                break;
+            }
+        }
+
+        return person;
+
+
+    }
+
+    public static Integer getSubjectCoefficient(HashMap<String, Object> cls, String subname) {
+        HashMap<String, Object> subObj = PgConnector.getObjectFromKey("subject_name", subname, "subjects");
+        assert subObj != null;
+        return PgConnector.getNumberOrNull(subObj,"subject_coefficient").intValue();
     }
 
     public static void applyDialogCaption(Stage s,Node dragArea) {
@@ -617,6 +611,19 @@ public class ProjectUtils {
                 useControls(false).
                 setCloseButtonHoverColor(Color.web(Store.Colors.deepRed))
         );
+    }
+
+    public static Label createErrLabel(String content) {
+        Label l = new Label(content);
+        l.setGraphic(createFontIcon(MaterialDesignA.ALERT_CIRCLE, 15, Paint.valueOf(Store.Colors.red)));
+        l.getStyleClass().addAll("text", "danger", "text-bold");
+        return l;
+    }
+
+    public static Label createInfoLabel(String content) {
+        Label pl = new Label(content);
+        pl.setStyle("-fx-text-fill: gray;-fx-font-weight: bold");
+        return pl;
     }
 
 

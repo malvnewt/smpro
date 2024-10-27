@@ -56,7 +56,7 @@ public class StudentClassService {
 
     //TOOLBAR CONTROLS
     Button registerBtn;
-    CheckBox toggleAllcb;
+    RadioButton toggleAllcb;
     Button refreshBtn;
     CustomTextField searchFilter;
     Button deleteSelections;
@@ -66,6 +66,7 @@ public class StudentClassService {
     Button exportexcel;
     Button generateMarksheet;
     Button importExcel;
+    Button transferBtn;
 
 
     //preperties
@@ -77,14 +78,18 @@ public class StudentClassService {
         registerGrou.addActions(ProjectUtils.capitalize(Translator.getIntl("register_student")), null, registerBtn);
 
 
-
-
         //selection_edit group
         CustomToolbarActionGroup selectionEditGroup = new CustomToolbarActionGroup();
 
-        toggleAllcb = new CheckBox();
+        toggleAllcb = new RadioButton();
         selectionEditGroup.addActions(Translator.getIntl("select_all"),
                 new ImageView(ResourceUtil.getImageFromResource("images/success.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)),toggleAllcb);
+
+
+        transferBtn = new Button("");
+        selectionEditGroup.addActions(Translator.getIntl("transfer_promote_short"),
+                new ImageView(ResourceUtil.getImageFromResource("images/success.png",
+                        Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)),transferBtn);
 
         //////////////////////////////////
         deleteSelections = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/remove_user.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
@@ -96,14 +101,7 @@ public class StudentClassService {
                 Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
         selectionEditGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("class_settings")),
                 null,editClassBtn);
-        ////////////////////////////////
 
-        searchFilter = new CustomTextField();
-        searchFilter.setMaxWidth(150);
-        searchFilter.setPromptText(Translator.getIntl("type_"));
-        searchFilter.setRight(new ImageView(ResourceUtil.getImageFromResource("images/search.png", 18, 18, true)));
-        selectionEditGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("search")),
-                null,searchFilter);
 
 
 
@@ -112,6 +110,15 @@ public class StudentClassService {
         selectionEditGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("view_edit")),
                 null,editSelection);
         editSelection.setId("images/edit.png");
+
+        ////////////////////////////////
+
+        searchFilter = new CustomTextField();
+        searchFilter.setMaxWidth(150);
+        searchFilter.setPromptText(Translator.getIntl("type_"));
+        searchFilter.setRight(new ImageView(ResourceUtil.getImageFromResource("images/search.png", 18, 18, true)));
+        selectionEditGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("search")),
+                null,searchFilter);
 
 
         //print/export group
@@ -143,7 +150,7 @@ public class StudentClassService {
         refreshBtn.setStyle("-fx-background-color: transparent");
 
 
-        for (Button b : new Button[]{editClassBtn,registerBtn, generateMarksheet, exportexcel,deleteSelections, importExcel, printClasslist, editSelection,refreshBtn}) {
+        for (Button b : new Button[]{editClassBtn,registerBtn, generateMarksheet, exportexcel,deleteSelections, importExcel, printClasslist, editSelection,refreshBtn,transferBtn}) {
             b.setCursor(Cursor.HAND);
             b.setStyle("-fx-background-color: transparent;-fx-border-width: 0");
             b.getStyleClass().add("toolbar-btn");
@@ -158,6 +165,7 @@ public class StudentClassService {
         }
 
 
+        transferBtn.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("transfer_promote")));
 
 
         return toolbarItems;
@@ -188,7 +196,7 @@ public class StudentClassService {
         });
 
 
-        toggleAllcb.setOnAction(e -> toggleSelectAll(toggleAllcb));
+        toggleAllcb.setOnAction(e -> toggleSelectAll());
 
         refreshBtn.setOnAction(e -> refreshTable());
 
@@ -207,6 +215,8 @@ public class StudentClassService {
         printClasslist.setOnAction(e -> exportStudentListToPdf());
 
         editClassBtn.setOnAction(e->openUpdateClassview());
+
+        generateMarksheet.setOnAction(e->exportMarksheetPdf());
 
 
 
@@ -306,13 +316,6 @@ public class StudentClassService {
         }
 
 
-        //fetch data
-//        String fetchAllStudents = """
-//                select students.id,students.classid,
-//                 students.firstname,students.lastname,students.gender,students.date_of_birth,students.matricule,
-//                 students.parent_one,students.address,students.place_of_birth,classes.class_abbreviation,
-//                students.admission_date,students.contact_one,students.repeater from students inner join classes on classes.id=students.classid order by firstname,lastname
-//                """;
 
         String fetchAllStudents = """
                 select * from students order by firstname,lastname
@@ -378,8 +381,8 @@ public class StudentClassService {
 
     }
 
-    public void toggleSelectAll(CheckBox toggle) {
-        if (toggle.isSelected()) {
+    public void toggleSelectAll() {
+        if (toggleAllcb.isSelected()) {
             studentTableView.currentItemSelectorP.forEach(cb -> cb.setSelected(true));
 
         } else {
@@ -400,6 +403,7 @@ public class StudentClassService {
     }
 
     public void exportStudentListToPdf() {
+
         List<String> selectedClasses = new ArrayList<>();
         List<String> selectedFields = new ArrayList<>();
         List<CheckBox> cbs = new ArrayList<>();
@@ -494,7 +498,7 @@ public class StudentClassService {
 
         fieldsVb.setStyle("-fx-background-color: "+Store.Colors.drakula);
 
-        List<String> fieldNames = List.of("firstname","lastname","gender","matricule","date_of_birth","admission_date","trade","parent_one","contact_one","repeater");
+        List<String> fieldNames = List.of("firstname","lastname","gender","parent_one","matricule","date_of_birth","admission_date","trade","contact_one");
 
         for (String f : fieldNames) {
             int index = fieldNames.indexOf(f);
@@ -571,10 +575,182 @@ public class StudentClassService {
 
 
     }
-
     public void exportMarksheetPdf() {
 
+        List<String> selectedClasses = new ArrayList<>();
+        HashMap<Integer, Integer> cidTocountMap = new HashMap<>();
+
+
+        List<CheckBox> cbs = new ArrayList<>();
+
+        HBox dlgContent = new HBox();
+        dlgContent.setAlignment(Pos.CENTER_LEFT);
+        dlgContent.setSpacing(10);
+        VBox.setVgrow(dlgContent,Priority.ALWAYS);
+
+        List<HashMap<String, Object>> sortedclasses = PgConnector.fetch("select * from classes order by level,classname", PgConnector.getConnection());
+
+        List<CheckBox> classCbs = new ArrayList<>();
+
+        GridPane pane = new GridPane();
+        pane.setVgap(10);
+        pane.setHgap(12);
+        pane.setAlignment(Pos.CENTER_LEFT);
+        ScrollPane scrollPane = new ScrollPane(pane);
+
+        int classcount = sortedclasses.size();
+        int colcount= 3;
+
+
+
+
+        for (HashMap<String, Object> cls : sortedclasses) {
+
+            String shortname = PgConnector.getFielorBlank(cls, "class_abbreviation");
+            String fullname = PgConnector.getFielorBlank(cls, "classname");
+            Number classid = PgConnector.getNumberOrNull(cls, "id");
+            int studentCount = PgConnector.fetch(String.format("select * from students where classid=%d", classid.intValue()),PgConnector.getConnection()).size();
+
+            HBox container = new HBox();
+            container.setSpacing(5);
+            container.setAlignment(Pos.CENTER_LEFT);
+            container.setPadding(new Insets(4));
+
+            CheckBox cb = new CheckBox(shortname.toUpperCase());
+            Label countLabel = new Label("1");// One copy
+
+
+
+            cb.setId(String.valueOf(classid));
+            cb.setTooltip(ProjectUtils.createTooltip(ProjectUtils.capitalize(fullname)));
+            cb.setStyle("-fx-font-weight: bold");
+            cb.setMinWidth(80);
+            cb.setMaxWidth(80);
+            cb.selectedProperty().addListener((o,old,selected)->{
+                if (selected) {
+
+                    selectedClasses.add(cb.getId());
+                    if (cidTocountMap.containsKey(classid.intValue())) {
+                        cidTocountMap.replace(classid.intValue(), Integer.parseInt(countLabel.getText()));
+                    } else {
+                        cidTocountMap.put(classid.intValue(), Integer.parseInt(countLabel.getText()));
+                    }
+
+                } else {
+                    selectedClasses.remove(cb.getId());
+                    cidTocountMap.remove(classid.intValue());
+                }
+            });
+
+            cbs.add(cb);
+
+            int index = sortedclasses.indexOf(cls);
+
+            int row = index/colcount;
+            int col = index % colcount;
+
+            Button plusBtn = new Button("",ProjectUtils.createFontIconColored(MaterialDesignP.PLUS,15,Paint.valueOf(Store.Colors.green)));
+            Button minusBtn = new Button("",ProjectUtils.createFontIconColored(MaterialDesignM.MINUS,15,Paint.valueOf(Store.Colors.White)));
+            plusBtn.setMaxSize(15,15);
+            minusBtn.setMaxSize(15,15);
+
+            countLabel.getStyleClass().add("text-bold");
+            countLabel.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignA.ACCOUNT, 15, Paint.valueOf("lightgray")));
+
+            plusBtn.setOnAction(e -> {
+                countLabel.setText(String.valueOf(Integer.parseInt(countLabel.getText()) + 1));
+                if (cidTocountMap.containsKey(classid.intValue())) {
+                    cidTocountMap.replace(classid.intValue(), Integer.parseInt(countLabel.getText()));
+                } else {
+                    cidTocountMap.put(classid.intValue(), Integer.parseInt(countLabel.getText()));
+                }
+
+            });
+            minusBtn.setOnAction(e->{
+                int currentcount = Integer.parseInt(countLabel.getText());
+                if (currentcount > 0) {
+                    int newocount = currentcount -1;
+                    countLabel.setText(String.valueOf(newocount));
+                }
+
+                if (cidTocountMap.containsKey(classid.intValue())) {
+                    cidTocountMap.replace(classid.intValue(), Integer.parseInt(countLabel.getText()));
+                } else {
+                    cidTocountMap.put(classid.intValue(), Integer.parseInt(countLabel.getText()));
+                }
+
+            });
+
+
+            container.setStyle("-fx-border-width: 1;-fx-border-color: " + Store.Colors.Gray);
+            container.getChildren().addAll(cb,ProjectUtils.createHspacer(10),minusBtn,countLabel,plusBtn);
+//            container.getChildren().addAll(cb,ProjectUtils.createHspacer(10),countLabel);
+
+            pane.add(container, col, row);
+
+        }
+
+
+
+        dlgContent.getChildren().addAll(scrollPane);
+        HBox.setHgrow(scrollPane,Priority.ALWAYS);
+
+        //
+
+        //load the view
+        FXMLLoader dlgLoader = new FXMLLoader(ResourceUtil.getAppResourceURL("views/dialog-view.fxml"),
+                ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
+
+        try {
+            Parent root = dlgLoader.load();
+
+            Stage stage = new Stage();
+            stage.initOwner(mainStage.getOwner());
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+//            double contentwidth = pane.getWidth() + fieldsVb.getWidth();
+//            double contentHeight = pane.getHeight();
+
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+
+            GenericDialogController controller = dlgLoader.getController();
+            controller.dlgTitle.setText(Translator.getIntl("set_classes_toprint"));
+            controller.content.getChildren().add(dlgContent);
+            controller.thisStage.set(stage);
+            controller.confirmBtn.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignP.PRINTER, 20, Paint.valueOf("white")));
+            controller.confirmBtn.setText(Translator.getIntl("print"));
+
+
+            controller.confirmBtn.setOnAction(e -> controller.printMarkSheets(
+                    selectedClasses.stream().map(cid -> ProjectUtils.getObject(cid, "classes")).toList(),
+                    selectedClasses.stream().map(c -> "").toList(),
+                    selectedClasses.stream().map(c -> cidTocountMap.get(Integer.parseInt(c))).toList()
+            ));
+
+            //add other controls
+            CheckBox toggleselect = new CheckBox(Translator.getIntl("toggle_select_all"));
+            toggleselect.selectedProperty().addListener((o, old, selected) -> {
+                if (selected) {
+                    cbs.forEach(item -> item.setSelected(true));
+                } else cbs.forEach(item -> item.setSelected(false));
+            });
+            controller.optionalTools.getChildren().add(toggleselect);
+
+
+            ProjectUtils.applyDialogCaption(stage, controller.dragbox);
+
+            stage.showAndWait();
+
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
+
+
     public void exportMarksheetExcel() {
 
     }
@@ -637,7 +813,8 @@ public class StudentClassService {
 
 
         Alert a = ProjectUtils.showAlert(mainStage, Alert.AlertType.WARNING, Translator.getIntl("do_you_delete"),
-                "WARNING", cleanedSelections.size()<=15 ? builder.toString(): Translator.getIntl("note_ireversible"), ButtonType.NO, ButtonType.YES, ButtonType.CANCEL);
+                "WARNING", cleanedSelections.size() <= 15 ? builder.toString() :
+                        String.format("%s \n%d %s", Translator.getIntl("note_ireversible"), cleanedSelections.size(), Translator.getIntl("students")), ButtonType.NO, ButtonType.YES, ButtonType.CANCEL);
         Optional<ButtonType> res = a.showAndWait();
         res.ifPresent(b->{
             if (Objects.equals(b, ButtonType.YES)) {
@@ -656,16 +833,31 @@ public class StudentClassService {
 
     }
 
+
+
     public void refreshTable() {
         toggleAllcb.setSelected(false);
         String q ;
         HashMap<String,Object> item = studentSections.selectedClassProperty.get();
 
-        if (item==null|| item.get("id").equals("allitem")) {
+        if (Objects.equals(null,item)) {
             q = "select * from students order by firstname";
-        } else {
-            int cid = Integer.parseInt(PgConnector.getFielorBlank(studentSections.selectedClassProperty.get(), "id"));
-            q = String.format("select * from students where classid=%d order by firstname", cid);
+
+        }else {
+            if (Objects.equals("allitem", item.get("id"))) {
+                q = "select * from students order by firstname";
+
+            } else {
+
+                try {
+
+                    int cid = Integer.parseInt(PgConnector.getFielorBlank(studentSections.selectedClassProperty.get(), "id"));
+                    q = String.format("select * from students where classid=%d order by firstname", cid);
+                } catch (NumberFormatException nerr) {
+                    q = "select * from students order by firstname";
+
+                }
+            }
         }
 
         //filter table

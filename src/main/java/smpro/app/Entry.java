@@ -19,6 +19,7 @@ import javafx.scene.paint.Paint;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import smpro.app.controllers.AddStudentController;
 import smpro.app.custom_titlebar.CaptionConfiguration;
 import smpro.app.custom_titlebar.CustomCaption;
 import smpro.app.utils.PgConnector;
@@ -26,12 +27,17 @@ import smpro.app.utils.ProjectUtils;
 import smpro.app.utils.Store;
 import smpro.app.utils.Translator;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.*;
 
 public class Entry extends Application {
@@ -54,7 +60,20 @@ public class Entry extends Application {
             SessionHandler.connectToProjectDb();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+
+            //handle failed connection
+
         }
+
+
+        Store.DbsubjectCategories.addAll(PgConnector.listHashAttrs(PgConnector.fetch("select * from subject_categories order by category_name",
+                PgConnector.getConnection()), "category_name"));
+
+        //////////////////////////////////////////////////  perform migrations from old version
+        //////////////////////////////////////////////////
+//        performDbMigrations();
+        //////////////////////////////////////////////////
+        //////////////////////////////////////////////////
 
 
 
@@ -112,6 +131,162 @@ public class Entry extends Application {
     public static void main(String[] args) {
         launch();
     }
+
+
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    public void performDbMigrations() {
+        try {
+            System.out.println("PERFORMING MIGRATIONS FROM THE OLD PRODUCT");
+            Connection oldconnection = PgConnector.initConnect("pae_2023_2024", "localhost");
+            Connection newconnection = PgConnector.initConnect("pae_2024_2025", "localhost");
+
+            //insert students
+
+            List<HashMap<String, Object>> oldStudents = PgConnector.fetch("select * from students", oldconnection);
+
+
+            for (HashMap<String, Object> sOld : oldStudents) {
+                String fullname = PgConnector.getFielorBlank(sOld, "full_name");
+                String dob = PgConnector.getFielorBlank(sOld, "date of birth");
+
+                String fname = fullname.substring(0, fullname.indexOf(" ")).strip();
+                String lname = fullname.substring(fullname.indexOf(" ")).strip();
+
+                String delimiter = dob.contains("-") ? "-" : "/";
+                LocalDate dobLocaldate;
+                if (delimiter.equals("-")) {
+                    int year = Integer.parseInt(dob.strip().split(delimiter)[2]);
+                    int day = Integer.parseInt(dob.strip().split(delimiter)[0]);
+
+//                    int temp;
+//                    if (String.valueOf(year).length()<4){
+//                        temp = day;
+//                        day=year;
+//                        year=temp;
+//                    }
+
+                    try {
+                        dobLocaldate = LocalDate.of(
+                                year,
+                                Integer.parseInt(dob.strip().split(delimiter)[1]),
+                                day  );
+
+                    } catch (DateTimeException derr) {
+                        dobLocaldate = LocalDate.of(
+                                day,
+                                Integer.parseInt(dob.strip().split(delimiter)[1]),
+                                year  );
+
+                    }
+
+
+
+
+                } else {
+
+
+                    try {
+                        dobLocaldate = LocalDate.of(
+                                Integer.parseInt(dob.strip().split(delimiter)[0]),
+                                Integer.parseInt(dob.strip().split(delimiter)[1]),
+                                Integer.parseInt(dob.strip().split(delimiter)[2])
+                        );
+                    } catch (DateTimeException derr2) {
+                        dobLocaldate = LocalDate.of(
+                                Integer.parseInt(dob.strip().split(delimiter)[2]),
+                                Integer.parseInt(dob.strip().split(delimiter)[1]),
+                                Integer.parseInt(dob.strip().split(delimiter)[1])
+                        );
+                    }
+
+                }
+
+                String birthplace = PgConnector.getFielorBlank(sOld, "place of birth");
+                String address = PgConnector.getFielorBlank(sOld, "address");
+                String sex = PgConnector.getFielorBlank(sOld, "sex");
+                String trade = PgConnector.getFielorBlank(sOld, "trade");
+                String parent = PgConnector.getFielorBlank(sOld, "parent");
+                boolean repeater = Boolean.parseBoolean(PgConnector.getFielorBlank(sOld, "repeater"));
+                String contact = PgConnector.getFielorBlank(sOld, "contact");
+                int classid = PgConnector.getNumberOrNull(sOld, "class").intValue();
+
+                int sectionid = PgConnector.getNumberOrNull(sOld, "section").intValue();
+                List<HashMap<String, Object>> foundSection = PgConnector.fetch
+                        (String.format("select * from sections where id=%d", sectionid), oldconnection);
+
+
+                //transfer
+                String q = """
+                        insert into students\s
+                        (
+                        classid,section,trade,
+                        firstname,lastname,
+                        place_of_birth,address,
+                                        
+                        admission_date,date_of_birth,
+                                        
+                        parent_one,contact_one,
+                    
+                        gender,repeater,
+                        matricule
+                                        
+                        )
+                                        
+                        values  (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                                        
+                        """;
+
+
+                try (PreparedStatement insert = PgConnector.getConnection().prepareStatement(q)) {
+
+                    insert.setInt(1, classid);
+                    insert.setString(2, PgConnector.getFielorBlank(foundSection.get(0), "section"));
+                    insert.setString(3, trade);
+
+                    insert.setString(4, fname);
+                    insert.setString(5, lname);
+                    insert.setString(6, birthplace);
+                    insert.setString(7, address);
+
+                    insert.setLong(8, java.time.Instant.now().minusMillis(1*Store.EPOCK_DAY_MILLISECS).toEpochMilli());
+                    insert.setLong(9, dobLocaldate.toEpochDay()*Store.EPOCK_DAY_MILLISECS);
+
+                    insert.setString(10, parent);
+                    insert.setString(11, contact);
+//                    insert.setString(12, lParentP.get());
+//                    insert.setString(13, lcontactP.get());
+
+                    insert.setString(12, sex);
+                    insert.setBoolean(13, repeater);
+                    insert.setString(14, AddStudentController.genMatricule(fname, lname));
+
+
+                    // insert
+//                    System.out.println(insert);
+
+//                    insert.executeUpdate();
+
+
+                } catch (Exception err) {
+                    err.printStackTrace();
+                }
+
+
+
+
+        }
+
+
+    } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+
 }
 
 
