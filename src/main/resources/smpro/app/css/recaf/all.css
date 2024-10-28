@@ -4,3 +4,23 @@
 @import "code-editor.css";
 @import "recaf.css";
 @import "global.css";
+
+.money {
+    -fx-font-family: "Courier New";
+    /*-fx-font-smoothing-type: lcd;*/
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+}
+
+.dotted-border {
+    -fx-border-color: #5e5e5e;
+    -fx-border-style: dashed;
+    -fx-border-width: 1;
+
+}
+
+.transparent-bg {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+
+}
