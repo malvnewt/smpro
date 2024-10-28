@@ -1142,7 +1142,13 @@ public class SettingsController implements Initializable {
             addSubjectController.thisStage.set(stage);
 
             addSubjectController.prepareUpdate(selectedSubject);
-            addSubjectController.confirmBtn.setOnAction(ev -> addSubjectController.update(selectedSubject));
+            addSubjectController.confirmBtn.setOnAction(ev -> {
+                try {
+                    addSubjectController.update(selectedSubject);
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
 
             ProjectUtils.applyDialogCaption(stage,addSubjectController.dragArea);
 

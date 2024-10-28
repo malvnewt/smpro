@@ -342,6 +342,11 @@ class SessionHandler {
             stage.showAndWait();
 
 
+            // CONNECTION SUCCESSFULL
+            PgConnector.update("CREATE EXTENSION IF NOT EXISTS hstore"); // for Map k,v pairs
+
+
+
 
 
         } catch (SQLException e) {

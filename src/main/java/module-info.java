@@ -42,6 +42,8 @@ module smpro.app {
     requires com.itextpdf.kernel;
     requires com.itextpdf.layout;
 
+    requires com.google.gson;
+
 
     opens smpro.app to javafx.fxml;
     opens smpro.app.controllers to javafx.fxml;

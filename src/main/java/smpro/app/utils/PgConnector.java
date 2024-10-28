@@ -1,13 +1,13 @@
 package smpro.app.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.postgresql.jdbc.PgArray;
+import org.postgresql.util.PGobject;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
-import java.security.cert.CertificateRevokedException;
 import java.sql.*;
 import java.util.*;
 
@@ -231,6 +231,55 @@ public class PgConnector {
 //            throw new RuntimeException(e);
         }
         return out;
+    }
+
+    public static HashMap<String, String> parsePgMapString(String pgMap, String... replacement) {
+
+        HashMap<String, String> map = new HashMap<>();
+        String bracesFreeString = pgMap.replaceAll("\\{", "").replaceAll("}", "");
+        List<String> equalToSeperatedPairs = Arrays.stream(bracesFreeString.split(",")).toList();
+        for (String pair : equalToSeperatedPairs) {
+            String k = pair.strip().split("=")[0].replace(" ", "");
+            String v = pair.strip().split("=")[1].replace(" ", "");
+            if (replacement.length > 0) {
+                k = k.replaceAll(replacement[0], "");
+                v = v.replaceAll(replacement[0], "");
+            }
+            if (!map.containsKey(k)) {
+                map.put(k, v);
+            } else map.replace(k, v);
+        }
+
+        return map;
+    }
+
+    public static PGobject getJsonbObject(HashMap<?,?> map) {
+
+        PGobject pGobject = new PGobject();
+        pGobject.setType("jsonb");
+        try {
+            pGobject.setValue(new Gson().toJson(map.toString()));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return pGobject;
+    }
+
+    public static HashMap<String,String> getMapFromJsonB(PGobject jsonb) {
+        Gson gson = new Gson();
+        JsonElement jsonElement = gson.fromJson(jsonb.getValue(), JsonElement.class);
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+
+        HashMap<String,String> map = new HashMap<>();
+
+        for (String k : map.keySet()) {
+            if (!map.containsKey(k)) {
+                map.put(k, jsonObject.get(k).getAsString());
+            }else map.replace(k, jsonObject.get(k).getAsString());
+        }
+
+        return map;
+
     }
 
     public static List<String> aggregatePgArray(ResultSet rs, String key) {

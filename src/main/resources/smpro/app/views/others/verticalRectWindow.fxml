@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="325.0"
+      spacing="10.0" style="-fx-border-radius: 5em;" stylesheets="@../../css/recaf/all.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="smpro.app.controllers.VerticalRectController">
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+   <children>
+      <HBox>
+         <children>
+            <Label fx:id="title" prefHeight="17.0" prefWidth="277.0" styleClass="section-title" stylesheets="@../../css/recaf/all.css" text="%select_subjets" />
+            <Button fx:id="closetP" mnemonicParsing="false" styleClass="transparent-btn" />
+         </children>
+      </HBox>
+      <Separator prefWidth="200.0" />
+      <HBox fx:id="searchcontainer" alignment="CENTER_LEFT" />
+      <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+         <content>
+            <VBox fx:id="itemcvb" prefHeight="200.0" prefWidth="100.0" />
+         </content>
+      </ScrollPane>
+      <Separator prefWidth="200.0" />
+      <HBox alignment="CENTER_RIGHT" spacing="5.0">
+         <children>
+            <Button fx:id="toffleselectAllBtn" minHeight="30.0" minWidth="50.0" mnemonicParsing="false" />
+            <Button fx:id="viewSelectedBtn" minHeight="30.0" minWidth="50.0" mnemonicParsing="false" />
+            <HBox maxHeight="30.0" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+            <Separator maxHeight="30.0" orientation="VERTICAL" prefHeight="200.0" />
+            <ButtonBar maxWidth="100.0" prefHeight="40.0" prefWidth="159.0">
+              <buttons>
+                  <Button fx:id="confirmBtn" defaultButton="true" maxWidth="50.0" minHeight="30.0" mnemonicParsing="false" text="OK" />
+              </buttons>
+            </ButtonBar>
+         </children>
+      </HBox>
+   </children>
+   <effect>
+      <InnerShadow>
+         <color>
+            <Color opacity="0.5" />
+         </color>
+      </InnerShadow>
+   </effect>
+</VBox>

@@ -52,7 +52,17 @@
             <Label text="%department_head" GridPane.rowIndex="5" />
             <TextField fx:id="namefield" promptText="eg computer science" GridPane.columnIndex="1" />
             <TextField fx:id="abbrfield" promptText="eg C.S" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="coefField" promptText="eg 5" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <children>
+                  <TextField fx:id="coefField" maxWidth="70.0" promptText="eg 5" />
+                  <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label text="%class_coefficients" />
+                     </children>
+                  </HBox>
+                  <Button fx:id="classcoefBtn" maxWidth="30.0" minWidth="30.0" mnemonicParsing="false" style="-fx-border-color: #444444; -fx-border-width: 2;" styleClass="transparent-bg" />
+               </children>
+            </HBox>
             <TextField fx:id="headField" promptText="eg Mr John Doe" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <HBox alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <children>

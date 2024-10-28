@@ -157,8 +157,8 @@ public class EntryController implements Initializable {
             "teachers","teachers.png",
             "classes_menu","students3.png",
             "score_records","marksheet.png",
-            "timetable","timetable2.png",
             "human_resource","hr4.png",
+            "timetable","timetable2.png",
             "reports_transcripts","reports3.png",
             "announcement","messages2.png"
     ));

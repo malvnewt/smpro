@@ -113,8 +113,8 @@ public class Store {
             "teachers",
             "classes_menu",
             "score_records",
-            "timetable",
             "human_resource",
+            "timetable",
             "reports_transcripts",
             "announcement",
 
