@@ -1,21 +1,13 @@
 package smpro.app;
 
 
-import eu.hansolo.tilesfx.Demo;
 import javafx.application.Application;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
-import javafx.scene.effect.Light;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -27,18 +19,18 @@ import smpro.app.utils.ProjectUtils;
 import smpro.app.utils.Store;
 import smpro.app.utils.Translator;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.Period;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class Entry extends Application {
 
@@ -60,11 +52,9 @@ public class Entry extends Application {
             SessionHandler.connectToProjectDb();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-
             //handle failed connection
-
         }
-
+        Store.EntryStage.set(stage);
 
         Store.DbsubjectCategories.addAll(PgConnector.listHashAttrs(PgConnector.fetch("select * from subject_categories order by category_name",
                 PgConnector.getConnection()), "category_name"));
@@ -74,8 +64,6 @@ public class Entry extends Application {
 //        performDbMigrations();
         //////////////////////////////////////////////////
         //////////////////////////////////////////////////
-
-
 
 
         URL mainurl = ResourceUtil.getAppResourceURL("views/entry-view.fxml");
@@ -90,14 +78,18 @@ public class Entry extends Application {
         String title = String.format("%s %s\u2800 \u2800 \u2800 %s \u2800 \u2800%s %s %s", "SM\u2796PRO",Store.UnicodeSumnbol.tm,
                 ProjectUtils.getFormatedDate(new Date().getTime(), DateFormat.getDateInstance(DateFormat.FULL,
                         Translator.getLocale())),Store.UnicodeSumnbol.leftSquarebracket,"SERVER SESSION",Store.UnicodeSumnbol.rightSquarebracket);
-        stage.setTitle(title.toUpperCase()); // TODO :: SET UNDECORATED TITLE
+        stage.setTitle(title.toUpperCase());
 
         stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
-
-
         stage.setScene(scene);
-        stage.show();
 
+        // all done. Now action data is hydrated
+        EntryController entryController = fxmlLoader.getController();
+        entryController.configureMenuActions();
+
+        stage.show();
+        stage.setMaxHeight(stage.getHeight());
+        stage.setMaxWidth(stage.getWidth());
 
 
         MenuBar menuBar = (MenuBar) fxmlLoader.getNamespace().get("menubar");
@@ -122,6 +114,8 @@ public class Entry extends Application {
         stage.setMinWidth(0.7 * screenWidth);
         stage.centerOnScreen();
         menuBar.requestFocus();
+        stage.setResizable(false);
+
 
 
 
@@ -300,7 +294,6 @@ class SessionHandler {
 
         try {
              baseconn =  PgConnector.initConnect(PgConnector.baseDbname,PgConnector.dbHost);
-            System.out.println(baseconn);
             PgConnector.baseConnection.set(baseconn);
 
             URL url = ResourceUtil.getAppResourceURL("views/others/connect.fxml");
@@ -338,6 +331,8 @@ class SessionHandler {
             List<HashMap<String, Object>> dbObjects = PgConnector.fetch("select * from  databases order by id",PgConnector.baseConnection.get()
             );
             controller.dbs.set(FXCollections.observableList(dbObjects));
+
+            Store.dbNamesProperty.set(FXCollections.observableList(dbObjects.stream().map(db -> PgConnector.getFielorBlank(db, "name")).toList()));
 
             stage.showAndWait();
 

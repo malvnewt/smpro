@@ -1,6 +1,9 @@
 package smpro.app.controllers;
 
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +31,7 @@ import org.kordamp.ikonli.materialdesign2.MaterialDesignB;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
 import org.kordamp.ikonli.materialdesign2.MaterialDesignP;
 import smpro.app.ResourceUtil;
+import smpro.app.services.HrService;
 import smpro.app.utils.PgConnector;
 import smpro.app.utils.ProjectUtils;
 import smpro.app.utils.Store;
@@ -84,6 +88,10 @@ public class AddClassController implements Initializable {
     public ImageView appIcon;
     public Button closedlg;
     public HBox formatContainer;
+    public TextField ptaf;
+    public TextField feef;
+    public HBox totall;
+    public Label totalLabel;
 
 
     List<Button> editBtns  = new ArrayList<>();
@@ -97,6 +105,10 @@ public class AddClassController implements Initializable {
     StringProperty shortNameP = new SimpleStringProperty();
     StringProperty classMasterP = new SimpleStringProperty();
     StringProperty sectionP = new SimpleStringProperty();
+
+    StringProperty totalP = new SimpleStringProperty();
+    StringProperty ptaP = new SimpleStringProperty();
+    StringProperty feeP = new SimpleStringProperty();
 
     IntegerProperty cycleP = new SimpleIntegerProperty(1);
     IntegerProperty levelP = new SimpleIntegerProperty(1);
@@ -204,12 +216,38 @@ public class AddClassController implements Initializable {
 
 
         //bind main class fields
+        feeP.bind(feef.textProperty());
+        ptaP.bind(ptaf.textProperty());
+        totalLabel.textProperty().bind(totalP);
+
+        feeP.addListener((observableValue, s, t1) -> {
+            try {
+                totalP.set(HrService.formatNumberToCurency(Integer.parseInt(Objects.equals(feef.getText(), "") ?"0":feeP.get()) +
+                        Integer.parseInt(Objects.equals(ptaf.getText(), "") ?"0":ptaP.get())));
+                System.out.println("new totalP >> "+totalP.get());
+            } catch (NumberFormatException ner) {
+                ner.printStackTrace();
+            }
+        });
+
+        ptaP.addListener((observableValue, s, t1) -> {
+            try {
+                totalP.set(HrService.formatNumberToCurency(Integer.parseInt(Objects.equals(feef.getText(), "") ?"0":feeP.get()) +
+                        Integer.parseInt(Objects.equals(ptaf.getText(), "") ?"0":ptaP.get())));
+                System.out.println("new totalP >> "+totalP.get());
+            } catch (NumberFormatException ner) {
+                ner.printStackTrace();
+            }
+        });
+
+
         shortNameP.bind(shortnamefield.textProperty());
         classnameP.bind(classnamefiled.textProperty());
         classMasterP.bind(classmastercombo.valueProperty());
         cycleP.bind(cyclecombo.valueProperty());
         levelP.bind(levelcombo.valueProperty());
         sectionP.bind(sectioncombo.valueProperty());
+
 
         //bind presets combo
         formatsCombo.valueProperty().addListener((o,old,newClassObj)->{
@@ -273,6 +311,11 @@ public class AddClassController implements Initializable {
 
         });
 
+        for (TextField t : new TextField[]{feef, ptaf}) {
+            t.textProperty().addListener((o, f, l) -> t.setText(l.replaceAll("\\D", "")));
+
+        }
+
 
 
 
@@ -280,6 +323,9 @@ public class AddClassController implements Initializable {
 
 
     public void initUi() throws SQLException {
+        ptaf.setText("0");
+        feef.setText("0");
+
         appIcon.setImage(ResourceUtil.getImageFromResource("images/plus.png", (int) appIcon.getFitWidth(), (int) appIcon.getFitHeight(), true));
         caption.setText(ProjectUtils.capitalize(Translator.getIntl("add_new_class")));
         caption.getStyleClass().add("caption-text");
@@ -507,6 +553,13 @@ public class AddClassController implements Initializable {
             }
         });
 
+        //tooltips
+        sectioncombo.valueProperty().addListener((o, f, l) -> sectioncombo.setTooltip(ProjectUtils.createTooltip(l.toUpperCase())));
+        classMasterP.addListener((o, f, l) -> classmastercombo.setTooltip(ProjectUtils.createTooltip(l.toUpperCase())));
+        classnameP.addListener((o, f, l) -> classnamefiled.setTooltip(ProjectUtils.createTooltip(l.toUpperCase())));
+
+        ptaf.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("optional_ptaamount")));
+
 
 
 
@@ -517,8 +570,6 @@ public class AddClassController implements Initializable {
         PreparedStatement ps = PgConnector.getConnection().prepareStatement("select * from classes where id=?");
         ps.setInt(1, cid);
 
-        System.out.println(ps);
-
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
@@ -527,8 +578,12 @@ public class AddClassController implements Initializable {
             String section = rs.getString("section");
             int cyc = rs.getInt("cycle");
             int levle = rs.getInt("level");
+
             String cmaster = rs.getString("class_master");
 
+//            int registrationfee = rs.getInt("registration");
+            int ptafee = rs.getInt("pta");
+            int schoolfee = rs.getInt("fee");
 
             //sub groups
            List<String> groupa = PgConnector.parsePgArray(rs,"subjects_ga");
@@ -570,6 +625,11 @@ public class AddClassController implements Initializable {
                 }).toList());
 
             }
+
+
+            feef.setText(String.valueOf(schoolfee));
+            ptaf.setText(String.valueOf(ptafee));
+            totalP.set(HrService.formatNumberToCurency(schoolfee + ptafee));
 
 
             classnamefiled.setText(name);
@@ -712,10 +772,12 @@ public class AddClassController implements Initializable {
 
 
         List<ComboBox<?>> numberFields = List.of(cyclecombo,levelcombo,sectioncombo);
-        List<TextField> textFields = List.of(classnamefiled,shortnamefield);
+        List<TextField> textFields = List.of(classnamefiled,shortnamefield,feef);
 
         List<String> stringErrors = List.of(
-                Translator.getIntl("classname"), Translator.getIntl("abbreviation")
+                Translator.getIntl("classname"),
+                Translator.getIntl("abbreviation"),
+                Translator.getIntl("required_for_human_resource_stats")
         );
 
         List<String> numberErrors = List.of(
@@ -795,12 +857,16 @@ public class AddClassController implements Initializable {
         if (!isvalidForm)  return false;
 
 
+        int pta = Objects.equals(null, ptaP.get()) || ptaP.get().isEmpty() ? 0 : Integer.parseInt(ptaP.get());
+        int feeamount = Integer.parseInt(feeP.get());
 
         String query = """
                 insert into classes 
                 ( classname,class_abbreviation,section,class_master,cycle,level,
-                subjects_ga,subjects_gb,subjects_gc,subjects_gd,compulsory_subjects)  values
-                (?,?,?,?,?,?,?,?,?,?,?)
+                subjects_ga,subjects_gb,subjects_gc,subjects_gd,compulsory_subjects,
+                pta,fee
+                )  values
+                (?,?,?,?,?,?,?,?,?,?,?,?,?)
                 
                 
                 """;
@@ -823,6 +889,10 @@ public class AddClassController implements Initializable {
         insertStatement.setArray(9, con.createArrayOf("text", ProjectUtils.getUniqueValues(catCsubs.get()).toArray()));
         insertStatement.setArray(10, con.createArrayOf("text", ProjectUtils.getUniqueValues(catDsubs.get()).toArray()));
         insertStatement.setArray(11, con.createArrayOf("text", ProjectUtils.getUniqueValues(compulsorySubsP.get()).toArray()));
+
+        insertStatement.setInt(12, pta);
+        insertStatement.setInt(13, feeamount);
+
 
         insertStatement.executeUpdate();
 
@@ -855,10 +925,12 @@ public class AddClassController implements Initializable {
 
 
         List<ComboBox<?>> numberFields = List.of(cyclecombo,levelcombo,sectioncombo);
-        List<TextField> textFields = List.of(classnamefiled,shortnamefield);
+        List<TextField> textFields = List.of(classnamefiled,shortnamefield,feef);
 
         List<String> stringErrors = List.of(
-                Translator.getIntl("classname"), Translator.getIntl("abbreviation")
+                Translator.getIntl("classname"), Translator.getIntl("abbreviation"),
+                Translator.getIntl("required_for_human_resource_stats")
+
         );
 
         List<String> numberErrors = List.of(
@@ -946,11 +1018,14 @@ public class AddClassController implements Initializable {
         }
 
 
-
+        int pta = Objects.equals(null, ptaP.get()) || ptaP.get().isEmpty() ? 0 : Integer.parseInt(ptaP.get());
+        int feeamount = Integer.parseInt(feeP.get());
 
         String updateQuery = """
                 update classes set classname=?,class_abbreviation=?,section=?,class_master=?,cycle=?,
-                level=?,subjects_ga=?,subjects_gb=?,subjects_gc=?,subjects_gd=?,compulsory_subjects=? where id=?
+                level=?,subjects_ga=?,subjects_gb=?,subjects_gc=?,subjects_gd=?,compulsory_subjects=?,
+                pta=?,fee=?
+                 where id=?
                 """;
 
 
@@ -972,7 +1047,10 @@ public class AddClassController implements Initializable {
         insertStatement.setArray(10, con.createArrayOf("text", ProjectUtils.getUniqueValues(catDsubs.get()).toArray()));
         insertStatement.setArray(11, con.createArrayOf("text", ProjectUtils.getUniqueValues(compulsorySubsP.get()).toArray()));
 
-        insertStatement.setInt(12, cid);
+        insertStatement.setInt(12, pta);
+        insertStatement.setInt(13, feeamount);
+
+        insertStatement.setInt(14, cid);
 
         System.out.println(insertStatement);
 

@@ -11,7 +11,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 import smpro.app.custom_titlebar.CaptionConfiguration;
 import smpro.app.utils.Store;

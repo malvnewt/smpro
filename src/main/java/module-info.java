@@ -31,9 +31,9 @@ module smpro.app {
     //custom caption
 //    requires lombok;
     requires org.jetbrains.annotations;
-    requires com.sun.jna.platform;
-    requires com.sun.jna;
-    requires lombok;
+//    requires com.sun.jna.platform;
+//    requires com.sun.jna;
+//    requires lombok;
 
 
    // ITEXT 7 FOR PDF
@@ -43,6 +43,9 @@ module smpro.app {
     requires com.itextpdf.layout;
 
     requires com.google.gson;
+
+    requires com.sun.jna.platform;
+    requires com.sun.jna;
 
 
     opens smpro.app to javafx.fxml;

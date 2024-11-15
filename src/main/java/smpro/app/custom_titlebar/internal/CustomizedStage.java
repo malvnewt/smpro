@@ -17,7 +17,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.robot.Robot;
 import javafx.stage.Stage;
 
-import lombok.Getter;
 
 import smpro.app.ResourceUtil;
 import smpro.app.custom_titlebar.CaptionConfiguration;
@@ -36,9 +35,7 @@ import static com.sun.jna.platform.win32.WinUser.*;
 
 public class CustomizedStage {
 
-    @Getter
     public final Stage stage;
-    @Getter
     public CaptionConfiguration config;
     private WinDef.HWND hWnd;
     private BaseTSD.LONG_PTR defWndProc;

@@ -17,6 +17,7 @@ import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.kernel.pdf.colorspace.PdfColorSpace;
@@ -217,7 +218,7 @@ class PdfHelper{
 
 
         //set page event handler
-        this.pdfdoc.addEventHandler(START_PAGE, new PageFooterEventHandler(this.doc, "page",
+        this.pdfdoc.addEventHandler(END_PAGE, new PageFooterEventHandler(this.doc, "page",
                Translator.getIntl("printed_on")+ " "+ ProjectUtils.getFormatedDateTime(new Date().getTime(),DateFormat.getDateTimeInstance(0,2,
                        Translator.getLocale()))));
 
@@ -964,21 +965,32 @@ class QrCellRender extends CellRenderer {
 
     PdfFont footerFont = PdfFontFactory.createFont("Helvetica-Oblique", PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED);
     PdfFont helveticaBold = PdfFontFactory.createFont("Helvetica-Bold", PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED);
+    PdfFont courierBold = PdfFontFactory.createFont("Courier-Bold", PdfFontFactory.EmbeddingStrategy.PREFER_NOT_EMBEDDED);
 
-    public PageFooterEventHandler(Document doc,String middleContent,String endContent) throws IOException {
+     private String wmark = "";
+
+    public PageFooterEventHandler(Document doc,String middleContent,String endContent,String... watermark) throws IOException {
         this.doc = doc;
         this.middlecontent = middleContent;
         this.endcontent = endContent;
+
+        if (watermark.length > 0) {
+            wmark = watermark[0];
+        } else {
+            HashMap<String, Object> base = PgConnector.getObjectFromId(1, "base");
+            assert base != null;
+            wmark = PgConnector.getFielorBlank(base, "school_abbr");
+        }
     }
     @Override
     public void handleEvent(Event event) {
         PdfDocumentEvent docEvent = (PdfDocumentEvent) event;
+        PdfPage page =docEvent.getPage();
+        Rectangle pageSize = page.getPageSize();
         PdfCanvas canvas = new PdfCanvas(docEvent.getPage());
-        Rectangle pageSize = docEvent.getPage().getPageSize();
 
         int pagecount = docEvent.getDocument().getNumberOfPages();
         int curPageIndex = docEvent.getDocument().getPageNumber(docEvent.getPage());
-
 
 
 
@@ -996,22 +1008,36 @@ class QrCellRender extends CellRenderer {
         }
 
         canvas.moveText(leftStart, bottom).setFontAndSize(footerFont, 7).showText("Powered by ")
-                .setFontAndSize(gunt, 7).showText("SMPRO ").setFontAndSize(arialUni,7).showText(Store.UnicodeSumnbol.andCopy).setFontAndSize(gunt,7).showText("2021")
-                .moveText(105,0).setFontAndSize(arialUni,12).showText(Store.UnicodeSumnbol.phone).setFontAndSize(helveticaBold,8).showText(" 671686616 ")
-                .moveText(midstart-40, 0).setFontAndSize(footerFont, 7).showText(middleString).moveText(endStart, 0).showText(endcontent).endText().release();
+                .setFontAndSize(gunt, 7).showText("SMPRO ").setFontAndSize(arialUni, 7).showText(Store.UnicodeSumnbol.andCopy).setFontAndSize(gunt, 7).showText("2021")
+                .moveText(105, 0).setFontAndSize(arialUni, 12).showText(Store.UnicodeSumnbol.phone).setFontAndSize(helveticaBold, 8).showText(" 671686616 ")
+                .moveText(midstart - 40, 0).setFontAndSize(footerFont, 7).showText(middleString).moveText(endStart, 0).showText(endcontent).
+                endText();
+
 
 
 
         //add water mark
 
-        HashMap<String, Object> base = PgConnector.getObjectFromId(1, "base");
-        assert base != null;
-        String abbr = PgConnector.getFielorBlank(base, "school_abbr");
-        Paragraph watermark = new Paragraph(abbr).setFontSize(40).setTextAlignment(TextAlignment.CENTER).setRotationAngle(Math.toRadians(45));
+
+        Paragraph watermark = new Paragraph(wmark).setFontSize(120).setOpacity(0.1f)
+                .setTextAlignment(TextAlignment.CENTER).setFont(helveticaBold).setRotationAngle(Math.toRadians(45));
 
 
         float centerX = pageSize.getWidth() / 2;
-        float centerY = pageSize.getHeight() / 2;
+        float centerY = (pageSize.getHeight() / 2)-150;
+
+        PdfCanvas newcanvas = new PdfCanvas(page.newContentStreamBefore(), page.getResources(), page.getDocument());
+        Canvas flexibleCanvas = new Canvas(newcanvas, page.getDocument(), pageSize);
+
+
+        flexibleCanvas.showTextAligned(watermark, centerX, centerY, TextAlignment.CENTER);
+
+
+        flexibleCanvas.close();
+        canvas.release();
+        newcanvas.release();
+
+
 
 
 //        try (Canvas c = new Canvas(docEvent.getPage(), pageSize);) {

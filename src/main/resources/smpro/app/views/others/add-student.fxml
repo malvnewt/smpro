@@ -108,7 +108,7 @@
                   </Button>
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0" style="-fx-border-color: #44444480;" GridPane.columnIndex="3" GridPane.rowIndex="3">
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="5.0" style="-fx-border-color: #44444480;" GridPane.columnIndex="3" GridPane.rowIndex="3">
                <children>
                   <ImageView fx:id="imageview" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
                   <ImageView fx:id="imaggrauview" fitHeight="100.0" fitWidth="100.0" layoutX="97.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true">
@@ -116,6 +116,11 @@
                         <SepiaTone />
                      </effect>
                   </ImageView>
+                  <VBox alignment="BOTTOM_RIGHT" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Button fx:id="undoImage" mnemonicParsing="false" styleClass="transparent-bg" />
+                     </children>
+                  </VBox>
                </children>
             </HBox>
             <StackPane style="-fx-border-color: #44444480;" GridPane.columnIndex="1" GridPane.rowIndex="3">

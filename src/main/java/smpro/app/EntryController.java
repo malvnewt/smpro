@@ -34,10 +34,7 @@ import org.controlsfx.control.PopOver;
 import org.controlsfx.control.StatusBar;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
-import smpro.app.services.DashboardService;
-import smpro.app.services.EmployeeService;
-import smpro.app.services.MarksheetService;
-import smpro.app.services.StudentClassService;
+import smpro.app.services.*;
 import smpro.app.utils.PgConnector;
 import smpro.app.utils.ProjectUtils;
 import smpro.app.utils.Store;
@@ -149,7 +146,61 @@ public class EntryController implements Initializable {
     public Label employeeDepartmentLabel;
 
 
+    public MenuItem logoutAction;
+    public MenuItem swichtMenu;
+    public Menu accountAcessMenu;
+    public MenuItem closeExitmenuAction;
+    public Tab payfeeTab;
+    public Label paymentPortaltitle;
+    public HBox hrStudentsearchcontainer;
+    public ImageView hrImagpreview;
+    public Label hrclassLabel;
+    public Label hrMatriculeLabel;
+    public Label registrationl;
+    public VBox feehistoryContainer;
+    public VBox salescombocontainer;
+    public Button addsaleBtn;
+    public VBox salesitemscontainer;
+    public VBox salesHistorycontainer;
+    public Label arrowLabel;
+    public Label totalenteredl;
+    public ComboBox<String> hrmethodCombo;
+    public Button hrvalidate;
+    public Button hrprintreceipt;
+    public Tab paySalarytab;
+    public Label expenseprotalTitle;
+    public VBox hrpaymentmotiveContainer;
+    public ImageView benficiaryImg;
+    public HBox beneficiaryContainer;
+    public Button hrdisbureBtn;
+    public Button hrExpenseIcon;
+    public VBox hrExpensetablecontainer;
+    public Tab transactionRecordsTab;
+    public Button hrResetFilter;
+    public VBox hrRecordsContainer;
+    public VBox expenseRvenuePlotcontainer;
+    public VBox revennuePieContainer;
+    public VBox expensePiecontainer;
+    public Label hrAdmininfol;
+    public Label hrdob;
+    public Label ptal;
+    public Label fee_ptatoall;
+    public Label feeAmount;
+    public Label payedl;
+    public Label duel;
+    public TextField ptaEntryf;
+    public TextField feeEntryf;
+    public Label hrRegistrationtick;
+    public Label hrPtatick;
+    public Label hrFeetick;
+    public TextField registrationf;
+    public Label hradmission;
+    public Label newlyRegistered;
+    public Button hrsearchHelp;
+
+
     List<String> featureNames = Store.appFeatures;
+    
 
     public HashMap<String, String> features = new HashMap<>(Map.of(
             "dashboard","dashboard3.png",
@@ -229,6 +280,14 @@ public class EntryController implements Initializable {
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
+                        return null;
+                    },
+                    4, o -> {
+                        try {
+                            initHrService();
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
+                        }
 
 
                         return null;
@@ -243,6 +302,7 @@ public class EntryController implements Initializable {
 
 
 
+    int MenuIconSize = 17;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -273,6 +333,49 @@ public class EntryController implements Initializable {
     }
 
 
+    ///////////////////////////
+    ///////////////////////////
+
+    public void logout() {
+        Store.SessionStage.get().show();
+        thisStage.get().hide();
+    }
+
+    public void exitApp() {
+        if (!Objects.equals(Store.EntryStage.get(),null))Store.EntryStage.get().close();
+        if (!Objects.equals(Store.SessionStage.get(),null))Store.SessionStage.get().close();
+        System.exit(0);
+
+
+    }
+
+    ///////////////////////////
+    ///////////////////////////
+
+
+    ////////////////////////////////////////////////////
+    public void configureMenuActions() {
+        //account access menu
+        accountAcessMenu.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/lock.png",
+                MenuIconSize + 3, MenuIconSize + 3, true, true)));
+
+        swichtMenu.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignD.DATABASE_CHECK, MenuIconSize, Paint.valueOf(Store.Colors.green)));
+        swichtMenu.setText(String.format("%s %s %s", Translator.getIntl("connected_to"),
+                Store.UnicodeSumnbol.rightArrow, PgConnector.getFielorBlank(Store.currentProjectProperty.get(), "name").toUpperCase()));
+        swichtMenu.getStyleClass().add("text-bold");
+
+        logoutAction.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignL.LOGOUT, MenuIconSize, Paint.valueOf(Store.Colors.red)));
+        logoutAction.setOnAction(e->logout());
+
+        closeExitmenuAction.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignP.POWER, MenuIconSize, Paint.valueOf(Store.Colors.red)));
+        closeExitmenuAction.setOnAction(e->exitApp());
+
+
+
+    }
+
+
+
     public void configureUi() {
 //        ProjectUtils.animatePaneSide(menupane,'w', Store.MENU_COLLAPSE_WIDTH);
         menupane.setMaxWidth(Store.MENU_COLLAPSE_WIDTH);
@@ -290,7 +393,6 @@ public class EntryController implements Initializable {
                 PgConnector.getFielorBlank(base, "academic_year").toUpperCase(),
                 Store.UnicodeSumnbol.blank,
                 Store.UnicodeSumnbol.blank
-//                ProjectUtils.getFormatedDate(new Date().getTime(), DateFormat.getDateInstance(0, Translator.getLocale()))
 
         );
         titleMenuelement.setText(mainTitle);
@@ -453,8 +555,9 @@ public class EntryController implements Initializable {
         statusBar.getStyleClass().add("progress-bar");
 
 
-        String curUsername = PgConnector.getFielorBlank(Store.AuthUser.get(), "displayName");
         TextFlow tf = new TextFlow();
+        String curUsername = PgConnector.getFielorBlank(Store.AuthUser.get(), "displayName");
+
         Text t1 = new Text(Translator.getIntl("logged_inas")+Store.UnicodeSumnbol.blank);
         Text tuser = new Text(Store.UnicodeSumnbol.atSymbole+ProjectUtils.capitalize(curUsername));
         tuser.setStyle("-fx-font-weight: bold;-fx-text-fill: #eeeeee90");
@@ -463,7 +566,21 @@ public class EntryController implements Initializable {
         tf.setTextAlignment(TextAlignment.CENTER);
         tf.setStyle("-fx-padding: 6px 0 0 0");
 
-        HBox loginInfoBox = new HBox(new ImageView(ResourceUtil.getImageFromResource("images/lock.png", 18, 18, true)), tf);
+        Store.AuthUser.addListener((observableValue, stringObjectHashMap, newval) -> {
+            TextFlow newtf = new TextFlow();
+
+            String newuname = PgConnector.getFielorBlank(Store.AuthUser.get(), "displayName");
+
+            Text newt1 = new Text(Translator.getIntl("logged_inas")+Store.UnicodeSumnbol.blank);
+            Text newusert = new Text(Store.UnicodeSumnbol.atSymbole+ProjectUtils.capitalize(newuname));
+            newusert.setStyle("-fx-font-weight: bold;-fx-text-fill: #eeeeee90");
+            newt1.setStyle("-fx-text-fill: #eeeeee70");
+            newtf.getChildren().addAll(newt1, newusert);
+            newtf.setTextAlignment(TextAlignment.CENTER);
+            newtf.setStyle("-fx-padding: 6px 0 0 0");
+        });
+
+        HBox loginInfoBox = new HBox(new ImageView(ResourceUtil.getImageFromResource("images/admin.png", 18, 18, true)), tf);
         loginInfoBox.setSpacing(7);
         loginInfoBox.setAlignment(Pos.CENTER_LEFT);
         loginInfoBox.setPadding(new Insets(0,5,0,30));
@@ -624,14 +741,11 @@ public class EntryController implements Initializable {
 
 
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////                            ///////////////////////////////////////
-    ///////////////////////////////////////     FEATURE HANDLERS      /////////////////////////////////////////
-    ///////////////////////////////////////                          //////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //===========================================================================================================
+    //===========================================================================================================
+    ///////////////////////////////////////     FEATURE HANDLERSS      /////////////////////////////////////////
+    //===========================================================================================================
+    //===========================================================================================================
 
 
 
@@ -665,7 +779,7 @@ public class EntryController implements Initializable {
 
 
     /////////////////////////////////////////////////////////////////////////////////////////
-    /////////////////////////////////   DASHBOARD HANDLER    //////////////////////////
+    /////////////////////////////////   DASHBOARD SERVICE    //////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
 
     public void initDashboarService() throws SQLException {
@@ -693,7 +807,7 @@ public class EntryController implements Initializable {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////   EMPLOYEE HANDLER     ////////////////////////////////
+    ///////////////////////////////////   EMPLOYEE SERVICE     ////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
 
     public void initEmployeeService() throws SQLException {
@@ -724,7 +838,7 @@ public class EntryController implements Initializable {
 
 
     /////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////////   MARKSHEET HANDLER     ////////////////////////////////
+    ///////////////////////////////////   MARKSHEET SERVICE     ////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
 
     public void initMarksheetService() throws SQLException {
@@ -747,6 +861,27 @@ public class EntryController implements Initializable {
         }
 
 
+
+
+
+
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////   HUMAN RESOURCE SERVICE     ////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+
+    public void initHrService() throws SQLException {
+            HrService hrService = new HrService(thisStage.get(),this);
+
+            List<Node> marksheettbActions = hrService.buildToolbarOptions();
+            hrService.bindFields();
+            featureToolbarMap.put(mainContentTabpane.getSelectionModel().getSelectedIndex(), marksheettbActions);
+
+            maintoolbar.getItems().clear();
+            maintoolbar.getItems().addAll(featureToolbarMap.get(mainContentTabpane.getSelectionModel().getSelectedIndex()));
+//            hrService.loadTable();
 
 
 

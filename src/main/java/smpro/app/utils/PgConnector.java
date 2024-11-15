@@ -177,7 +177,6 @@ public class PgConnector {
 
         }
 
-
         return is;
 
 
@@ -334,6 +333,18 @@ public class PgConnector {
         List<HashMap<String, Object>> res = fetch(q, getConnection());
         if (res.isEmpty()) return null;
         return res.get(0);
+    }
+
+
+    //HR SERVICE
+    public static Number aggregateNumericFieldsAndSum(List<HashMap<String, Object>> list, String numberKey) {
+        double sum = 0;
+
+        for (HashMap<String, Object> item : list) {
+            Number n = getNumberOrNull(item, numberKey);
+            if (!Objects.equals(null,n)) sum += n.doubleValue();
+        }
+        return sum;
     }
 
 

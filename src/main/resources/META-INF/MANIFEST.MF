@@ -1,0 +1,28 @@
+Manifest-Version: 1.0
+Main-Class: smpro.app.Entry
+Class-Path: atlantafx-base-2.0.1.jar javafx-graphics-20-win.jar javafx-g
+ raphics-20.jar curvesapi-1.06-module.jar javafx-web-17.0.6-win.jar java
+ fx-fxml-17.0.6-win.jar ikonli-javafx-12.3.1.jar FXTaskbarProgressBar-v1
+ 1.4.jar junit-jupiter-engine-5.10.0.jar dx-1.7-module.jar barcodes-7.1.
+ 18-module.jar ikonli-materialdesign-pack-12.3.1.jar jna-platform-5.12.1
+ .jar javafx-controls-20.jar javafx-base-20.jar javafx-base-20-win.jar j
+ avafx-fxml-17.0.6-linux.jar bridj-0.7.0-module.jar annotations-23.0.0.j
+ ar javafx-controls-20-linux.jar slf4j-api-1.7.30-module.jar commons-cod
+ ec-1.15-module.jar junit-platform-commons-1.10.0.jar commons-compress-1
+ .21.jar bcprov-jdk15on-1.68.jar ikonli-materialdesign2-pack-12.3.1.jar 
+ formsfx-core-11.6.0.jar hyph-7.1.18-module.jar javafx-graphics-20-linux
+ .jar javafx-media-17.0.6.jar javafx-controls-20-win.jar xmlbeans-5.0.2.
+ jar poi-5.1.0.jar poi-ooxml-5.1.0.jar poi-ooxml-lite-5.1.0.jar bcpkix-j
+ dk15on-1.68.jar controlsfx-11.1.2.jar junit-platform-engine-1.10.0.jar 
+ kernel-7.1.18-module.jar commons-math3-3.6.1-module.jar postgresql-42.6
+ .2.jar svg-7.1.18-module.jar tilesfx-11.48.jar javafx-web-17.0.6-linux.
+ jar lombok-1.18.24.jar ikonli-core-12.3.1.jar SparseBitSet-1.2-module.j
+ ar fxribbon-1.2.2-module.jar font-asian-7.1.18-module.jar forms-7.1.18-
+ module.jar javafx-base-20-linux.jar commons-collections4-4.4.jar styled
+ -xml-parser-7.1.18-module.jar checker-qual-3.31.0.jar layout-7.1.18-mod
+ ule.jar javafx-swing-17.0.6-win.jar pdfa-7.1.18-module.jar javafx-media
+ -17.0.6-win.jar gson-2.8.6.jar charts-1.0.5-module.jar jna-5.12.1.jar f
+ xsvgimage-1.0b2-module.jar io-7.1.18-module.jar javafx-media-17.0.6-lin
+ ux.jar commons-io-2.11.0.jar log4j-api-2.14.1.jar sign-7.1.18-module.ja
+ r junit-jupiter-api-5.10.0.jar opentest4j-1.3.0.jar
+

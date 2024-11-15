@@ -25,7 +25,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.Duration;
-import lombok.SneakyThrows;
 import org.controlsfx.control.PopOver;
 import org.controlsfx.control.SearchableComboBox;
 import org.kordamp.ikonli.materialdesign2.*;
@@ -75,7 +74,7 @@ public class MarksheetService{
 
 
     PopOver p;
-
+    boolean isAdminUser = Boolean.parseBoolean(PgConnector.getFielorBlank(Store.AuthUser.get(), "isAdmin"));
 
     public MarksheetService(Stage s,EntryController ec) {
         this.entryController =ec;
@@ -90,6 +89,9 @@ public class MarksheetService{
 
 
     private void initUi() {
+
+        entryController.examsTableContainer.getChildren().add(ProjectUtils.getTablePlaceholder());
+
         HashMap<String, Object> basedata = PgConnector.fetch("select * from base",PgConnector.getConnection()).get(0);
         List<HashMap<String, Object>> dbSubjects = PgConnector.fetch("select * from subjects order by subject_name", PgConnector.getConnection());
 
@@ -119,36 +121,20 @@ public class MarksheetService{
         examsSubjectcombo.getItems().clear();
         examsSubjectcombo.getItems().addAll(dbSubjects);
         examsSubjectcombo.getStyleClass().addAll("dense", "bordered","text-bold");
-        examsSubjectcombo.setCellFactory(new Callback<>() {
-            @Override
-            public ListCell<HashMap<String, Object>> call(ListView<HashMap<String, Object>> hashMapListView) {
-                return new ListCell<>() {
-                    @Override
-                    protected void updateItem(HashMap<String, Object> stringObjectHashMap, boolean b) {
-                        super.updateItem(stringObjectHashMap, b);
-                        if (!b) {
-                            setText(String.format("%s ( %s ) ", ProjectUtils.capitalize(PgConnector.getFielorBlank(stringObjectHashMap, "subject_name"))
-                                    , PgConnector.getFielorBlank(stringObjectHashMap, "subject_abbreviation")));
-                            setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CIRCLE_DOUBLE, 30, Paint.valueOf(Store.Colors.White)));
 
-                        } else {
-                            setGraphic(null);
-                            setText(null);
-
-                        }
-                    }
-                };
-            }
-        });
+        setSubjectComboCellFactory();
+        classesTreeview.selectedSubjectProperty.addListener((o, f, l) -> setSubjectComboCellFactory());
 
         examsSubjectcombo.setButtonCell( new ListCell<>(){
             @Override
             protected void updateItem(HashMap<String, Object> stringObjectHashMap, boolean b) {
                 super.updateItem(stringObjectHashMap, b);
                 if (!b) {
-                    setText(String.format("%s ( %s ) ",ProjectUtils.capitalize(PgConnector.getFielorBlank(stringObjectHashMap,"subject_name"))
-                            ,PgConnector.getFielorBlank(stringObjectHashMap,"subject_abbreviation")));
-                    setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CIRCLE_DOUBLE,30,Paint.valueOf(Store.Colors.White)));
+                    setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CIRCLE_MULTIPLE,30,Paint.valueOf(Store.Colors.White)));
+
+                    setText(String.format("%s ", PgConnector.getFielorBlank(stringObjectHashMap, "subject_abbreviation")));
+
+
 
                 } else {
                     setGraphic(null);
@@ -182,6 +168,61 @@ public class MarksheetService{
 
     }
 
+    public void setSubjectComboCellFactory() {
+        examsSubjectcombo.setCellFactory(new Callback<>() {
+            @Override
+            public ListCell<HashMap<String, Object>> call(ListView<HashMap<String, Object>> hashMapListView) {
+                return new ListCell<>() {
+                    @Override
+                    protected void updateItem(HashMap<String, Object> stringObjectHashMap, boolean b) {
+                        super.updateItem(stringObjectHashMap, b);
+                        if (!b) {
+                            setGraphic(ProjectUtils.createFontIcon(MaterialDesignC.CIRCLE_DOUBLE, 30, Paint.valueOf(Store.Colors.White)));
+
+
+
+                            String subjectName = PgConnector.getFielorBlank(stringObjectHashMap, "subject_name");
+                            String subjectAbbr = PgConnector.getFielorBlank(stringObjectHashMap, "subject_abbreviation");
+                            HashMap<String, Object> cobj = classesTreeview.selectedSubjectProperty.get();
+
+                            if (!isAdminUser) {
+                                setText(String.format("%s ( %s ) ", ProjectUtils.capitalize(subjectName)
+                                        ,subjectAbbr));
+                            } else {
+                                try {
+                                    setText(String.format("%s (%s) %s%s %s %s %s ",
+                                            ProjectUtils.capitalize(subjectName),
+                                            subjectAbbr,
+                                            Store.UnicodeSumnbol.blank,
+                                            Store.UnicodeSumnbol.blank,
+
+                                            Objects.equals(null, cobj) ? "" : Translator.getIntl("instructor"),
+                                            Objects.equals(null, cobj) ? "" : Store.UnicodeSumnbol.rightArrow,
+                                            Objects.equals(null, cobj) ? "" :
+                                                    ProjectUtils.getTeacherForSubject(subjectName, PgConnector.getNumberOrNull(cobj, "id").intValue()).toUpperCase()
+                                    ));
+                                } catch (SQLException e) {
+                                    setText(String.format("%s ( %s ) ", ProjectUtils.capitalize(subjectName)
+                                            ,subjectAbbr));
+                                    throw new RuntimeException(e);
+                                }
+
+                            }
+
+
+                        } else {
+                            setGraphic(null);
+                            setText(null);
+
+                        }
+                    }
+                };
+            }
+        });
+
+
+    }
+
     public List<Node> buildToolbarOptions(){
         //register group
         CustomToolbarActionGroup registerGrou = new CustomToolbarActionGroup();
@@ -191,7 +232,6 @@ public class MarksheetService{
 
         //selection_edit group
         CustomToolbarActionGroup selectionEditGroup = new CustomToolbarActionGroup();
-
 
         //////////////////////////////////
         printAllLRecordsBtn = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/printer_laser.png",
@@ -424,7 +464,7 @@ public class MarksheetService{
 
                     textField.focusedProperty().addListener((observableValue, aBoolean, isfocused) -> {
                         if (!Objects.equals(p, null)) {
-                        if (p.isShowing())p.hide();
+                            if (p.isShowing())p.hide();
 
                         }
 
@@ -482,6 +522,7 @@ public class MarksheetService{
 
 
     public void loadTable() {
+
         clearEntries();
         statP.set("");
         // check all params
@@ -564,7 +605,7 @@ public class MarksheetService{
             statP.set(Translator.getIntl("unsubmitted"));
         } else {
 
-        statP.set(String.format("%%Sucess: %5.2f%%\t%s %s", srate,Translator.getIntl("submitted"),ProjectUtils.getFormatedDate(date, DateFormat.getDateInstance(1,Translator.getLocale()))));
+            statP.set(String.format("%%Sucess: %5.2f%%\t%s %s", srate,Translator.getIntl("submitted"),ProjectUtils.getFormatedDate(date, DateFormat.getDateInstance(1,Translator.getLocale()))));
         }
 
 
@@ -576,6 +617,7 @@ public class MarksheetService{
 
 
         if (!isloaded.get()) {
+
             scoreEntryView.loadInitialData(data);
 //            scoreEntryView.itemsProperty().set(FXCollections.observableList(data));
             entryController.examsTableContainer.getChildren().clear();
@@ -583,7 +625,7 @@ public class MarksheetService{
             isloaded.set(true);
 
         } else {
-        scoreEntryView.filteredItemsProperty.set(FXCollections.observableList(data));
+            scoreEntryView.filteredItemsProperty.set(FXCollections.observableList(data));
         }
 
 
@@ -597,7 +639,7 @@ public class MarksheetService{
 
     public static boolean isvalidEntry(String scoredata) {
         try {
-           double val =  Double.parseDouble(scoredata);
+            double val =  Double.parseDouble(scoredata);
             return !(val > 20) && !(val < 0);
         } catch (Exception err) {
             err.printStackTrace();
@@ -1107,7 +1149,7 @@ public class MarksheetService{
     public void openSingleSheet(HashMap<String,Object> studentObj) throws SQLException {
 
         try {
-          SingleScoreViewController singleScoreViewController  = ActionStageLinker.openSingleScoreDialog(mainStage,studentObj);
+            SingleScoreViewController singleScoreViewController  = ActionStageLinker.openSingleScoreDialog(mainStage,studentObj);
             studentRecordSearch.setItems(FXCollections.observableList(new ArrayList<>()));
             studentRecordSearch.setItems(FXCollections.observableList(getAcceissibleData()));
 
@@ -1176,7 +1218,7 @@ public class MarksheetService{
         a.showAndWait().ifPresent(bt->{
             if (bt == ButtonType.YES) {
                 for (String sid : selectScores) {
-                PgConnector.update(String.format("delete from marks where classid=%d and subject='%s' and sequence=%d and student_matricule='%s' ", classid, subject, seq,sid));
+                    PgConnector.update(String.format("delete from marks where classid=%d and subject='%s' and sequence=%d and student_matricule='%s' ", classid, subject, seq,sid));
                 }
                 loadTable();
 
@@ -1188,6 +1230,7 @@ public class MarksheetService{
 
 
     public void refresh() {
+        HashMap<String, Object> classITemSelected = classesTreeview.selectedSubjectProperty.get();
         scoreEntryView.currentItemSelectorP.forEach(cb -> cb.setSelected(false));
 
         HashMap<String, Object> currentClassObj = classesTreeview.selectedSubjectProperty.get();
@@ -1212,6 +1255,9 @@ public class MarksheetService{
         scoreEntryView.getSelectionModel().clearSelection();
         loadTable();
         classesTreeview.getSelectionModel().select(currentSelectedTreeItem);
+
+        if (!Objects.equals(null,classITemSelected))classesTreeview.selectItem(PgConnector.getFielorBlank(classITemSelected, "id"));
+
 
 
 

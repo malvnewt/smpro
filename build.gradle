@@ -5,6 +5,8 @@ plugins {
   id 'org.openjfx.javafxplugin' version '0.0.13'
   id 'org.beryx.jlink' version '2.25.0'
 
+  id 'com.github.ben-manes.versions' version '0.41.0'
+
   // third party
   id("org.gradlex.extra-java-module-info") version "1.8"
 }
@@ -126,6 +128,7 @@ extraJavaModuleInfo {
 
 dependencies {
 
+
   implementation('org.controlsfx:controlsfx:11.1.2')
   implementation('com.dlsc.formsfx:formsfx-core:11.6.0') {
     exclude(group: 'org.openjfx')
@@ -185,7 +188,7 @@ dependencies {
   implementation 'org.projectlombok:lombok:1.18.24'
 
   // use native windows progressbar
-  implementation 'com.github.Dansoftowner:FXTaskbarProgressBar:v11.4'
+//  implementation 'com.github.Dansoftowner:FXTaskbarProgressBar:v11.4'
 
 
 

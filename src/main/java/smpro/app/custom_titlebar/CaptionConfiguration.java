@@ -7,7 +7,6 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import lombok.Getter;
 
 //@Getter
 public class CaptionConfiguration {

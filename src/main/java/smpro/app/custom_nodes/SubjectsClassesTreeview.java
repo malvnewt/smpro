@@ -122,12 +122,16 @@ public class SubjectsClassesTreeview extends TreeView<HashMap<String, Object>> {
         rootitem.getChildren().addAll(categoryItems);
 
         getSelectionModel().selectedItemProperty().addListener((observableValue, hashMapTreeItem, item) -> {
+            if (!Objects.equals(null, item)) {
+
             HashMap<String, Object> data = item.getValue();
 
             if (item.isLeaf()) {
                 //filter table
                 selectedSubjectProperty.set(data);
                 selectedItemP.set(item);
+
+            }
 
             }
 
@@ -167,6 +171,26 @@ public class SubjectsClassesTreeview extends TreeView<HashMap<String, Object>> {
 
 
     }
+
+    public void selectItem(String itemId) {
+        boolean isselected=false;
+        try {
+            List<TreeItem<HashMap<String, Object>>> items = rootitem.getChildren();
+
+            for (TreeItem<HashMap<String, Object>> marksClassItem : items) {
+                if(isselected)break;
+                if (Objects.equals(itemId, PgConnector.getFielorBlank(marksClassItem.getValue(), "id"))) {
+                    getSelectionModel().select(marksClassItem);
+                    isselected = true;
+                }
+
+            }
+
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
+    }
+
 
 
 

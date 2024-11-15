@@ -626,6 +626,20 @@ public class ProjectUtils {
         return pl;
     }
 
+    public static VBox getTablePlaceholder(int... size) {
+        VBox placeholder = new VBox();
+        VBox.setVgrow(placeholder,Priority.ALWAYS);
+        placeholder.setAlignment(Pos.CENTER);
+        Label l = new Label( Translator.getIntl("no_data").toUpperCase());
+        l.setStyle("-fx-font-weight: bold;-fx-font-size: 14px;-fx-text-fill: lightgray;-fx-opacity: 0.75");
+
+        int dim = size.length == 0 ? 40 : size[0];
+        l.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/empty-glass.png", dim, dim, true)));
+        placeholder.getChildren().add(l);
+
+        return placeholder;
+    }
+
 
 
 

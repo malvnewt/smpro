@@ -84,7 +84,6 @@ public class ClassSectionsTreeview extends TreeView<HashMap<String, Object>> {
             )));
 
             sectionItems.add(sectionItem);
-
             sectionClasses.forEach(cls -> {
 
                 TreeItem<HashMap<String, Object>> classItem = new TreeItem<>(new HashMap<>(Map.of(
@@ -231,6 +230,30 @@ public class ClassSectionsTreeview extends TreeView<HashMap<String, Object>> {
         f.playFromStart();
 
 
+    }
+
+    public void selectItem(String itemId) {
+        boolean isselected=false;
+        try {
+            List<TreeItem<HashMap<String, Object>>> items = rootitem.getChildren();
+
+            for (TreeItem<HashMap<String, Object>> sectionItem : items) {
+                if(isselected)break;
+
+                for (TreeItem<HashMap<String, Object>> classitem : sectionItem.getChildren()) {
+                    if(isselected)break;
+
+                if (Objects.equals(itemId, PgConnector.getFielorBlank(classitem.getValue(), "id"))) {
+                    getSelectionModel().select(classitem);
+                    isselected = true;
+
+                }
+                }
+            }
+
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
     }
 
 

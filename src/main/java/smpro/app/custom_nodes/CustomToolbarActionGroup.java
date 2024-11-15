@@ -34,8 +34,8 @@ public class CustomToolbarActionGroup {
 
         Label l = new Label(label);
         l.setStyle("-fx-opacity: 0.85");
-        l.setMinWidth(100);
-        l.setMaxWidth(100);
+        l.setMinWidth(50);
+        l.setMaxWidth(150);
         l.setTextOverrun(OverrunStyle.ELLIPSIS);
         l.setTooltip(ProjectUtils.createTooltip(label.toUpperCase()));
         control.setTooltip(ProjectUtils.createTooltip(label.toUpperCase()));
@@ -67,7 +67,10 @@ public class CustomToolbarActionGroup {
 //        pane.setVgap(5);
         pane.setAlignment(Pos.CENTER_LEFT);
 
-        int maxcolcount = Math.ceilDiv(actionItems.size(), rowcount);
+//        int maxcolcount = Math.ceilDiv(actionItems.size(), rowcount);
+        int maxcolcount = (actionItems.size() + rowcount - 1) / rowcount;
+//        int maxcolcount = (int) Math.ceil(actionItems.size()/rowcount);
+
 
 
         for (HBox item : actionItems) {

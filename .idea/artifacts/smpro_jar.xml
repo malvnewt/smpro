@@ -1,0 +1,139 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="smpro:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/smpro_jar</output-path>
+    <root id="archive" name="app.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="app.main" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/io.github.mkpaz/atlantafx-base/2.0.1/51d2bfa35150921fe5b8b5e3c1a1bf78a6d57684/atlantafx-base-2.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-graphics/20/57d79e5dbc28f3873f1911bff0f704a77596165f/javafx-graphics-20-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-graphics/20/7ec67be002e516ab69d1a14f3edbde01fc921664/javafx-graphics-20.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/943fbb7d4ac31a481012d1ac12a95e5c/transformed/curvesapi-1.06-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-web/17.0.6/f4117256e602d41f484f2b9e5a74eeadc0a272eb/javafx-web-17.0.6-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-fxml/17.0.6/5724aedc415683e62eeab3a3875550aa814c84fd/javafx-fxml-17.0.6-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.kordamp.ikonli/ikonli-javafx/12.3.1/6df78c8f23f4509f88b8e05c32da64b7dc494356/ikonli-javafx-12.3.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/com.github.Dansoftowner/FXTaskbarProgressBar/v11.4/a38a3b1d1b537858a7f88ef956f9048a3099a45b/FXTaskbarProgressBar-v11.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-engine/5.10.0/90587932d718fc51a48112d33045a18476c542ad/junit-jupiter-engine-5.10.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/876d379a0519bb108a28705a64ce4023/transformed/dx-1.7-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/69aef4a4425e409077d37ec73ab398ca/transformed/barcodes-7.1.18-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.kordamp.ikonli/ikonli-materialdesign-pack/12.3.1/c43817e06f255d55f4ef336ac3352c4948d727d7/ikonli-materialdesign-pack-12.3.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/net.java.dev.jna/jna-platform/5.12.1/97406a297c852f4a41e688a176ec675f72e8329/jna-platform-5.12.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-controls/20/9d8d07b9b3463121fd600861473a8ad2ddf727dc/javafx-controls-20.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-base/20/82863562a321abc761f301477ef90ba6c20f022a/javafx-base-20.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-base/20/b75c1d2a661fc392bc601fcbb1d1931f8d4c637e/javafx-base-20-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-fxml/17.0.6/c500ec44fd60e74a11021c71c0e6127dc31bc41d/javafx-fxml-17.0.6-linux.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/af43ec5f47c962a78a61ffb6102efe69/transformed/bridj-0.7.0-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-controls/20/89a276fa379956d70ffafd3945b2d5f0c6e318af/javafx-controls-20-linux.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/1beb12c9021f0f6a070d4c6f8a4273e1/transformed/slf4j-api-1.7.30-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/b83af31cfea9305a5bc2a8bb6d004f7b/transformed/commons-codec-1.15-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.junit.platform/junit-platform-commons/1.10.0/d533ff2c286eaf963566f92baf5f8a06628d2609/junit-platform-commons-1.10.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.21/4ec95b60d4e86b5c95a0e919cb172a0af98011ef/commons-compress-1.21.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.68/46a080368d38b428d237a59458f9bc915222894d/bcprov-jdk15on-1.68.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.kordamp.ikonli/ikonli-materialdesign2-pack/12.3.1/d6f5ea03a281cee1ce696f6da57fd95c7051ed7f/ikonli-materialdesign2-pack-12.3.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/com.dlsc.formsfx/formsfx-core/11.6.0/dd14a71601781f316a3d5259af549c37b4b3b311/formsfx-core-11.6.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/8cbd6a2346d0bcfea5102e7ce3e55791/transformed/hyph-7.1.18-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-graphics/20/403d6f1f37f018b309c9df78a8a580fd6186604d/javafx-graphics-20-linux.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-media/17.0.6/5a496809cfebccf228a9cb1678b8cd51d986704b/javafx-media-17.0.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-controls/20/f9a84d43adab2745f4999e7ff9a64f12dd563f1f/javafx-controls-20-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.apache.xmlbeans/xmlbeans/5.0.2/ac85f740e3492e28662cf5595d67113ffadc547d/xmlbeans-5.0.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.apache.poi/poi/5.1.0/5a3df8f117b615974c88c337dcad9690e236336/poi-5.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.apache.poi/poi-ooxml/5.1.0/8ded9fd39b2a1a6431d00cd838783f9075b588a3/poi-ooxml-5.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.apache.poi/poi-ooxml-lite/5.1.0/449196e22bcb79056161e3baa4ca40bfa8e1937b/poi-ooxml-lite-5.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.68/81da950604ff0b2652348cbd2b48fde46ced9867/bcpkix-jdk15on-1.68.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.controlsfx/controlsfx/11.1.2/584bc3f468e2c33100fcdbb1daf0a3e095e5e031/controlsfx-11.1.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.junit.platform/junit-platform-engine/1.10.0/276c4edcf64fabb5a139fa7b4f99330d7a93b804/junit-platform-engine-1.10.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/a21fed0658e106e61f203f9334446c2f/transformed/kernel-7.1.18-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/4c0fc24927d019b8de1b4032de75ce8b/transformed/commons-math3-3.6.1-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.postgresql/postgresql/42.6.2/18c33c28326b2f81480833291b81f5eca080ab3c/postgresql-42.6.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/b08819718ebf030b2715b142003299e4/transformed/svg-7.1.18-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/eu.hansolo/tilesfx/11.48/b0bc6121588dc076252147ff82886073526b823c/tilesfx-11.48.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-web/17.0.6/69293d257d088cd7f48a69a87afa59f4eb6461c6/javafx-web-17.0.6-linux.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.24/13a394eed5c4f9efb2a6d956e2086f1d81e857d9/lombok-1.18.24.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.kordamp.ikonli/ikonli-core/12.3.1/50c5658c1a5aeeec30320c6be71274d01f5fb869/ikonli-core-12.3.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/d9850d686d0fd0a6d86b7d5b7a1abf68/transformed/SparseBitSet-1.2-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/9d84f7f3d26591d21330918e6f15db29/transformed/fxribbon-1.2.2-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/a20cb9b47313d8fe5f5dd1114f493ca8/transformed/font-asian-7.1.18-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/6323af8fcb0cfc7371c910432b468b4b/transformed/forms-7.1.18-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-base/20/d82ec648e48647e10125ff0e3dce70348a80ac18/javafx-base-20-linux.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.apache.commons/commons-collections4/4.4/62ebe7544cb7164d87e0637a2a6a2bdc981395e8/commons-collections4-4.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/5e7e1c16eecc1744d3e369e958e9277d/transformed/styled-xml-parser-7.1.18-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.checkerframework/checker-qual/3.31.0/eeefd4af42e2f4221d145c1791582f91868f99ab/checker-qual-3.31.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/129359b72fe7bc5da39b248c9e3f6e92/transformed/layout-7.1.18-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-swing/17.0.6/974e453fb9afac1fb6536a1c6c0edfc203959b8/javafx-swing-17.0.6-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/c1c1d685f601f4da4163fae60aae2598/transformed/pdfa-7.1.18-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-media/17.0.6/cc7e03817252ace41ece37ab29f193ba3fd0153e/javafx-media-17.0.6-win.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/com.google.code.gson/gson/2.8.6/9180733b7df8542621dc12e21e87557e8c99b8cb/gson-2.8.6.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/643af7381a298a8935961359d00a368c/transformed/charts-1.0.5-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/net.java.dev.jna/jna/5.12.1/b1e93a735caea94f503e95e6fe79bf9cdc1e985d/jna-5.12.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/02e9b0533514868e48daa096ba1baf3c/transformed/fxsvgimage-1.0b2-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/6aa81bb1dc3a03494e9f11d1ae05c22d/transformed/io-7.1.18-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.openjfx/javafx-media/17.0.6/a76bc115c1e43c4757466a1e128c2602db7e52f8/javafx-media-17.0.6-linux.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/commons-io/commons-io/2.11.0/a2503f302b11ebde7ebc3df41daebe0e4eea3689/commons-io-2.11.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-api/2.14.1/cd8858fbbde69f46bce8db1152c18a43328aae78/log4j-api-2.14.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/transforms-3/1cf07f13e8032155dbf7a1436cf89695/transformed/sign-7.1.18-module.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.junit.jupiter/junit-jupiter-api/5.10.0/2fe4ba3d31d5067878e468c96aa039005a9134d3/junit-jupiter-api-5.10.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="C:/JAVA/GRADLES/gradle-8.2-all/gradle-8.2/caches/modules-2/files-2.1/org.opentest4j/opentest4j/1.3.0/152ea56b3a72f655d4fd677fc0ef2596c3dd5e6e/opentest4j-1.3.0.jar" path-in-jar="/" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-console-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-console-l1-2-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-datetime-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-debug-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-errorhandling-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-file-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-file-l1-2-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-file-l2-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-handle-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-heap-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-interlocked-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-libraryloader-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-localization-l1-2-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-memory-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-namedpipe-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-processenvironment-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-processthreads-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-processthreads-l1-1-1.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-profile-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-rtlsupport-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-string-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-synch-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-synch-l1-2-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-sysinfo-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-timezone-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-core-util-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-conio-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-convert-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-environment-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-filesystem-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-heap-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-locale-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-math-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-multibyte-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-private-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-process-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-runtime-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-stdio-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-string-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-time-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/api-ms-win-crt-utility-l1-1-0.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/decora_sse.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/fxplugins.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/glass.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/glib-lite.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/gstreamer-lite.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/javafx_font.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/javafx_iio.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/jfxmedia.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/jfxwebkit.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/msvcp140.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/msvcp140_1.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/msvcp140_2.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/prism_common.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/prism_d3d.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/prism_sw.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/ucrtbase.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/vcruntime140.dll" />
+      <element id="file-copy" path="$USER_HOME$/Desktop/ARCHIVES/JARS/openjfx-21.0.4_windows-x64_bin-sdk/javafx-sdk-21.0.4/bin/vcruntime140_1.dll" />
+    </root>
+  </artifact>
+</component>

@@ -2,6 +2,7 @@
 
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
@@ -33,10 +34,12 @@
          <children>
             <GridPane fx:id="infogrid" hgap="10.0" vgap="10.0">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" prefWidth="135.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="284.0" minWidth="10.0" prefWidth="238.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="218.0" minWidth="10.0" prefWidth="211.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="130.0" prefWidth="135.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="284.0" minWidth="150.0" prefWidth="238.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="218.0" minWidth="130.0" prefWidth="211.0" />
                 <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="375.0" minWidth="10.0" prefWidth="252.0" />
+                  <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="375.0" minWidth="10.0" prefWidth="252.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="375.0" minWidth="10.0" prefWidth="252.0" />
               </columnConstraints>
               <rowConstraints>
                   <RowConstraints minHeight="60.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -56,7 +59,7 @@
                      <GridPane.margin>
                         <Insets left="20.0" />
                      </GridPane.margin></Label>
-                  <Label styleClass="section-title" text="%class_info" />
+                  <Label styleClass="section-title" text="%class_info" GridPane.columnSpan="2" />
                   <ImageView fx:id="iconView" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" visible="false" GridPane.columnIndex="3" />
                   <TextField fx:id="classnamefiled" promptText="eg Form five science, Terminal D ..." GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <TextField fx:id="shortnamefield" promptText="eg  F5, USS,LSA ..." GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -68,6 +71,32 @@
                      </padding>
                   </Label>
                   <ComboBox fx:id="levelcombo" prefHeight="32.0" prefWidth="264.0" promptText="%select" styleClass="alt-icon" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                  <HBox alignment="CENTER_LEFT" GridPane.columnIndex="4" GridPane.columnSpan="2">
+                     <children>
+                        <Label styleClass="section-title" text="%fee_structure" />
+                     </children>
+                  </HBox>
+                  <Label text="%pta_fee" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <Label text="%fee_amount" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                  <TextField fx:id="ptaf" text="0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                  <TextField fx:id="feef" promptText="eg 115000" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                  <Label text="%tuition_total" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                  <HBox fx:id="totall" alignment="CENTER_LEFT" style="-fx-border-color: #57aaff;" GridPane.columnIndex="5" GridPane.rowIndex="3">
+                     <children>
+                        <Label fx:id="totalLabel" style="-fx-font-size: 15; -fx-text-fill: #57aaff;" text="000000">
+                           <styleClass>
+                              <String fx:value="text-bolder" />
+                              <String fx:value="money" />
+                           </styleClass>
+                           <cursor>
+                              <Cursor fx:constant="NONE" />
+                           </cursor>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                     </padding>
+                  </HBox>
                </children>
             </GridPane>
             <Separator prefWidth="200.0" />

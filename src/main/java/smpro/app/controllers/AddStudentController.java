@@ -1,5 +1,6 @@
 package smpro.app.controllers;
 
+import javafx.beans.binding.When;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -67,6 +68,7 @@ public class AddStudentController implements Initializable {
     public Button resetbtn;
     public HBox classContainer;
     public Label dobDisplay;
+    public Button undoImage;
 
 
     //properties
@@ -132,6 +134,10 @@ public class AddStudentController implements Initializable {
         genderGroup.getToggles().addAll(maleradio, femaleradio, nonbinradio);
 
 
+        undoImage.setGraphic(ProjectUtils.createFontIconColored(MaterialDesignU.UNDO, 20, Paint.valueOf("#dddddd")));
+        undoImage.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("remove_image")));
+
+        fcontactfield.setRight(ProjectUtils.createFontIcon(MaterialDesignP.PHONE, 12, Paint.valueOf("gray")));
         fcontactfield.setRight(ProjectUtils.createFontIcon(MaterialDesignP.PHONE, 12, Paint.valueOf("gray")));
         lcontactfield.setRight(ProjectUtils.createFontIcon(MaterialDesignP.PHONE, 12, Paint.valueOf("gray")));
         contact1container.getChildren().add(fcontactfield);
@@ -274,6 +280,13 @@ public class AddStudentController implements Initializable {
     }
 
     public void bindFields() {
+
+        undoImage.setOnAction(e -> {
+            imageP.set(null);
+            imagePathP.set("");
+
+        });
+
         fnameP.bind(fnamefield.textProperty());
         lnameP.bind(lnamefield.textProperty());
         tradeP.bind(tradeSearch.valueProperty());
@@ -299,16 +312,20 @@ public class AddStudentController implements Initializable {
         });
 
 
-
-
-//        imageview.imageProperty().bind(imageP);
-//        imaggrauview.imageProperty().bind(imageP);
-
         imaggrauview.imageProperty().bind(imageview.imageProperty());
 
         imageP.addListener((observableValue, image, newimg) -> {
             imageview.setImage(newimg);
+//            if (!Objects.equals(newimg, null)) {
+//                undoImage.setVisible(true);
+//
+//            } else {
+//                undoImage.setVisible(false);
+//
+//            }
         });
+
+        undoImage.visibleProperty().bind(imageP.isNotNull());
 
 
         sectioncombo.valueProperty().addListener((observableValue, s, newSection) -> {

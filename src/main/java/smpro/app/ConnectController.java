@@ -2,22 +2,31 @@ package smpro.app;
 
 import javafx.animation.Timeline;
 import javafx.beans.property.*;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.controlsfx.control.PopOver;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
 import smpro.app.custom_nodes.MyPasswordField;
+import smpro.app.custom_titlebar.CaptionConfiguration;
+import smpro.app.custom_titlebar.CustomCaption;
 import smpro.app.utils.*;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -56,6 +65,11 @@ public class ConnectController implements Initializable {
 
     BooleanProperty isvalidUsernameP = new SimpleBooleanProperty(false);
     BooleanProperty isvalidpassP = new SimpleBooleanProperty(false);
+
+    /////////////////
+    BooleanProperty isInitialLogin = new SimpleBooleanProperty(true);
+
+
 
 
     @Override
@@ -248,6 +262,7 @@ public class ConnectController implements Initializable {
 
 
         confirmBtn.setOnAction(e->{
+            boolean isInititalLogin = isInitialLogin.get();
             //reset
             isvalidpassP.set(false);
             isvalidUsernameP.set(false);
@@ -280,7 +295,17 @@ public class ConnectController implements Initializable {
                 usernamefield.clear();
                 passfi8eld.clear();
                 thisStage.get().hide();
+
+                if (!isInititalLogin) {
+                    try {
+                        openNewSession();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+
                 System.out.println("VALID ROOTADMIN LOG IN");
+                isInitialLogin.set(false);
                 return;
 
             }
@@ -309,7 +334,16 @@ public class ConnectController implements Initializable {
                     usernamefield.clear();
                     passfi8eld.clear();
                     thisStage.get().hide();
+
+                    if (!isInititalLogin) {
+                        try {
+                            openNewSession();
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
                     System.out.println("VALID ADMIN LOG IN");
+                    isInitialLogin.set(false);
                     return;
 
                 }
@@ -338,14 +372,23 @@ public class ConnectController implements Initializable {
                     usernamefield.clear();
                     passfi8eld.clear();
                     thisStage.get().hide();
+
+
+                    if (!isInititalLogin) {
+                        try {
+                            openNewSession();
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                    }
                     System.out.println("VALID STAFF LOG IN");
+                    isInitialLogin.set(false);
                     return;
 
                 }
 
+
             }
-
-
 
 
             if (!isvalidpassP.get()){
@@ -371,9 +414,65 @@ public class ConnectController implements Initializable {
 
 
         });
+
+
     }
 
 
+    public void openNewSession() throws IOException {
+        Stage stage = new Stage();
+
+
+        URL mainurl = ResourceUtil.getAppResourceURL("views/entry-view.fxml");
+        FXMLLoader fxmlLoader = new FXMLLoader(mainurl);
+        fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
+        Parent root =fxmlLoader.load();
+        Scene scene = new Scene(root, 320, 240);
+        scene.getStylesheets().addAll(
+                ResourceUtil.getAppResourceURL("css/recaf/recaf.css").toExternalForm()
+        );
+
+        String title = String.format("%s %s\u2800 \u2800 \u2800 %s \u2800 \u2800%s %s %s", "SM\u2796PRO",Store.UnicodeSumnbol.tm,
+                ProjectUtils.getFormatedDate(new Date().getTime(), DateFormat.getDateInstance(DateFormat.FULL,
+                        Translator.getLocale())),Store.UnicodeSumnbol.leftSquarebracket,"SERVER SESSION",Store.UnicodeSumnbol.rightSquarebracket);
+        stage.setTitle(title.toUpperCase());
+
+        stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
+        stage.setScene(scene);
+
+        // all done. Now action data is hydrated
+        EntryController entryController = fxmlLoader.getController();
+        entryController.configureMenuActions();
+
+        stage.show();
+
+
+
+        MenuBar menuBar = (MenuBar) fxmlLoader.getNamespace().get("menubar");
+        menuBar.setStyle("-fx-border-width: 0 0 1px 0;-fx-border-color: "+Store.Colors.lightestGray);
+
+        CustomCaption.useForStage(stage, new CaptionConfiguration().setCaptionHeight(40)
+                .setIconColor(Color.web(Store.Colors.LightGray))
+                .setIconHoverColor(Color.web(Store.Colors.White))
+                .setControlBackgroundColor(Color.web(Store.Colors.transparent))
+                .setButtonHoverColor(Color.web("#aaaaaa30"))
+                .setCaptionDragRegion(menuBar).
+                useControls(true).
+                setCloseButtonHoverColor(Color.web(Store.Colors.deepRed))
+        );
+
+
+        EntryController controller = fxmlLoader.getController();
+        controller.thisStage.set(stage);
+
+        double screenHeight =  Screen.getPrimary().getBounds().getHeight();
+        double screenWidth =  Screen.getPrimary().getBounds().getWidth();
+
+        stage.setMinHeight(0.8 * screenHeight);
+        stage.setMinWidth(0.7 * screenWidth);
+        stage.centerOnScreen();
+        menuBar.requestFocus();
+    }
 
     public void createProject() {
     }

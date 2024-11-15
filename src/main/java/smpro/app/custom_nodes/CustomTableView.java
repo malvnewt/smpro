@@ -26,6 +26,7 @@ import smpro.app.utils.Translator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 
 public class CustomTableView extends TableView<HashMap<String,Object>> {
@@ -44,14 +45,15 @@ public class CustomTableView extends TableView<HashMap<String,Object>> {
     BooleanProperty selectAllProperty = new SimpleBooleanProperty(false);
 
 
-    public CustomTableView(List<TableColumn<HashMap<String,Object>,String>> cols ,int idcol) {
+    public CustomTableView(List<TableColumn<HashMap<String,Object>,String>> cols ,int... idcol) {
         setItems(FXCollections.observableList(new ArrayList<>()));
 
         itemsProperty().bind(filteredItemsProperty);
         filteredItemsProperty.addAll(new ArrayList<>());
 
+        if (idcol.length > 0) {
 
-        TableColumn<HashMap<String, Object>, String> selectCol = cols.get(idcol);
+        TableColumn<HashMap<String, Object>, String> selectCol = cols.get(idcol[0]);
         selectCol.setCellFactory(new Callback<>() {
 
             @Override
@@ -97,18 +99,14 @@ public class CustomTableView extends TableView<HashMap<String,Object>> {
             }
         });
 
+        }
+
+
 //        itemsProperty().addListener((observableValue, hashMaps, t1) -> currentItemSelectorP.clear());
 
         getColumns().addAll(cols);
         getStyleClass().addAll("dense", "bordered", "striped");
-
-        VBox placeholder = new VBox();
-        placeholder.setAlignment(Pos.CENTER);
-        Label l = new Label(Translator.getIntl("no_data").toUpperCase());
-        l.setStyle("-fx-font-weight: bold;-fx-font-size: 18px;-fx-text-fill: lightgray;-fx-opacity: 0.75");
-        l.setGraphic(new ImageView(ResourceUtil.getImageFromResource("images/empty-glass.png", 50, 50, true)));
-        placeholder.getChildren().add(l);
-        setPlaceholder(placeholder);
+        setPlaceholder(ProjectUtils.getTablePlaceholder(35));
 
     }
 
@@ -144,6 +142,20 @@ public class CustomTableView extends TableView<HashMap<String,Object>> {
 
         f.playFromStart();
     }
+
+    public void selectItem(String itemId) {
+
+        boolean isselected=false;
+        try {
+            HashMap<String, Object> objToSelect = getItems().stream().filter(item -> Objects.equals(itemId,PgConnector.
+                    getFielorBlank(item, "id"))).findFirst().orElse(null);
+            if (!Objects.equals(null,objToSelect)) getSelectionModel().select(objToSelect);
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
+    }
+
+
 
 
 

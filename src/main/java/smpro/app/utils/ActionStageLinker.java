@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.logging.Handler;
 
@@ -162,8 +163,9 @@ public class ActionStageLinker {
         return controller;
     }
     public static SingleScoreViewController openSingleScoreDialog(Stage parent,HashMap<String,Object> sobj) throws SQLException {
-        URL url = ResourceUtil.getAppResourceURL("views/others/singleStudentScoreView.fxml");
+        if (!Objects.equals(null,Store.SingleMarksheetStage.get())) return null;
 
+        URL url = ResourceUtil.getAppResourceURL("views/others/singleStudentScoreView.fxml");
         FXMLLoader fxmlLoader = new FXMLLoader(url);
         fxmlLoader.setResources(ResourceBundle.getBundle(Store.RESOURCE_BASE_URL+"lang",Translator.getLocale()));
         Parent root = null;
@@ -180,6 +182,7 @@ public class ActionStageLinker {
         stage.initOwner(parent);
         stage.getIcons().add(ResourceUtil.getImageFromResource("images/logo-server.png", 50, 50));
         stage.setResizable(false);
+        Store.SingleMarksheetStage.set(stage);
 
         SingleScoreViewController controller = fxmlLoader.getController();
         controller.thisStage.set(stage);
@@ -193,6 +196,7 @@ public class ActionStageLinker {
         );
 
         stage.show();
+        stage.setOnHidden(e -> Store.SingleMarksheetStage.set(null));
         return controller;
     }
 

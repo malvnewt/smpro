@@ -16,10 +16,10 @@ public class Translator {
             Locale.ENGLISH,
             Locale.FRENCH,
             Locale.GERMAN,
-            Locale.CHINESE,
+            Locale.CHINESE
 //            Locale.ITALIAN,
-            Locale.of("ru"),
-            Locale.of("es")
+//            Locale.of("ru"),
+//            Locale.of("es")
     );
 
     static {

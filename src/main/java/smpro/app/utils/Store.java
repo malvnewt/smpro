@@ -1,11 +1,13 @@
 package smpro.app.utils;
 
-import javafx.beans.property.MapProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleMapProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
 import javafx.scene.effect.Light;
 import javafx.stage.Stage;
+import org.kordamp.ikonli.Ikon;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignB;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignS;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -15,7 +17,14 @@ import java.util.Map;
 
 public class Store {
     public static ObjectProperty<HashMap<String, Object>> AuthUser = new SimpleObjectProperty<>();
+   public static ListProperty<String> dbNamesProperty = new SimpleListProperty<>(FXCollections.observableList(new ArrayList<>()));
+
+   //stage controls
     public static ObjectProperty<Stage> SessionStage = new SimpleObjectProperty<>(null);
+    public static ObjectProperty<Stage> EntryStage = new SimpleObjectProperty<>(null);
+    public static ObjectProperty<Stage> SingleMarksheetStage = new SimpleObjectProperty<>(null);
+
+    /////////////////////////
 
     public static ObjectProperty<HashMap<String, Object>> currentProjectProperty = new SimpleObjectProperty<>(null);
 
@@ -106,6 +115,14 @@ public class Store {
     public static String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     public static String digits = "0123456789";
 
+    public static HashMap<String, String> supportedCurrencis = new HashMap<>(Map.of("XAF", "images/cmr.png"));
+    public static HashMap<String, Ikon> supportedPaymentMethods = new HashMap<>(Map.of(
+            "cash", MaterialDesignC.CASH,
+            "cheque", MaterialDesignC.CARD_ACCOUNT_DETAILS,
+            "bank_deposit", MaterialDesignB.BANK_TRANSFER,
+            "mobile_wallet", MaterialDesignS.SIM
+    ));
+
 
    public static List<String> appFeatures = List.of(
             "dashboard",
@@ -147,6 +164,8 @@ public class Store {
             2, List.of(3, 4),
             3, List.of(5, 6)
     ));
+
+
 
 
 }

@@ -165,6 +165,11 @@ public class EmployeeService {
         toolbarItems.add(selectionEditGroup.build(2));
         toolbarItems.add(refreshgroup.build(1));
 
+        registerBtn.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("register_emptp")));
+        printStafflist.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("printstafflisttp")));
+        editSelection.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("editemptp")));
+        searchFilter.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("searchemptp")));
+
 
 
         return toolbarItems;
@@ -251,7 +256,7 @@ public class EmployeeService {
 
         entryController.collapseStaffDetails.setOnAction(e->{
             //animate details width to0
-            empTableview.getSelectionModel().clearSelection();
+//            empTableview.getSelectionModel().clearSelection();
 
             entryController.empdetailspane.setMinWidth(0);
             ProjectUtils.animatePaneSide(entryController.empdetailspane, 'w', 0);
@@ -932,6 +937,7 @@ public class EmployeeService {
     }
 
     public void refreshTable() {
+        HashMap<String, Object> currentSelectedEmp = empTableview.getSelectionModel().getSelectedItem();
         toggleAllcb.setSelected(false);
         toggleSelectAll(null,false);
         searchFilter.setText("");
@@ -941,12 +947,14 @@ public class EmployeeService {
         empTableview.currentSelectedIds.clear();
 
         entryController.empdetailspane.setMinWidth(0);
-        ProjectUtils.animatePaneSide(entryController.empdetailspane, 'w', 0);
+//        ProjectUtils.animatePaneSide(entryController.empdetailspane, 'w', 0);
 
         String q  = "select * from employees order by employee_category,time_factor,first_lastname";
 
         //filter table
         empTableview.filter(q);
+        if (!Objects.equals(null,currentSelectedEmp))empTableview.selectItem(PgConnector.getFielorBlank(currentSelectedEmp, "id"));
+
 
     }
 

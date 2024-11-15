@@ -563,11 +563,7 @@
                                                                                  <children>
                                                                                     <Label text="%student_concerned" GridPane.rowIndex="1" />
                                                                                     <Label fx:id="paymentPortaltitle" style="-fx-font-size: 17;" styleClass="smpro-large-sub" text="%collect_fee_and_payments" GridPane.columnSpan="4" />
-                                                                                    <HBox fx:id="hrStudentsearchcontainer" alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                                                                       <children>
-                                                                                          <Button fx:id="hrsearchHelp" minWidth="40.0" mnemonicParsing="false" styleClass="transparent-bg" />
-                                                                                       </children>
-                                                                                    </HBox>
+                                                                                    <VBox fx:id="hrStudentsearchcontainer" alignment="CENTER_LEFT" minHeight="30.0" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #57aaff;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                                     <VBox alignment="CENTER" maxWidth="150.0" prefHeight="200.0" prefWidth="100.0" style="-fx-border-color: #5e5e5e; -fx-border-style: dashed;" GridPane.columnIndex="3" GridPane.rowSpan="3">
                                                                                        <children>
                                                                                           <ImageView fx:id="hrImagpreview" fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true" />
@@ -600,7 +596,7 @@
                                                                                  </children>
                                                                               </GridPane>
                                                                               <Separator prefWidth="200.0" />
-                                                                              <Label styleClass="text-bold" text="%class_tuition_structure" />
+                                                                              <Label styleClass="text-bold" text="%tuition_payment" />
                                                                               <GridPane hgap="5.0" vgap="2.0">
                                                                                 <columnConstraints>
                                                                                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" prefWidth="100.0" />
@@ -615,7 +611,7 @@
                                                                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                 </rowConstraints>
                                                                                  <children>
-                                                                                    <Label text="%feeAmountB" GridPane.columnIndex="2" />
+                                                                                    <Label text="%feeAmountC" GridPane.columnIndex="2" />
                                                                                     <Label text="%ptaA" GridPane.columnIndex="1">
                                                                                        <GridPane.margin>
                                                                                           <Insets />
@@ -628,7 +624,7 @@
                                                                                           <Insets />
                                                                                        </GridPane.margin>
                                                                                     </Label>
-                                                                                    <Label text="%totalab" GridPane.columnIndex="3" />
+                                                                                    <Label text="%totalabc" GridPane.columnIndex="3" />
                                                                                     <Label fx:id="payedl" style="-fx-text-fill: #57aaff;" styleClass="money" text="------" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                                                                     <Label text="%amount_due" GridPane.columnIndex="5" />
                                                                                     <HBox style="-fx-border-color: #57aaff; -fx-border-width: 0 0 1 0;" GridPane.columnIndex="5" GridPane.rowIndex="1">
@@ -645,23 +641,24 @@
                                                                                     </HBox>
                                                                                     <Label text="%amount_payed" GridPane.columnIndex="4" />
                                                                                     <Label text="%trade" />
-                                                                                    <Label fx:id="registrationl" style="-fx-font-size: 20;" styleClass="text-bold" text="-------" GridPane.rowIndex="1" />
+                                                                                    <Label fx:id="registrationl" style="-fx-font-size: 20;" styleClass="text-bold" text="------" GridPane.rowIndex="1" />
                                                                                  </children>
                                                                               </GridPane>
-                                                                              <SplitPane dividerPositions="0.6" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                                                              <SplitPane dividerPositions="0.6" prefHeight="160.0" prefWidth="200.0">
                                                                                 <items>
-                                                                                  <AnchorPane minHeight="0.0" prefHeight="160.0" prefWidth="100.0">
+                                                                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                                                                        <children>
                                                                                           <VBox layoutX="133.0" layoutY="-54.0" prefHeight="160.0" prefWidth="408.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                              <children>
                                                                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
                                                                                                    <children>
-                                                                                                      <VBox layoutX="64.0" layoutY="-14.0" prefHeight="200.0" prefWidth="400.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                                      <VBox layoutX="64.0" layoutY="-14.0" prefHeight="200.0" prefWidth="400.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                                          <children>
-                                                                                                            <GridPane fx:id="hrRegistrat" hgap="5.0" minHeight="94.0" prefHeight="114.0" prefWidth="473.0" vgap="5.0">
+                                                                                                            <Label styleClass="text-bold" text="%new_payment" />
+                                                                                                            <GridPane fx:id="hrRegistrat" hgap="5.0" prefWidth="380.0" vgap="5.0">
                                                                                                               <columnConstraints>
                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                                                                                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="70.0" minWidth="10.0" prefWidth="100.0" />
+                                                                                                                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="30.0" minWidth="10.0" prefWidth="100.0" />
                                                                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                                                                               </columnConstraints>
                                                                                                               <rowConstraints>
@@ -672,53 +669,15 @@
                                                                                                                <children>
                                                                                                                   <Label text="%pta_fee" GridPane.rowIndex="1" />
                                                                                                                   <Label text="%new_fee_deposit" GridPane.rowIndex="2" />
-                                                                                                                  <TextField fx:id="ptaEntryf" style="-fx-font-size: 15;" styleClass="money" text="-------" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                                                                                                  <TextField fx:id="feeEntryf" style="-fx-font-size: 15;" styleClass="money" text="-------" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                                                                                                                  <TextField fx:id="ptaEntryf" style="-fx-font-size: 15;" styleClass="money" text="------" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                                                                                                  <TextField fx:id="feeEntryf" style="-fx-font-size: 15;" styleClass="money" text="------" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                                                                                                                   <Label text="%registration_fee" />
-                                                                                                                  <TextField fx:id="registrationf" style="-fx-font-size: 15;" styleClass="money" text="-------" GridPane.columnIndex="2" />
-                                                                                                                  <Label fx:id="hrRegistrationtick" style="-fx-text-fill: #cccccc;" styleClass="text-bold" text="XAF" GridPane.columnIndex="1" />
-                                                                                                                  <Label fx:id="hrPtatick" style="-fx-text-fill: #cccccc;" styleClass="text-bold" text="XAF" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                                                                  <Label fx:id="hrFeetick" style="-fx-text-fill: #cccccc;" styleClass="text-bold" text="XAF" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                                                                                  <TextField fx:id="registrationf" style="-fx-font-size: 15;" styleClass="money" text="------" GridPane.columnIndex="2" />
+                                                                                                                  <Label fx:id="hrRegistrationtick" text="T" GridPane.columnIndex="1" />
+                                                                                                                  <Label fx:id="hrPtatick" text="T" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                                                                  <Label fx:id="hrFeetick" text="T" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                                                                                </children>
                                                                                                             </GridPane>
-                                                                                                            <Separator prefWidth="200.0" />
-                                                                                                            <VBox prefHeight="146.0" prefWidth="473.0" VBox.vgrow="ALWAYS">
-                                                                                                               <children>
-                                                                                                                  <HBox alignment="TOP_CENTER" spacing="10.0">
-                                                                                                                     <children>
-                                                                                                                        <Label styleClass="text-bold" text="%new_sale_requirements" />
-                                                                                                                        <VBox fx:id="salescombocontainer" maxHeight="30.0" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
-                                                                                                                        <Button fx:id="addsaleBtn" minWidth="20.0" mnemonicParsing="false" styleClass="transparent-bg">
-                                                                                                                           <cursor>
-                                                                                                                              <Cursor fx:constant="HAND" />
-                                                                                                                           </cursor>
-                                                                                                                        </Button>
-                                                                                                                     </children>
-                                                                                                                     <padding>
-                                                                                                                        <Insets bottom="2.0" right="10.0" />
-                                                                                                                     </padding>
-                                                                                                                  </HBox>
-                                                                                                                  <VBox VBox.vgrow="ALWAYS">
-                                                                                                                     <VBox.margin>
-                                                                                                                        <Insets right="10.0" />
-                                                                                                                     </VBox.margin>
-                                                                                                                     <children>
-                                                                                                                        <ScrollPane fitToWidth="true" minViewportHeight="120.0" style="-fx-border-color: #5e5e5e;">
-                                                                                                                           <content>
-                                                                                                                              <VBox fx:id="salesitemscontainer" minHeight="100.0" prefHeight="168.0" prefWidth="451.0" spacing="2.0">
-                                                                                                                                 <padding>
-                                                                                                                                    <Insets top="2.0" />
-                                                                                                                                 </padding>
-                                                                                                                              </VBox>
-                                                                                                                           </content>
-                                                                                                                        </ScrollPane>
-                                                                                                                     </children>
-                                                                                                                  </VBox>
-                                                                                                               </children>
-                                                                                                               <padding>
-                                                                                                                  <Insets right="10.0" />
-                                                                                                               </padding>
-                                                                                                            </VBox>
                                                                                                          </children>
                                                                                                          <padding>
                                                                                                             <Insets top="10.0" />
@@ -737,10 +696,7 @@
                                                                                        <children>
                                                                                           <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                              <children>
-                                                                                                <VBox fx:id="feehistoryContainer" prefHeight="160.0" prefWidth="408.0" VBox.vgrow="ALWAYS">
-                                                                                                   <padding>
-                                                                                                      <Insets top="10.0" />
-                                                                                                   </padding></VBox>
+                                                                                                <VBox fx:id="feehistoryContainer" prefHeight="160.0" prefWidth="408.0" />
                                                                                              </children>
                                                                                              <opaqueInsets>
                                                                                                 <Insets top="10.0" />
@@ -752,6 +708,65 @@
                                                                                        </padding>
                                                                                     </AnchorPane>
                                                                                 </items>
+                                                                              </SplitPane>
+                                                                              <HBox maxHeight="15.0" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                                                                                 <children>
+                                                                                    <Separator prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                                                    <Separator prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                                                                                 </children>
+                                                                              </HBox>
+                                                                              <SplitPane dividerPositions="0.6" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                                                                 <items>
+                                                                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                                                                       <children>
+                                                                                          <VBox layoutX="133.0" layoutY="-54.0" prefHeight="160.0" prefWidth="408.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                             <children>
+                                                                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                                                                                                   <children>
+                                                                                                      <VBox layoutX="7.0" prefHeight="200.0" prefWidth="400.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="-7.0" AnchorPane.topAnchor="0.0">
+                                                                                                         <children>
+                                                                                                            <HBox spacing="10.0">
+                                                                                                               <children>
+                                                                                                                  <Label styleClass="text-bold" text="%new_sale" />
+                                                                                                                  <VBox fx:id="salescombocontainer" maxHeight="30.0" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS" />
+                                                                                                                  <Button fx:id="addsaleBtn" minWidth="40.0" mnemonicParsing="false" styleClass="transparent-bg">
+                                                                                                                     <cursor>
+                                                                                                                        <Cursor fx:constant="HAND" />
+                                                                                                                     </cursor></Button>
+                                                                                                               </children>
+                                                                                                               <padding>
+                                                                                                                  <Insets right="10.0" />
+                                                                                                               </padding>
+                                                                                                            </HBox>
+                                                                                                            <ScrollPane fitToHeight="true" fitToWidth="true">
+                                                                                                               <VBox.margin>
+                                                                                                                  <Insets right="10.0" />
+                                                                                                               </VBox.margin>
+                                                                                                               <content>
+                                                                                                                  <VBox fx:id="salesitemscontainer" prefHeight="200.0" prefWidth="100.0" spacing="2.0" style="-fx-border-color: #5e5e5e;">
+                                                                                                                     <padding>
+                                                                                                                        <Insets top="2.0" />
+                                                                                                                     </padding>
+                                                                                                                  </VBox>
+                                                                                                               </content>
+                                                                                                            </ScrollPane>
+                                                                                                         </children>
+                                                                                                         <padding>
+                                                                                                            <Insets right="10.0" />
+                                                                                                         </padding>
+                                                                                                      </VBox>
+                                                                                                   </children>
+                                                                                                </AnchorPane>
+                                                                                             </children>
+                                                                                          </VBox>
+                                                                                       </children>
+                                                                                    </AnchorPane>
+                                                                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                                                                       <children>
+                                                                                          <VBox fx:id="salesHistorycontainer" layoutX="154.0" layoutY="-11.0" prefHeight="160.0" prefWidth="408.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                                       </children>
+                                                                                    </AnchorPane>
+                                                                                 </items>
                                                                               </SplitPane>
                                                                               <Separator prefWidth="200.0" />
                                                                               <HBox alignment="TOP_RIGHT" maxHeight="70.0" prefHeight="100.0" prefWidth="200.0" spacing="20.0" VBox.vgrow="NEVER">
@@ -769,7 +784,7 @@
                                                                                                 <Insets />
                                                                                              </HBox.margin>
                                                                                              <children>
-                                                                                                <Label fx:id="totalenteredl" minWidth="250.0" style="-fx-text-fill: white; -fx-font-size: 20; -fx-border-color: white; -fx-border-style: dashed; -fx-border-width: 2;" styleClass="money" text="-----------------">
+                                                                                                <Label fx:id="totalenteredl" minWidth="200.0" style="-fx-text-fill: white; -fx-font-size: 20; -fx-border-color: white; -fx-border-style: dashed; -fx-border-width: 2;" styleClass="money" text="-------------">
                                                                                                    <padding>
                                                                                                       <Insets bottom="5.0" left="10.0" right="5.0" top="5.0" />
                                                                                                    </padding>
@@ -781,7 +796,7 @@
                                                                                                 <Insets top="5.0" />
                                                                                              </padding>
                                                                                           </Label>
-                                                                                          <ComboBox fx:id="hrmethodCombo" minHeight="36.0" minWidth="200.0" prefWidth="150.0" promptText="%select" styleClass="alt-icon" />
+                                                                                          <ComboBox fx:id="hrmethodCombo" minHeight="36.0" prefWidth="150.0" promptText="%select" styleClass="alt-icon" />
                                                                                        </children>
                                                                                     </HBox>
                                                                                     <Button fx:id="hrvalidate" defaultButton="true" minHeight="36.0" minWidth="50.0" mnemonicParsing="false" styleClass="text-bold" text="%validate">
@@ -792,7 +807,7 @@
                                                                                           <Cursor fx:constant="HAND" />
                                                                                        </cursor>
                                                                                     </Button>
-                                                                                    <Button fx:id="hrprintreceipt" minHeight="36.0" minWidth="40.0" mnemonicParsing="false" styleClass="transparent-bg">
+                                                                                    <Button fx:id="hrprintreceipt" minHeight="36.0" minWidth="40.0" mnemonicParsing="false">
                                                                                        <HBox.margin>
                                                                                           <Insets />
                                                                                        </HBox.margin>
@@ -847,7 +862,7 @@
                                                                                     </VBox>
                                                                                     <Label text="%beneficiary_agent" GridPane.rowIndex="2" />
                                                                                     <HBox fx:id="beneficiaryContainer" alignment="CENTER_LEFT" style="-fx-border-color: #57aaff;" styleClass="text-bold" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
-                                                                                    <Button fx:id="hrdisbureBtn" defaultButton="true" minWidth="40.0" mnemonicParsing="false" styleClass="text-bold" text="%disburse" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                                                                                    <Button fx:id="hrdisbureBtn" defaultButton="true" minWidth="40.0" mnemonicParsing="false" text="%disburse" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                                                                                     <Button fx:id="hrExpenseIcon" minWidth="40.0" mnemonicParsing="false" style="-fx-border-width: 0; -fx-background-color: transparent;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                                                                  </children>
                                                                               </GridPane>

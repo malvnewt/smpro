@@ -1593,7 +1593,7 @@ public class SettingsController implements Initializable {
                 try {
                     boolean saved = addClassController.save();
                     if (saved) {
-                        classesTable.getItems().clear();
+                        if (!Objects.equals(null,classesTable))classesTable.getItems().clear();
                         List<HashMap<String, Object>> dbClasses = PgConnector.fetch("select * from classes order by level, classname", PgConnector.getConnection());
                         classesTable.getItems().addAll(dbClasses);
 

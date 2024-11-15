@@ -67,6 +67,7 @@ public class StudentClassService {
     Button generateMarksheet;
     Button importExcel;
     Button transferBtn;
+    Button registerClassbtn;
 
 
     //preperties
@@ -74,8 +75,13 @@ public class StudentClassService {
     public List<Node> buildToolbarOptions(){
         //register group
         CustomToolbarActionGroup registerGrou = new CustomToolbarActionGroup();
-        registerBtn = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/plus_green.png", Store.TOOBAR_ICONSIZE+15, Store.TOOBAR_ICONSIZE, true)));
+        registerBtn = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/plus_green.png", Store.TOOBAR_ICONSIZE+10, Store.TOOBAR_ICONSIZE, true)));
         registerGrou.addActions(ProjectUtils.capitalize(Translator.getIntl("register_student")), null, registerBtn);
+
+        registerClassbtn = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/plus_green.png",
+                Store.TOOBAR_ICONSIZE+10, Store.TOOBAR_ICONSIZE, true)));
+        registerGrou.addActions(ProjectUtils.capitalize(Translator.getIntl("add_new_class")), null, registerClassbtn);
+
 
 
         //selection_edit group
@@ -86,10 +92,9 @@ public class StudentClassService {
                 new ImageView(ResourceUtil.getImageFromResource("images/success.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)),toggleAllcb);
 
 
-        transferBtn = new Button("");
+        transferBtn = new Button("",ProjectUtils.createFontIconColored(MaterialDesignA.ARROW_TOP_RIGHT_THICK,Store.TOOBAR_ICONSIZE,Paint.valueOf(Store.Colors.LightGray)));
         selectionEditGroup.addActions(Translator.getIntl("transfer_promote_short"),
-                new ImageView(ResourceUtil.getImageFromResource("images/success.png",
-                        Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)),transferBtn);
+                null,transferBtn);
 
         //////////////////////////////////
         deleteSelections = new Button("", new ImageView(ResourceUtil.getImageFromResource("images/remove_user.png", Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
@@ -101,8 +106,6 @@ public class StudentClassService {
                 Store.TOOBAR_ICONSIZE, Store.TOOBAR_ICONSIZE, true)));
         selectionEditGroup.addActions(ProjectUtils.capitalize(Translator.getIntl("class_settings")),
                 null,editClassBtn);
-
-
 
 
         //////////////////////////////
@@ -150,7 +153,9 @@ public class StudentClassService {
         refreshBtn.setStyle("-fx-background-color: transparent");
 
 
-        for (Button b : new Button[]{editClassBtn,registerBtn, generateMarksheet, exportexcel,deleteSelections, importExcel, printClasslist, editSelection,refreshBtn,transferBtn}) {
+
+        for (Button b : new Button[]{editClassBtn,registerClassbtn,registerBtn, generateMarksheet, exportexcel,
+                deleteSelections, importExcel, printClasslist, editSelection,refreshBtn,transferBtn}) {
             b.setCursor(Cursor.HAND);
             b.setStyle("-fx-background-color: transparent;-fx-border-width: 0");
             b.getStyleClass().add("toolbar-btn");
@@ -159,13 +164,13 @@ public class StudentClassService {
 
 
 
-        toolbarItems.add(registerGrou.build(1));
+        toolbarItems.add(registerGrou.build(2));
         for (CustomToolbarActionGroup group : new CustomToolbarActionGroup[]{ selectionEditGroup, printGroup,refreshgroup}) {
             toolbarItems.add(group.build(2));
         }
 
 
-        transferBtn.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("transfer_promote")));
+        transferBtn.setTooltip(ProjectUtils.createTooltip(Translator.getIntl("transfer_studentstp")));
 
 
         return toolbarItems;
@@ -193,6 +198,11 @@ public class StudentClassService {
     public void bindFields() {
         registerBtn.setOnAction(e->{
             ActionStageLinker.openAddStudent(mainStage);
+        });
+        registerClassbtn.setOnAction(e->{
+            SettingsController settingsController = new SettingsController();
+            settingsController.openClassWindow(false,mainStage);
+
         });
 
 
@@ -260,10 +270,9 @@ public class StudentClassService {
                 idcol, fnamecol, lnamecol, gendercol, matriculecol, birthplacecol, repeatercol, dobcol, admissiondatecol, addresscol, classnamecol, parentcol, contactcol
         );
         fnamecol.setMinWidth(120);
-        lnamecol.setMinWidth(120);
-        parentcol.setMinWidth(150);
+//        lnamecol.setMinWidth(120);
+//        parentcol.setMinWidth(150);
         classnamecol.setMinWidth(60);
-        gendercol.setMinWidth(60);
 
 
 //        idcol.setMinWidth(50);
@@ -836,6 +845,7 @@ public class StudentClassService {
 
 
     public void refreshTable() {
+
         toggleAllcb.setSelected(false);
         String q ;
         HashMap<String,Object> item = studentSections.selectedClassProperty.get();
@@ -863,8 +873,10 @@ public class StudentClassService {
         //filter table
         studentTableView.filter(q);
         studentSections.reloadTree();
-        studentSections.getSelectionModel().select(studentSections.selectedItemP.get());
+        searchFilter.clear();
 
+
+        if (!Objects.equals(null,item))studentSections.selectItem(PgConnector.getFielorBlank(item, "id"));
 
 
 
